@@ -1,0 +1,32 @@
+{
+  "name": "ludumdare33",
+  "version": "1.0.0",
+  "description": "Ludum Dare 33",
+  "main": "dist/main.js",
+  "dependencies": {
+    "babel-core": "^5.8.22",
+    "babel-loader": "^5.3.2",
+    "http-server": "^0.8.0",
+    "phaser": "^2.4.2",
+    "webpack": "^1.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ripter/LD33.git"
+  },
+  "keywords": [
+    "ludum",
+    "dare",
+    "LD33"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ripter/LD33/issues"
+  },
+  "homepage": "https://github.com/ripter/LD33#readme"
+}
