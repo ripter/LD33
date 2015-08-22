@@ -62,11 +62,8 @@ function update() {
 }
 
 function collideBulletProp(bullet, prop) {
-  console.log('collideBulletProp', bullet, prop);
-  
   // kill the bullet
   bullet.kill();
-  prop.body.velocity = {x:0, y:0};
 }
 
 function collideBulletMob(bullet, mob) {
