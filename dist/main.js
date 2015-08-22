@@ -55,7 +55,7 @@
 
 	var _playerJs = __webpack_require__(2);
 
-	var _dragonJs = __webpack_require__(3);
+	var _dragonJs = __webpack_require__(4);
 
 	var _dragonJs2 = _interopRequireDefault(_dragonJs);
 
@@ -63,7 +63,7 @@
 
 	var _mobJs2 = _interopRequireDefault(_mobJs);
 
-	var _fireJs = __webpack_require__(4);
+	var _fireJs = __webpack_require__(3);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -7608,7 +7608,7 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser*/
 	'use strict';
@@ -7617,6 +7617,13 @@
 	  value: true
 	});
 	exports.playerControl = playerControl;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _fireJs = __webpack_require__(3);
+
+	var _fireJs2 = _interopRequireDefault(_fireJs);
+
 	var SPEED = 100;
 
 	function playerControl(game, sprite) {
@@ -7637,6 +7644,28 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	/*global Phaser */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var SPEED = Phaser.Timer.HALF;
+
+	function Fire(game, x, y) {
+	  this.game = game;
+	  this.sprite = game.add.sprite(x, y, 'fire');
+	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+
+	  this.sprite.body.velocity.y = -SPEED;
+	}
+	exports['default'] = Fire;
+	module.exports = exports['default'];
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser */
@@ -7649,7 +7678,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fireJs = __webpack_require__(4);
+	var _fireJs = __webpack_require__(3);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -7762,28 +7791,6 @@
 	}
 	export default Dragon;
 	*/
-	module.exports = exports['default'];
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	/*global Phaser */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	var SPEED = Phaser.Timer.HALF;
-
-	function Fire(game, x, y) {
-	  this.game = game;
-	  this.sprite = game.add.sprite(x, y, 'fire');
-	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-
-	  this.sprite.body.velocity.y = -SPEED;
-	}
-	exports['default'] = Fire;
 	module.exports = exports['default'];
 
 /***/ },

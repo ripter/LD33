@@ -1,6 +1,7 @@
 /*global Phaser*/
 'use strict';
 
+import Fire from './fire.js';
 const SPEED = 100;
 
 export function playerControl(game, sprite) {
