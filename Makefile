@@ -39,9 +39,9 @@ test:
 	$(BIN)/mocha -R nyan --compilers js:babel/register
 
 server.PID:
-	$(BIN)/http-server ./dist -p 3000 --silent & echo $$! > $@
+	# $(BIN)/http-server ./dist -p 3000 --silent & echo $$! > $@
 	#if you are having issues, try this one
-	#$(BIN)/http-server ./dist -p 3000
+	$(BIN)/http-server ./dist -p 3000
 
 stop: server.PID
 	-kill `cat server.PID`
