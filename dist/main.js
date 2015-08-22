@@ -128,6 +128,8 @@
 
 	function collideBulletMob(bullet, mob) {
 	  console.log('collideBulletMob', bullet, mob);
+	  bullet.kill();
+	  mob.kill();
 	}
 
 	function collideWaypoint(one, two) {
@@ -318,12 +320,13 @@
 	  value: true
 	});
 	exports.moveToPoint = moveToPoint;
-	var SPEED = Phaser.Timer.SECOND;
+	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 
 	function moveToPoint(sprite, waypoint) {
 	  var x = waypoint.x;
 	  var y = waypoint.y;
 
+	  console.log('waypoint', x, y);
 	  game.physics.arcade.accelerateToXY(sprite, x, y, SPEED);
 	}
 

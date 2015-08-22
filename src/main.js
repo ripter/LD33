@@ -74,6 +74,8 @@ function collideBulletProp(bullet, prop) {
 
 function collideBulletMob(bullet, mob) {
   console.log('collideBulletMob', bullet, mob);
+  bullet.kill();
+  mob.kill();
 }
 
 function collideWaypoint(one, two) {
