@@ -15,6 +15,7 @@ let mobs;
 let bullets;
 let waypoints;
 let props;
+let balloons;
 
 const game = new Phaser.Game(
   1024
@@ -38,6 +39,8 @@ function preload() {
   game.load.image('tree', 'assets/tree.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
   game.load.image('shrub', 'assets/shrub.png', 64, 64);
+  
+  game.load.spritesheet('fire', 'assets/fire_4frame.png', 20, 40);
 
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 }

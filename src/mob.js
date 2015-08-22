@@ -1,7 +1,7 @@
 /*global Phaser, game */
 'use strict';
 
-const DELAY = Phaser.Timer.SECOND;
+const DELAY = Phaser.Timer.SECOND * 5;
 const SPEED = 100; //Phaser.Timer.MINUTE * 4;
 
 export function moveToPoint(sprite, waypoint) {
