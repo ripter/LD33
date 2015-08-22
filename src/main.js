@@ -39,6 +39,7 @@ function preload() {
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
+  game.add.sprite(0,0, lvl1.background);
   
   // Setup groups!
   window.player = player = spawnDragon(500, 500);

@@ -87,6 +87,8 @@
 	function create() {
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
+	  game.add.sprite(0, 0, _level1Js2['default'].background);
+
 	  // Setup groups!
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
