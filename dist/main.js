@@ -64,7 +64,11 @@
 	var player = undefined;
 	var mobs = [];
 
-	var game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', { preload: preload, create: create, update: update });
+	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', {
+	  preload: preload,
+	  create: create,
+	  update: update
+	});
 
 	function preload() {
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
@@ -72,6 +76,8 @@
 	}
 
 	function create() {
+	  game.physics.startSystem(Phaser.Physics.ARCADE);
+
 	  player = new _dragonJs2['default'](game, 100, 100);
 	  mobs.push(new _mobJs2['default'](game, 300, 100, 'king'));
 	}

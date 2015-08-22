@@ -7,7 +7,16 @@ import Mob from './mob.js';
 let player;
 let mobs = [];
 
-const game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', { preload: preload, create: create, update: update });
+const game = new Phaser.Game(
+  1024
+  , 600
+  , Phaser.AUTO
+  , 'content'
+  , { 
+    preload: preload
+    , create: create
+    , update: update 
+});
 
 function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
@@ -15,6 +24,8 @@ function preload() {
 }
 
 function create() {
+  game.physics.startSystem(Phaser.Physics.ARCADE);
+
   player = new Dragon(game, 100, 100);
   mobs.push(new Mob(game, 300, 100, 'king'));
 }
