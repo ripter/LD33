@@ -53,15 +53,17 @@
 
 	var _ramda2 = _interopRequireDefault(_ramda);
 
-	var _dragonJs = __webpack_require__(2);
+	var _playerJs = __webpack_require__(2);
+
+	var _dragonJs = __webpack_require__(3);
 
 	var _dragonJs2 = _interopRequireDefault(_dragonJs);
 
-	var _mobJs = __webpack_require__(4);
+	var _mobJs = __webpack_require__(5);
 
 	var _mobJs2 = _interopRequireDefault(_mobJs);
 
-	var _fireJs = __webpack_require__(3);
+	var _fireJs = __webpack_require__(4);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -86,12 +88,15 @@
 	function create() {
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	  player = game.add.sprite(500, 500, 'dragon');
-	  mob = game.add.sprite(300, 100, 'king');
-	  fire = game.add.sprite(300, 500, 'fire');
+	  //player = game.add.sprite(500, 500, 'dragon');
+	  player = new _dragonJs2['default'](game, 500, 500);
 
-	  game.physics.enable([player, fire], Phaser.Physics.ARCADE);
-	  fire.body.velocity.y = -Phaser.Timer.HALF;
+	  mob = game.add.sprite(300, 100, 'king');
+	  //fire = game.add.sprite(300, 500, 'fire');
+	  fire = new _fireJs2['default'](game, 300, 500);
+
+	  //game.physics.enable(fire, Phaser.Physics.ARCADE);
+	  //fire.body.velocity.y = -Phaser.Timer.HALF;
 
 	  mobs = game.add.group();
 	  mobs.enableBody = true;
@@ -100,8 +105,9 @@
 	}
 
 	function update() {
-
-	  game.physics.arcade.collide(fire, mobs, collide, null, this);
+	  player.update();
+	  //playerControl(game, player.sprite);
+	  game.physics.arcade.collide(fire.sprite, mobs, collide, null, this);
 	}
 
 	function collide(one, two) {
@@ -7596,6 +7602,35 @@
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	/*global Phaser*/
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.playerControl = playerControl;
+	var SPEED = 100;
+
+	function playerControl(game, sprite) {
+	  var _Phaser$Keyboard = Phaser.Keyboard;
+	  var LEFT = _Phaser$Keyboard.LEFT;
+	  var RIGHT = _Phaser$Keyboard.RIGHT;
+	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+
+	  // Movement keys
+	  if (game.input.keyboard.isDown(LEFT)) {
+	    sprite.body.velocity.x = -SPEED;
+	  } else if (game.input.keyboard.isDown(RIGHT)) {
+	    sprite.body.velocity.x = SPEED;
+	  } else {
+	    sprite.body.velocity.x = 0;
+	  }
+	}
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser */
@@ -7606,13 +7641,9 @@
 	  value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _fireJs = __webpack_require__(3);
+	var _fireJs = __webpack_require__(4);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -7622,74 +7653,113 @@
 	var FIRE_OFFSET_X = 25;
 	var FIRE_SPEED = Phaser.Timer.HALF;
 
-	var Dragon = (function () {
-	  function Dragon(game, sprite) {
-	    _classCallCheck(this, Dragon);
+	function Dragon(game, x, y) {
+	  this.game = game;
+	  this.sprite = game.add.sprite(x, y, 'dragon');
+	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	}
+	Dragon.prototype = {
+	  update: function update() {
+	    var game = this.game;
+	    var _Phaser$Keyboard = Phaser.Keyboard;
+	    var LEFT = _Phaser$Keyboard.LEFT;
+	    var RIGHT = _Phaser$Keyboard.RIGHT;
+	    var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
 
+	    // Movement keys
+	    if (game.input.keyboard.isDown(LEFT)) {
+	      this.sprite.body.velocity.x = -SPEED;
+	    } else if (game.input.keyboard.isDown(RIGHT)) {
+	      this.sprite.body.velocity.x = SPEED;
+	    } else {
+	      this.sprite.body.velocity.x = 0;
+	    }
+
+	    // FIRE!!!
+	    if (game.input.keyboard.isDown(SPACEBAR)) {
+	      this.fire();
+	    }
+
+	    if (this.bullet) {
+	      this.bullet.update();
+	    }
+	  },
+
+	  fire: function fire() {
+	    if (this.bullet) {
+	      return;
+	    }
+	    var _sprite = this.sprite;
+	    var x = _sprite.x;
+	    var y = _sprite.y;
+
+	    this.bullet = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
+
+	    // Delay before they can fire again.
+	    this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
+	  },
+
+	  resetFire: function resetFire() {
+	    this.bullet = null;
+	  }
+	};
+	exports['default'] = Dragon;
+
+	/*
+	class Dragon {
+	  constructor(game, sprite) {
 	    this.game = game;
 	    this.sprite = sprite;
 	    // PHYSICS!!!!!
 	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	    this.bullet = null;
 	  }
-
-	  _createClass(Dragon, [{
-	    key: 'update',
-	    value: function update() {
-	      var game = this.game;
-	      var _Phaser$Keyboard = Phaser.Keyboard;
-	      var LEFT = _Phaser$Keyboard.LEFT;
-	      var RIGHT = _Phaser$Keyboard.RIGHT;
-	      var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
-
-	      // Movement keys
-	      if (game.input.keyboard.isDown(LEFT)) {
-	        this.sprite.body.velocity.x = -SPEED;
-	      } else if (game.input.keyboard.isDown(RIGHT)) {
-	        this.sprite.body.velocity.x = SPEED;
-	      } else {
-	        this.sprite.body.velocity.x = 0;
-	      }
-
-	      // FIRE!!!
-	      if (game.input.keyboard.isDown(SPACEBAR)) {
-	        this.fire();
-	      }
-
-	      if (this.bullet) {
-	        this.bullet.update();
-	      }
+	  
+	  update() {
+	    const game = this.game;
+	    const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
+	    
+	    // Movement keys
+	    if (game.input.keyboard.isDown(LEFT)) { 
+	      this.sprite.body.velocity.x = -SPEED;
 	    }
-	  }, {
-	    key: 'fire',
-	    value: function fire() {
-	      if (this.bullet) {
-	        return;
-	      }
-	      var _sprite = this.sprite;
-	      var x = _sprite.x;
-	      var y = _sprite.y;
-
-	      this.bullet = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
-
-	      // Delay before they can fire again.
-	      this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
+	    else if (game.input.keyboard.isDown(RIGHT)) {
+	      this.sprite.body.velocity.x = SPEED;
 	    }
-	  }, {
-	    key: 'resetFire',
-	    value: function resetFire() {
-	      this.bullet = null;
+	    else {
+	      this.sprite.body.velocity.x = 0;
 	    }
-	  }]);
-
-	  return Dragon;
-	})();
-
-	exports['default'] = Dragon;
+	    
+	    // FIRE!!!
+	    if (game.input.keyboard.isDown(SPACEBAR)) {
+	      this.fire(); 
+	    }
+	    
+	    if (this.bullet) {
+	      this.bullet.update();
+	    }
+	  }
+	  
+	  fire() {
+	    if (this.bullet) { return; }
+	    const {x, y} = this.sprite;
+	    
+	    this.bullet = new Fire(this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
+	    
+	    // Delay before they can fire again.
+	    this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
+	  }
+	  
+	  resetFire() {
+	    this.bullet = null;
+	  }
+	}
+	export default Dragon;
+	*/
 	module.exports = exports['default'];
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -7699,40 +7769,20 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
 	var SPEED = Phaser.Timer.HALF;
-	var SPRITE_CACHE = 'fire';
 
-	var Fire = (function () {
-	  function Fire(game, sprite) {
-	    _classCallCheck(this, Fire);
+	function Fire(game, x, y) {
+	  this.game = game;
+	  this.sprite = game.add.sprite(x, y, 'fire');
+	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 
-	    this.game = game;
-	    this.sprite = sprite;
-	    // PHYSICS!!!!!
-	    game.physics.enable(sprite, Phaser.Physics.ARCADE);
-
-	    // Start it flying!
-	    //this.sprite.body.velocity.y = -SPEED;
-	  }
-
-	  _createClass(Fire, [{
-	    key: 'update',
-	    value: function update() {}
-	  }]);
-
-	  return Fire;
-	})();
-
+	  this.sprite.body.velocity.y = -SPEED;
+	}
 	exports['default'] = Fire;
 	module.exports = exports['default'];
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	/*global Phaser */

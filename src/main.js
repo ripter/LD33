@@ -1,6 +1,7 @@
 /*global Phaser */
 import R from 'ramda';
 
+import {playerControl} from './player.js';
 import Dragon from './dragon.js';
 import Mob from './mob.js';
 import Fire from './fire.js';
@@ -31,12 +32,15 @@ function preload() {
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  player = game.add.sprite(500, 500, 'dragon');
+  //player = game.add.sprite(500, 500, 'dragon');
+  player = new Dragon(game, 500, 500);
+
   mob = game.add.sprite(300, 100, 'king');
-  fire = game.add.sprite(300, 500, 'fire');
+  //fire = game.add.sprite(300, 500, 'fire');
+  fire = new Fire(game, 300, 500);
   
-  game.physics.enable([player, fire], Phaser.Physics.ARCADE); 
-  fire.body.velocity.y = -Phaser.Timer.HALF;
+  //game.physics.enable(fire, Phaser.Physics.ARCADE); 
+  //fire.body.velocity.y = -Phaser.Timer.HALF;
   
   mobs = game.add.group();
   mobs.enableBody = true;
@@ -45,8 +49,9 @@ function create() {
 }
 
 function update() {
-  
-  game.physics.arcade.collide(fire, mobs, collide, null, this);
+  player.update();
+  //playerControl(game, player.sprite);
+  game.physics.arcade.collide(fire.sprite, mobs, collide, null, this);
 
 }
 
