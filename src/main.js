@@ -1,10 +1,12 @@
 /*global Phaser */
 'use strict';
-import R from 'ramda';
 
 import {createGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
+import {spawnWaypoints} from './level-loader.js';
+
+import lvl1 from './level1.js';
 
 let player;
 let mobs;
@@ -28,6 +30,8 @@ function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('fire', 'assets/fire.png', 64, 64);
+  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
+
 }
 
 function create() {
@@ -38,7 +42,9 @@ function create() {
   window.player = player = spawnDragon(500, 500);
   window.mobs = mobs = createGroup();
   window.bullets = bullets = createGroup();
-  window.waypoints = waypoints = createGroup();
+
+  window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
+
   window.props = props = createGroup();
 }
 
