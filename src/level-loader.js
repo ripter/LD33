@@ -19,7 +19,8 @@ export function spawnSprites(list) {
   let group = createGroup();
 
   list.forEach((point) => {
-    group.create(point.x, point.y, point.spriteKey);  
+    let sprite = group.create(point.x, point.y, point.spriteKey);  
+    sprite.anchor = {x: .5, y: 1};
   });
   
   return group;
