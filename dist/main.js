@@ -57,7 +57,7 @@
 
 	var _dragonJs2 = _interopRequireDefault(_dragonJs);
 
-	var _mobJs = __webpack_require__(3);
+	var _mobJs = __webpack_require__(4);
 
 	var _mobJs2 = _interopRequireDefault(_mobJs);
 
@@ -69,16 +69,18 @@
 	  create: create,
 	  update: update
 	});
+	window.game = game;
 
 	function preload() {
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
+	  game.load.image('fire', 'assets/fire.png', 64, 64);
 	}
 
 	function create() {
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	  player = new _dragonJs2['default'](game, 100, 100);
+	  player = new _dragonJs2['default'](game, 500, 500);
 	  mobs.push(new _mobJs2['default'](game, 300, 100, 'king'));
 	}
 
@@ -7578,6 +7580,84 @@
 
 /***/ },
 /* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser */
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _fireJs = __webpack_require__(3);
+
+	var _fireJs2 = _interopRequireDefault(_fireJs);
+
+	var SPEED = 100;
+	var SPRITE_CACHE = 'dragon';
+	var FIRE_OFFSET_Y = 0;
+	var FIRE_OFFSET_X = 50;
+
+	var Dragon = (function () {
+	  function Dragon(game, x, y) {
+	    _classCallCheck(this, Dragon);
+
+	    this.game = game;
+	    this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
+	    // PHYSICS!!!!!
+	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	  }
+
+	  _createClass(Dragon, [{
+	    key: 'update',
+	    value: function update() {
+	      var game = this.game;
+	      var _Phaser$Keyboard = Phaser.Keyboard;
+	      var LEFT = _Phaser$Keyboard.LEFT;
+	      var RIGHT = _Phaser$Keyboard.RIGHT;
+	      var SPACE = _Phaser$Keyboard.SPACE;
+
+	      // Movement keys
+	      if (game.input.keyboard.isDown(LEFT)) {
+	        this.sprite.body.velocity.x = -SPEED;
+	      } else if (game.input.keyboard.isDown(RIGHT)) {
+	        this.sprite.body.velocity.x = SPEED;
+	      } else {
+	        this.sprite.body.velocity.x = 0;
+	      }
+
+	      // FIRE!!!
+	      if (game.input.keyboard.isDown(SPACE)) {
+	        this.fire();
+	      }
+	    }
+	  }, {
+	    key: 'fire',
+	    value: function fire() {
+	      var _sprite = this.sprite;
+	      var x = _sprite.x;
+	      var y = _sprite.y;
+
+	      this.fire = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
+	      console.log('fire', this.fire);
+	    }
+	  }]);
+
+	  return Dragon;
+	})();
+
+	exports['default'] = Dragon;
+	module.exports = exports['default'];
+
+/***/ },
+/* 3 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -7592,30 +7672,34 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var Dragon = (function () {
-	  function Dragon(game, x, y) {
-	    _classCallCheck(this, Dragon);
+	var SPEED = 100;
+	var SPRITE_CACHE = 'fire';
 
-	    console.log('Hello World');
+	var Fire = (function () {
+	  function Fire(game, x, y) {
+	    _classCallCheck(this, Fire);
+
 	    this.game = game;
-	    this.sprite = game.add.sprite(x, y, 'dragon');
+	    this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
+	    // PHYSICS!!!!!
+	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	  }
 
-	  _createClass(Dragon, [{
+	  _createClass(Fire, [{
 	    key: 'update',
 	    value: function update() {
-	      this.sprite.update();
+	      this.sprite.body.velocity.y = SPEED;
 	    }
 	  }]);
 
-	  return Dragon;
+	  return Fire;
 	})();
 
-	exports['default'] = Dragon;
+	exports['default'] = Fire;
 	module.exports = exports['default'];
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	/*global Phaser */

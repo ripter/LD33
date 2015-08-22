@@ -17,16 +17,18 @@ const game = new Phaser.Game(
     , create: create
     , update: update 
 });
+window.game = game;
 
 function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
+  game.load.image('fire', 'assets/fire.png', 64, 64);
 }
 
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  player = new Dragon(game, 100, 100);
+  player = new Dragon(game, 500, 500);
   mobs.push(new Mob(game, 300, 100, 'king'));
 }
 
