@@ -16,8 +16,8 @@ const Level = {
 					]
 
 	, background 	: 'background'
-	, mobs 			: [{spriteKey: 'king'}
-					, {spriteKey: 'knight'}]
+	, mobs 			: [{x:120, y:0, spriteKey: 'king'}
+					, {x:120, y:0, spriteKey: 'knight'}]
 					
 	, props 		: [
 			{x:100,y:100, spriteKey:'tree'}
