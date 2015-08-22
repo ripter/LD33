@@ -1,4 +1,4 @@
-/*global Phaser*/
+/*global Phaser, game*/
 'use strict';
 
 import Fire from './fire.js';
@@ -10,7 +10,7 @@ const SPEED = 100;
 
 let bullet;
 
-export function playerControl(game, sprite) {
+export function playerControl(sprite) {
   const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
 
   // Movement keys

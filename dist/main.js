@@ -7606,7 +7606,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*global Phaser*/
+	/*global Phaser, game*/
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -7628,7 +7628,7 @@
 
 	var bullet = undefined;
 
-	function playerControl(game, sprite) {
+	function playerControl(sprite) {
 	  var _Phaser$Keyboard = Phaser.Keyboard;
 	  var LEFT = _Phaser$Keyboard.LEFT;
 	  var RIGHT = _Phaser$Keyboard.RIGHT;
@@ -7661,12 +7661,13 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	/*global Phaser */
+	/*global Phaser, game */
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	exports.spawnFire = spawnFire;
 	var SPEED = Phaser.Timer.HALF;
 
 	function Fire(game, x, y) {
@@ -7677,7 +7678,16 @@
 	  this.sprite.body.velocity.y = -SPEED;
 	}
 	exports['default'] = Fire;
-	module.exports = exports['default'];
+
+	// totally not a constructor
+	// constructors use NEW, we use SPAWN. Totally different! :)
+
+	function spawnFire(x, y) {
+	  var sprite = game.add.sprite(x, y, 'fire');
+
+	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	  this.sprite.body.velocity.y = -SPEED;
+	}
 
 /***/ },
 /* 4 */
