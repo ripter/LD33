@@ -8,6 +8,7 @@
     "babel-loader": "^5.3.2",
     "http-server": "^0.8.0",
     "phaser": "^2.4.2",
+    "ramda": "^0.17.1",
     "webpack": "^1.11.0"
   },
   "devDependencies": {},
