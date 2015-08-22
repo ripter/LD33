@@ -10,7 +10,7 @@ const Level = {
 			{x:100,y:100, spriteKey:'tree'}
 			, {x:0,y:0, spriteKey: 'tree'}
 			, {x:0,y:0, spriteKey: 'tree'}
-			, {x:0,y:0, spriteKey: 'wall'}
+			, {x:0,y:50, spriteKey: 'wall'}
 			]
 };
 
