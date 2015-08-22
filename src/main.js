@@ -4,7 +4,7 @@
 import {createGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
-import {spawnWaypoints, spawnSprites} from './level-loader.js';
+import {spawnWaypoints, spawnProps, spawnSprites} from './level-loader.js';
 
 import lvl1 from './level1.js';
 
@@ -50,19 +50,27 @@ function create() {
 
   window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
   window.mobs = mobs = spawnSprites(lvl1.mobs);
-  window.props = props = spawnSprites(lvl1.props);
+  window.props = props = spawnProps(lvl1.props);
 }
 
 function update() {
-  game.physics.arcade.collide(bullets, mobs, collideBullet);
-  game.physics.arcade.collide(bullets, props, collideBullet);
+  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
+  game.physics.arcade.collide(bullets, props, collideBulletProp);
   game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
   
   playerControl(player);  
 }
 
-function collideBullet(one, two) {
-  console.log('collideBullet', one, two);
+function collideBulletProp(bullet, prop) {
+  console.log('collideBulletProp', bullet, prop);
+  
+  // kill the bullet
+  bullet.kill();
+  prop.body.velocity = {x:0, y:0};
+}
+
+function collideBulletMob(bullet, mob) {
+  console.log('collideBulletMob', bullet, mob);
 }
 
 function collideWaypoint(one, two) {

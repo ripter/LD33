@@ -16,6 +16,14 @@ export function spawnWaypoints(points) {
   return group;
 }
 
+export function spawnProps(list) {
+  let group = spawnSprites(list);
+  
+  group.setAll('body.immovable', true);
+
+  return group;
+}
+
 export function spawnSprites(list) {
   let group = createGroup();
 

@@ -98,19 +98,27 @@
 
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
 	  window.mobs = mobs = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].mobs);
-	  window.props = props = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].props);
+	  window.props = props = (0, _levelLoaderJs.spawnProps)(_level1Js2['default'].props);
 	}
 
 	function update() {
-	  game.physics.arcade.collide(bullets, mobs, collideBullet);
-	  game.physics.arcade.collide(bullets, props, collideBullet);
+	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
+	  game.physics.arcade.collide(bullets, props, collideBulletProp);
 	  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
 
 	  (0, _playerJs.playerControl)(player);
 	}
 
-	function collideBullet(one, two) {
-	  console.log('collideBullet', one, two);
+	function collideBulletProp(bullet, prop) {
+	  console.log('collideBulletProp', bullet, prop);
+
+	  // kill the bullet
+	  bullet.kill();
+	  prop.body.velocity = { x: 0, y: 0 };
+	}
+
+	function collideBulletMob(bullet, mob) {
+	  console.log('collideBulletMob', bullet, mob);
 	}
 
 	function collideWaypoint(one, two) {
@@ -300,6 +308,7 @@
 	  value: true
 	});
 	exports.spawnWaypoints = spawnWaypoints;
+	exports.spawnProps = spawnProps;
 	exports.spawnSprites = spawnSprites;
 
 	var _groupsJs = __webpack_require__(1);
@@ -313,6 +322,14 @@
 	    var sprite = group.create(point.x, point.y, 'waypoint');
 	    sprite.anchor = { x: .5, y: 1 };
 	  });
+
+	  return group;
+	}
+
+	function spawnProps(list) {
+	  var group = spawnSprites(list);
+
+	  group.setAll('body.immovable', true);
 
 	  return group;
 	}
