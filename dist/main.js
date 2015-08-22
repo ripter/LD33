@@ -87,14 +87,15 @@
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  game.load.image('fire', 'assets/fire.png', 64, 64);
+	  //game.load.image('fire', 'assets/fire.png', 64, 64);
 	  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
 
 	  game.load.image('tree', 'assets/tree.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
 	  game.load.image('shrub', 'assets/shrub.png', 64, 64);
+	  game.load.image('balloon', 'assets/balloon.png', 64, 64);
 
-	  game.load.spritesheet('fire', 'assets/fire_4frame.png', 20, 40);
+	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 	}
@@ -105,11 +106,10 @@
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
 
 	  // Setup groups!
-	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
+	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
-	  //window.mobs = mobs = spawnSprites(lvl1.mobs);
 	  window.mobs = mobs = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].mobs);
 	  window.props = props = (0, _levelLoaderJs.spawnProps)(_level1Js2['default'].props);
 
@@ -209,9 +209,9 @@
 	  value: true
 	});
 	exports.spawnFire = spawnFire;
-	var SPEED = Phaser.Timer.HALF;
-	var OFFSET_Y = -100;
-	var OFFSET_X = 25;
+	var SPEED = 300;
+	var OFFSET_Y = 0;
+	var OFFSET_X = 50;
 
 	// totally not a constructor
 	// constructors use NEW, we use SPAWN. Totally different! :)
@@ -219,6 +219,8 @@
 	function spawnFire(x, y) {
 	  var sprite = bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
+	  sprite.animations.add('fly');
+	  sprite.animations.play('fly', 24, true);
 	  sprite.body.velocity.y = -SPEED;
 	  return sprite;
 	}

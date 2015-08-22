@@ -33,14 +33,15 @@ function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('knight', 'assets/knight.png', 64, 64);
-  game.load.image('fire', 'assets/fire.png', 64, 64);
+  //game.load.image('fire', 'assets/fire.png', 64, 64);
   game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
 
   game.load.image('tree', 'assets/tree.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
   game.load.image('shrub', 'assets/shrub.png', 64, 64);
+  game.load.image('balloon', 'assets/balloon.png', 64, 64);
   
-  game.load.spritesheet('fire', 'assets/fire_4frame.png', 20, 40);
+  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 }
@@ -51,11 +52,10 @@ function create() {
   game.add.sprite(0,0, lvl1.background);
   
   // Setup groups!
-  window.player = player = spawnDragon(500, 500);
   window.bullets = bullets = createGroup();
+  window.player = player = spawnDragon(500, 500);
 
   window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
-  //window.mobs = mobs = spawnSprites(lvl1.mobs);
   window.mobs = mobs = spawnSprites(lvl1.mobs);
   window.props = props = spawnProps(lvl1.props);
  
