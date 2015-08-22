@@ -187,64 +187,11 @@
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
-	var SPEED = 100;
-	var SPRITE_CACHE = 'dragon';
-	var FIRE_OFFSET_Y = -100;
-	var FIRE_OFFSET_X = 25;
-	var FIRE_SPEED = Phaser.Timer.HALF;
-
-	function Dragon(game, x, y) {
-	  this.game = game;
-	  this.sprite = game.add.sprite(x, y, 'dragon');
-	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	}
-	Dragon.prototype = {
-	  update: function update() {
-	    var game = this.game;
-	    var _Phaser$Keyboard = Phaser.Keyboard;
-	    var LEFT = _Phaser$Keyboard.LEFT;
-	    var RIGHT = _Phaser$Keyboard.RIGHT;
-	    var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
-
-	    // Movement keys
-	    if (game.input.keyboard.isDown(LEFT)) {
-	      this.sprite.body.velocity.x = -SPEED;
-	    } else if (game.input.keyboard.isDown(RIGHT)) {
-	      this.sprite.body.velocity.x = SPEED;
-	    } else {
-	      this.sprite.body.velocity.x = 0;
-	    }
-
-	    // FIRE!!!
-	    if (game.input.keyboard.isDown(SPACEBAR)) {
-	      this.fire();
-	    }
-	  },
-
-	  fire: function fire() {
-	    if (this.bullet) {
-	      return;
-	    }
-	    var _sprite = this.sprite;
-	    var x = _sprite.x;
-	    var y = _sprite.y;
-
-	    this.bullet = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
-
-	    // Delay before they can fire again.
-	    this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
-	  },
-
-	  resetFire: function resetFire() {
-	    this.bullet = null;
-	  }
-	};
-	exports['default'] = Dragon;
-
 	function spawnDragon(x, y) {
 	  var sprite = game.add.sprite(x, y, 'dragon');
 	  game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
+	  sprite.health = 3;
 	  return sprite;
 	}
 
