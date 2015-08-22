@@ -29,6 +29,7 @@ window.game = game;
 function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
+  game.load.image('knight', 'assets/knight.png', 64, 64);
   game.load.image('fire', 'assets/fire.png', 64, 64);
   game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
 
