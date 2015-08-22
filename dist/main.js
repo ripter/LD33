@@ -49,21 +49,41 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+	var _gameStateJs = __webpack_require__(1);
+
+	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
+
+	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', _gameStateJs2['default']);
+	window.game = game;
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _groupsJs = __webpack_require__(1);
+	var _groupsJs = __webpack_require__(2);
 
-	var _dragonJs = __webpack_require__(2);
+	var _dragonJs = __webpack_require__(3);
 
-	var _playerJs = __webpack_require__(4);
+	var _playerJs = __webpack_require__(5);
 
-	var _mobJs = __webpack_require__(5);
+	var _mobJs = __webpack_require__(6);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _levelLoaderJs = __webpack_require__(6);
+	var _levelLoaderJs = __webpack_require__(7);
 
-	var _level1Js = __webpack_require__(7);
+	var _level1Js = __webpack_require__(8);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
@@ -74,24 +94,21 @@
 	var bullets = undefined;
 	var waypoints = undefined;
 	var props = undefined;
-
-	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', {
-	  preload: preload,
-	  create: create,
-	  update: update
-	});
-	window.game = game;
+	var balloons = undefined;
+	var score = 0;
 
 	function preload() {
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  game.load.image('fire', 'assets/fire.png', 64, 64);
 	  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
 
 	  game.load.image('tree', 'assets/tree.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
 	  game.load.image('shrub', 'assets/shrub.png', 64, 64);
+	  game.load.image('balloon', 'assets/balloon.png', 64, 64);
+
+	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 	}
@@ -102,11 +119,10 @@
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
 
 	  // Setup groups!
-	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
+	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
-	  //window.mobs = mobs = spawnSprites(lvl1.mobs);
 	  window.mobs = mobs = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].mobs);
 	  window.props = props = (0, _levelLoaderJs.spawnProps)(_level1Js2['default'].props);
 
@@ -115,6 +131,11 @@
 
 	  // start a mob moving
 	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
+	}
+
+	function score() {
+	  console.log('score', score);
+	  score += 1;
 	}
 
 	function update() {
@@ -132,6 +153,7 @@
 
 	function collideBulletMob(bullet, mob) {
 	  console.log('collideBulletMob', bullet, mob);
+	  score();
 	  bullet.kill();
 	  mob.kill();
 	}
@@ -148,8 +170,15 @@
 	  // How get next waypoint for mob??
 	}
 
+	exports['default'] = {
+	  preload: preload,
+	  create: create,
+	  update: update
+	};
+	module.exports = exports['default'];
+
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -169,7 +198,7 @@
 	}
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -183,7 +212,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fireJs = __webpack_require__(3);
+	var _fireJs = __webpack_require__(4);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -196,7 +225,7 @@
 	}
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game, bullets */
@@ -206,9 +235,9 @@
 	  value: true
 	});
 	exports.spawnFire = spawnFire;
-	var SPEED = Phaser.Timer.HALF;
-	var OFFSET_Y = -100;
-	var OFFSET_X = 25;
+	var SPEED = 300;
+	var OFFSET_Y = 0;
+	var OFFSET_X = 50;
 
 	// totally not a constructor
 	// constructors use NEW, we use SPAWN. Totally different! :)
@@ -216,12 +245,14 @@
 	function spawnFire(x, y) {
 	  var sprite = bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
+	  sprite.animations.add('fly');
+	  sprite.animations.play('fly', 24, true);
 	  sprite.body.velocity.y = -SPEED;
 	  return sprite;
 	}
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game*/
@@ -232,9 +263,9 @@
 	});
 	exports.playerControl = playerControl;
 
-	var _fireJs = __webpack_require__(3);
+	var _fireJs = __webpack_require__(4);
 
-	var FIRE_SPEED = Phaser.Timer.HALF;
+	var FIRE_SPEED = Phaser.Timer.SECOND;
 	var SPEED = 100;
 
 	var canFire = true;
@@ -267,7 +298,7 @@
 	}
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -278,7 +309,7 @@
 	});
 	exports.moveToPoint = moveToPoint;
 	exports.run = run;
-	var DELAY = Phaser.Timer.SECOND;
+	var DELAY = Phaser.Timer.SECOND * 5;
 	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 
 	function moveToPoint(sprite, waypoint) {
@@ -311,7 +342,7 @@
 	}
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
@@ -325,7 +356,7 @@
 	exports.spawnProps = spawnProps;
 	exports.spawnSprites = spawnSprites;
 
-	var _groupsJs = __webpack_require__(1);
+	var _groupsJs = __webpack_require__(2);
 
 	// create a group of waypoints that exist at [{x,y} ...]
 
@@ -364,7 +395,7 @@
 	}
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
