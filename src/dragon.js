@@ -34,10 +34,6 @@ Dragon.prototype = {
     if (game.input.keyboard.isDown(SPACEBAR)) {
       this.fire(); 
     }
-    
-    if (this.bullet) {
-      this.bullet.update();
-    }
   }
   
   , fire() {
@@ -55,55 +51,3 @@ Dragon.prototype = {
   }
 };
 export default Dragon;
-
-/*
-class Dragon {
-  constructor(game, sprite) {
-    this.game = game;
-    this.sprite = sprite;
-    // PHYSICS!!!!!
-    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-    this.bullet = null;
-  }
-  
-  update() {
-    const game = this.game;
-    const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
-    
-    // Movement keys
-    if (game.input.keyboard.isDown(LEFT)) { 
-      this.sprite.body.velocity.x = -SPEED;
-    }
-    else if (game.input.keyboard.isDown(RIGHT)) {
-      this.sprite.body.velocity.x = SPEED;
-    }
-    else {
-      this.sprite.body.velocity.x = 0;
-    }
-    
-    // FIRE!!!
-    if (game.input.keyboard.isDown(SPACEBAR)) {
-      this.fire(); 
-    }
-    
-    if (this.bullet) {
-      this.bullet.update();
-    }
-  }
-  
-  fire() {
-    if (this.bullet) { return; }
-    const {x, y} = this.sprite;
-    
-    this.bullet = new Fire(this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
-    
-    // Delay before they can fire again.
-    this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
-  }
-  
-  resetFire() {
-    this.bullet = null;
-  }
-}
-export default Dragon;
-*/
