@@ -49,21 +49,41 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+	var _gameStateJs = __webpack_require__(1);
+
+	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
+
+	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', _gameStateJs2['default']);
+	window.game = game;
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _groupsJs = __webpack_require__(1);
+	var _groupsJs = __webpack_require__(2);
 
-	var _dragonJs = __webpack_require__(2);
+	var _dragonJs = __webpack_require__(3);
 
-	var _playerJs = __webpack_require__(4);
+	var _playerJs = __webpack_require__(5);
 
-	var _mobJs = __webpack_require__(5);
+	var _mobJs = __webpack_require__(6);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _levelLoaderJs = __webpack_require__(6);
+	var _levelLoaderJs = __webpack_require__(7);
 
-	var _level1Js = __webpack_require__(7);
+	var _level1Js = __webpack_require__(8);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
@@ -76,13 +96,6 @@
 	var props = undefined;
 	var balloons = undefined;
 	var score = 0;
-
-	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', {
-	  preload: preload,
-	  create: create,
-	  update: update
-	});
-	window.game = game;
 
 	function preload() {
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
@@ -157,8 +170,15 @@
 	  // How get next waypoint for mob??
 	}
 
+	exports['default'] = {
+	  preload: preload,
+	  create: create,
+	  update: update
+	};
+	module.exports = exports['default'];
+
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -178,7 +198,7 @@
 	}
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -192,7 +212,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fireJs = __webpack_require__(3);
+	var _fireJs = __webpack_require__(4);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -205,7 +225,7 @@
 	}
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game, bullets */
@@ -232,7 +252,7 @@
 	}
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game*/
@@ -243,7 +263,7 @@
 	});
 	exports.playerControl = playerControl;
 
-	var _fireJs = __webpack_require__(3);
+	var _fireJs = __webpack_require__(4);
 
 	var FIRE_SPEED = Phaser.Timer.SECOND;
 	var SPEED = 100;
@@ -278,7 +298,7 @@
 	}
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -322,7 +342,7 @@
 	}
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
@@ -336,7 +356,7 @@
 	exports.spawnProps = spawnProps;
 	exports.spawnSprites = spawnSprites;
 
-	var _groupsJs = __webpack_require__(1);
+	var _groupsJs = __webpack_require__(2);
 
 	// create a group of waypoints that exist at [{x,y} ...]
 
@@ -375,7 +395,7 @@
 	}
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
