@@ -9,4 +9,3 @@ export function moveToPoint(sprite, waypoint) {
   console.log('waypoint', x, y);
   game.physics.arcade.accelerateToXY(sprite, x, y, SPEED);
 }
-
