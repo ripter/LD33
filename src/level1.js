@@ -16,7 +16,7 @@ const Level = {
 					]
 
 	, background 	: 'background'
-	, mobs 			: [{spriteKey: 'king'}
+	, mobs 			: [{x: 100, y: 100, spriteKey: 'king'}
 					, {spriteKey: 'knight'}]
 
 	, props 		: [

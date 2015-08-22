@@ -11,6 +11,7 @@ export function spawnWaypoints(points) {
   points.forEach((point) => {
     let sprite = group.create(point.x, point.y, 'waypoint');
     sprite.anchor = {x: .5, y: 1};
+    sprite.body.immovable = true;
   });
   
   return group;
