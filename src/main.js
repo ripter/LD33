@@ -78,4 +78,6 @@ function collideBulletMob(bullet, mob) {
 
 function collideWaypoint(one, two) {
   console.log('collideWaypoint', one, two);
+  
+  // move to the next one!
 }
