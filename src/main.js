@@ -16,6 +16,7 @@ let bullets;
 let waypoints;
 let props;
 let balloons;
+let score = 0;
 
 const game = new Phaser.Game(
   1024
@@ -65,6 +66,11 @@ function create() {
   //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 }
 
+function score() {
+  console.log('score', score)
+  score += 1;
+}
+
 function update() {
   game.physics.arcade.collide(bullets, mobs, collideBulletMob);
   game.physics.arcade.collide(bullets, props, collideBulletProp);
@@ -80,6 +86,7 @@ function collideBulletProp(bullet, prop) {
 
 function collideBulletMob(bullet, mob) {
   console.log('collideBulletMob', bullet, mob);
+  score();
   bullet.kill();
   mob.kill();
 }
