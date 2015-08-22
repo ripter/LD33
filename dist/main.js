@@ -7726,22 +7726,25 @@
 	    key: 'update',
 	    value: function update() {
 	      this.sprite.update();
-	      console.log(this.game.width, this.game.height);
-	      this.mobRight(5);
+	      console.log(this.sprite.x);
+
+	      if (this.sprite.x <= 1024) {
+	        this.mobRight();
+	      } else {
+	        this.mobLeft();
+	      }
 	    }
 	  }, {
 	    key: 'mobLeft',
-	    value: function mobLeft(x) {
-	      if (x === null || x === 'undefined') {
-	        this.sprite.x -= x;
-	      }
+	    value: function mobLeft() {
+	      this.sprite.x -= 5;
+	      console.log('left');
 	    }
 	  }, {
 	    key: 'mobRight',
-	    value: function mobRight(x) {
-	      if (x === null || x === 'undefined') {
-	        this.sprite.x += x;
-	      }
+	    value: function mobRight() {
+	      console.log('right');
+	      this.sprite.x += 2;
 	    }
 	  }]);
 
