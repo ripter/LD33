@@ -6,6 +6,7 @@ const SPEED = 100;
 const SPRITE_CACHE = 'dragon';
 const FIRE_OFFSET_Y = 0;
 const FIRE_OFFSET_X = 50;
+const FIRE_SPEED = Phaser.Timer.HALF;
 
 class Dragon {
   constructor(game, x, y) {
@@ -13,11 +14,12 @@ class Dragon {
     this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
     // PHYSICS!!!!!
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    this.bullet = null;
   }
   
   update() {
     const game = this.game;
-    const {LEFT, RIGHT, SPACE} = Phaser.Keyboard;
+    const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
     
     // Movement keys
     if (game.input.keyboard.isDown(LEFT)) { 
@@ -31,16 +33,24 @@ class Dragon {
     }
     
     // FIRE!!!
-    if (game.input.keyboard.isDown(SPACE)) {
+    if (game.input.keyboard.isDown(SPACEBAR)) {
       this.fire(); 
     }
   }
   
   fire() {
+    if (this.bullet) { return; }
     const {x, y} = this.sprite;
     
-    this.fire = new Fire(this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
-    console.log('fire', this.fire);
+    this.bullet = new Fire(this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
+    
+    // Delay before they can fire again.
+    //this.game.time.add(FIRE_SPEED, this.resetFire, this);
+  }
+  
+  resetFire() {
+    this.bullet = null;
+    console.log('Chanrged!');
   }
 }
 export default Dragon;
