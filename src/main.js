@@ -4,8 +4,10 @@
 import {createGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
-import {spawnWaypoints, spawnSprites} from './level-loader.js';
+import * as Mob from './mob.js';
+import {spawnWaypoints, spawnProps, spawnSprites} from './level-loader.js';
 
+window.Mob = Mob;
 import lvl1 from './level1.js';
 
 let player;
@@ -35,6 +37,7 @@ function preload() {
 
   game.load.image('tree', 'assets/tree.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
+  game.load.image('shrub', 'assets/shrub.png', 64, 64);
 
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 }
@@ -50,21 +53,31 @@ function create() {
 
   window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
   window.mobs = mobs = spawnSprites(lvl1.mobs);
-  window.props = props = spawnSprites(lvl1.props);
+  window.props = props = spawnProps(lvl1.props);
+  
+  // start a mob moving
+  Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 }
 
 function update() {
-  game.physics.arcade.collide(bullets, mobs, collideBullet);
-  game.physics.arcade.collide(bullets, props, collideBullet);
+  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
+  game.physics.arcade.collide(bullets, props, collideBulletProp);
   game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
   
   playerControl(player);  
 }
 
-function collideBullet(one, two) {
-  console.log('collideBullet', one, two);
+function collideBulletProp(bullet, prop) {
+  // kill the bullet
+  bullet.kill();
+}
+
+function collideBulletMob(bullet, mob) {
+  console.log('collideBulletMob', bullet, mob);
 }
 
 function collideWaypoint(one, two) {
   console.log('collideWaypoint', one, two);
+  
+  // move to the next one!
 }

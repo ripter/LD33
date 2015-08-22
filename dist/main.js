@@ -49,17 +49,25 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
 	var _groupsJs = __webpack_require__(1);
 
 	var _dragonJs = __webpack_require__(2);
 
 	var _playerJs = __webpack_require__(4);
 
-	var _levelLoaderJs = __webpack_require__(5);
+	var _mobJs = __webpack_require__(5);
 
-	var _level1Js = __webpack_require__(6);
+	var Mob = _interopRequireWildcard(_mobJs);
+
+	var _levelLoaderJs = __webpack_require__(6);
+
+	var _level1Js = __webpack_require__(7);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
+
+	window.Mob = Mob;
 
 	var player = undefined;
 	var mobs = undefined;
@@ -83,6 +91,7 @@
 
 	  game.load.image('tree', 'assets/tree.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
+	  game.load.image('shrub', 'assets/shrub.png', 64, 64);
 
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 	}
@@ -98,23 +107,33 @@
 
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
 	  window.mobs = mobs = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].mobs);
-	  window.props = props = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].props);
+	  window.props = props = (0, _levelLoaderJs.spawnProps)(_level1Js2['default'].props);
+
+	  // start a mob moving
+	  Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 	}
 
 	function update() {
-	  game.physics.arcade.collide(bullets, mobs, collideBullet);
-	  game.physics.arcade.collide(bullets, props, collideBullet);
+	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
+	  game.physics.arcade.collide(bullets, props, collideBulletProp);
 	  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
 
 	  (0, _playerJs.playerControl)(player);
 	}
 
-	function collideBullet(one, two) {
-	  console.log('collideBullet', one, two);
+	function collideBulletProp(bullet, prop) {
+	  // kill the bullet
+	  bullet.kill();
+	}
+
+	function collideBulletMob(bullet, mob) {
+	  console.log('collideBulletMob', bullet, mob);
 	}
 
 	function collideWaypoint(one, two) {
 	  console.log('collideWaypoint', one, two);
+
+	  // move to the next one!
 	}
 
 /***/ },
@@ -290,6 +309,26 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.moveToPoint = moveToPoint;
+	var SPEED = Phaser.Timer.SECOND;
+
+	function moveToPoint(sprite, waypoint) {
+	  var x = waypoint.x;
+	  var y = waypoint.y;
+
+	  game.physics.arcade.accelerateToXY(sprite, x, y, SPEED);
+	}
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
@@ -300,6 +339,7 @@
 	  value: true
 	});
 	exports.spawnWaypoints = spawnWaypoints;
+	exports.spawnProps = spawnProps;
 	exports.spawnSprites = spawnSprites;
 
 	var _groupsJs = __webpack_require__(1);
@@ -312,7 +352,16 @@
 	  points.forEach(function (point) {
 	    var sprite = group.create(point.x, point.y, 'waypoint');
 	    sprite.anchor = { x: .5, y: 1 };
+	    sprite.body.immovable = true;
 	  });
+
+	  return group;
+	}
+
+	function spawnProps(list) {
+	  var group = spawnSprites(list);
+
+	  group.setAll('body.immovable', true);
 
 	  return group;
 	}
@@ -329,7 +378,7 @@
 	}
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -344,7 +393,7 @@
 					background: 'background',
 					mobs: [{ x: 120, y: 0, spriteKey: 'king' }, { x: 120, y: 0, spriteKey: 'knight' }],
 
-					props: [{ x: 100, y: 100, spriteKey: 'tree' }, { x: 0, y: 0, spriteKey: 'tree' }, { x: 0, y: 0, spriteKey: 'tree' }, { x: 0, y: 50, spriteKey: 'wall' }]
+					props: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }]
 	};
 
 	exports['default'] = Level;
