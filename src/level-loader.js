@@ -15,10 +15,10 @@ export function spawnWaypoints(points) {
   return group;
 }
 
-export function spawnMobs(points) {
+export function spawnSprites(list) {
   let group = createGroup();
 
-  points.forEach((point) => {
+  list.forEach((point) => {
     group.create(point.x, point.y, point.spriteKey);  
   });
   

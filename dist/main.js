@@ -81,6 +81,9 @@
 	  game.load.image('fire', 'assets/fire.png', 64, 64);
 	  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
 
+	  game.load.image('tree', 'assets/tree.png', 64, 64);
+	  game.load.image('wall', 'assets/wall.png', 64, 64);
+
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 	}
 
@@ -93,10 +96,9 @@
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
 
-	  window.mobs = mobs = (0, _levelLoaderJs.spawnMobs)(_level1Js2['default'].mobs);
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
-
-	  window.props = props = (0, _groupsJs.createGroup)();
+	  window.mobs = mobs = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].mobs);
+	  window.props = props = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].props);
 	}
 
 	function update() {
@@ -298,7 +300,7 @@
 	  value: true
 	});
 	exports.spawnWaypoints = spawnWaypoints;
-	exports.spawnMobs = spawnMobs;
+	exports.spawnSprites = spawnSprites;
 
 	var _groupsJs = __webpack_require__(1);
 
@@ -314,10 +316,10 @@
 	  return group;
 	}
 
-	function spawnMobs(points) {
+	function spawnSprites(list) {
 	  var group = (0, _groupsJs.createGroup)();
 
-	  points.forEach(function (point) {
+	  list.forEach(function (point) {
 	    group.create(point.x, point.y, point.spriteKey);
 	  });
 
@@ -338,7 +340,7 @@
 					waypoints: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
 					background: 'background',
 					mobs: [{ spriteKey: 'king' }, { spriteKey: 'knight' }],
-					props: [{ x: 0, y: 0, spriteKey: 'bush' }, { x: 0, y: 0, spriteKey: 'bush' }, { x: 0, y: 0, spriteKey: 'bush' }, { x: 0, y: 0, spriteKey: 'fence' }]
+					props: [{ x: 100, y: 100, spriteKey: 'tree' }, { x: 0, y: 0, spriteKey: 'tree' }, { x: 0, y: 0, spriteKey: 'tree' }, { x: 0, y: 0, spriteKey: 'wall' }]
 	};
 
 	exports['default'] = Level;

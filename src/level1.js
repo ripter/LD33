@@ -7,10 +7,10 @@ const Level = {
 	, mobs 			: [{spriteKey: 'king'}
 					, {spriteKey: 'knight'}]
 	, props 		: [
-			{x:0,y:0, spriteKey:'bush'}
-			, {x:0,y:0, spriteKey: 'bush'}
-			, {x:0,y:0, spriteKey: 'bush'}
-			, {x:0,y:0, spriteKey: 'fence'}
+			{x:100,y:100, spriteKey:'tree'}
+			, {x:0,y:0, spriteKey: 'tree'}
+			, {x:0,y:0, spriteKey: 'tree'}
+			, {x:0,y:0, spriteKey: 'wall'}
 			]
 };
 
