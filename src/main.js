@@ -1,11 +1,16 @@
 /*global Phaser */
+'use strict';
 import R from 'ramda';
 
+import {playerControl} from './player.js';
 import Dragon from './dragon.js';
 import Mob from './mob.js';
+import Fire from './fire.js';
 
 let player;
-let mobs = [];
+let mobs;
+let mob;
+let fire;
 
 const game = new Phaser.Game(
   1024
@@ -28,14 +33,31 @@ function preload() {
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
+  //player = game.add.sprite(500, 500, 'dragon');
   player = new Dragon(game, 500, 500);
-  mobs.push(new Mob(game, 300, 100, 'king'));
+  //fire = new Fire(game, 300, 500);
+  mob = new Mob(game, 300, 100, 'king');
+
+  window.mobs = mobs = game.add.group();
+  mobs.enableBody = true;
+  mobs.physicsBodyType = Phaser.Physics.ARCADE;
+  mobs.add(mob.sprite);
 }
 
 function update() {
   player.update();
-  
-  mobs.forEach(function(mob) {
-    mob.update();
+
+  mobs.forEach((mobSprite) => {
+    mobSprite.host.update();
   });
+
+  //playerControl(game, player.sprite);
+  if (player.bullet) {
+    game.physics.arcade.collide(player.bullet.sprite, mobs, collide, null, this);
+  }
+
+}
+
+function collide(one, two) {
+  //console.log('collide', arguments);
 }

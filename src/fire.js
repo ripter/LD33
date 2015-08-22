@@ -1,18 +1,25 @@
-/*global Phaser */
+/*global Phaser, game */
+'use strict';
 
-const SPEED = 100;
-const SPRITE_CACHE = 'fire';
+const SPEED = Phaser.Timer.HALF;
 
-class Fire {
-  constructor(game, x, y) {
-    this.game = game;
-    this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
-    // PHYSICS!!!!!
-    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-  }
-  
-  update() {
-    this.sprite.body.velocity.y = SPEED;
-  }
+function Fire(game, x, y) {
+  this.game = game;
+  this.sprite = game.add.sprite(x, y, 'fire');
+  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+
+  this.sprite.body.velocity.y = -SPEED;
 }
 export default Fire;
+
+
+// totally not a constructor
+// constructors use NEW, we use SPAWN. Totally different! :)
+export function spawnFire(x, y) {
+  let sprite = game.add.sprite(x, y, 'fire'); 
+
+  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+  this.sprite.body.velocity.y = -SPEED;
+}
+
+
