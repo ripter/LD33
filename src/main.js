@@ -5,7 +5,8 @@ import Dragon from './dragon.js';
 import Mob from './mob.js';
 
 let player;
-let mobs = [];
+let mobs;
+let mob;
 
 const game = new Phaser.Game(
   1024
@@ -29,13 +30,28 @@ function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   player = new Dragon(game, 500, 500);
-  mobs.push(new Mob(game, 300, 100, 'king'));
+  mob = new Mob(game, 300, 100, 'king');
+  
+  // mobs = game.add.group();
+  // mobs.enableBody = true;
+  // mobs.physicsBodyType = Phaser.Physics.ARCADE;
+  // //game.physics.enable(mobs, Phaser.Physics.ARCADE);
+  // mobs.add((new Mob(game, 300, 100, 'king')).sprite);
 }
 
 function update() {
   player.update();
   
-  mobs.forEach(function(mob) {
-    mob.update();
-  });
+  if (player.bullet) {
+    console.log('test bullet');
+    game.physics.arcade.overlap(player.bullet, mob, collide);
+  }
+  //mobs.update();
+  // mobs.forEach(function(mob) {
+  //   mob.update();
+  // });
+}
+
+function collide() {
+  debugger;
 }

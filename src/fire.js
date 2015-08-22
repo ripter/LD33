@@ -1,6 +1,6 @@
 /*global Phaser */
 
-const SPEED = 100;
+const SPEED = Phaser.Timer.HALF;
 const SPRITE_CACHE = 'fire';
 
 class Fire {
@@ -12,7 +12,7 @@ class Fire {
   }
   
   update() {
-    this.sprite.body.velocity.y = SPEED;
+    this.sprite.body.velocity.y = -SPEED;
   }
 }
 export default Fire;

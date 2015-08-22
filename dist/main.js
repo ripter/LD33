@@ -57,12 +57,13 @@
 
 	var _dragonJs2 = _interopRequireDefault(_dragonJs);
 
-	var _mobJs = __webpack_require__(4);
+	var _mobJs = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./mob.js\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
 	var _mobJs2 = _interopRequireDefault(_mobJs);
 
 	var player = undefined;
-	var mobs = [];
+	var mobs = undefined;
+	var mob = undefined;
 
 	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', {
 	  preload: preload,
@@ -81,15 +82,30 @@
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  player = new _dragonJs2['default'](game, 500, 500);
-	  mobs.push(new _mobJs2['default'](game, 300, 100, 'king'));
+	  mob = new _mobJs2['default'](game, 300, 100, 'king');
+
+	  // mobs = game.add.group();
+	  // mobs.enableBody = true;
+	  // mobs.physicsBodyType = Phaser.Physics.ARCADE;
+	  // //game.physics.enable(mobs, Phaser.Physics.ARCADE);
+	  // mobs.add((new Mob(game, 300, 100, 'king')).sprite);
 	}
 
 	function update() {
 	  player.update();
 
-	  mobs.forEach(function (mob) {
-	    mob.update();
-	  });
+	  if (player.bullet) {
+	    console.log('test bullet');
+	    game.physics.arcade.overlap(player.bullet, mob, collide);
+	  }
+	  //mobs.update();
+	  // mobs.forEach(function(mob) {
+	  //   mob.update();
+	  // });
+	}
+
+	function collide() {
+	  debugger;
 	}
 
 /***/ },
@@ -7602,8 +7618,9 @@
 
 	var SPEED = 100;
 	var SPRITE_CACHE = 'dragon';
-	var FIRE_OFFSET_Y = 0;
-	var FIRE_OFFSET_X = 50;
+	var FIRE_OFFSET_Y = -100;
+	var FIRE_OFFSET_X = 25;
+	var FIRE_SPEED = Phaser.Timer.HALF;
 
 	var Dragon = (function () {
 	  function Dragon(game, x, y) {
@@ -7613,6 +7630,7 @@
 	    this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
 	    // PHYSICS!!!!!
 	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	    this.bullet = null;
 	  }
 
 	  _createClass(Dragon, [{
@@ -7622,7 +7640,7 @@
 	      var _Phaser$Keyboard = Phaser.Keyboard;
 	      var LEFT = _Phaser$Keyboard.LEFT;
 	      var RIGHT = _Phaser$Keyboard.RIGHT;
-	      var SPACE = _Phaser$Keyboard.SPACE;
+	      var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
 
 	      // Movement keys
 	      if (game.input.keyboard.isDown(LEFT)) {
@@ -7634,19 +7652,33 @@
 	      }
 
 	      // FIRE!!!
-	      if (game.input.keyboard.isDown(SPACE)) {
+	      if (game.input.keyboard.isDown(SPACEBAR)) {
 	        this.fire();
+	      }
+
+	      if (this.bullet) {
+	        this.bullet.update();
 	      }
 	    }
 	  }, {
 	    key: 'fire',
 	    value: function fire() {
+	      if (this.bullet) {
+	        return;
+	      }
 	      var _sprite = this.sprite;
 	      var x = _sprite.x;
 	      var y = _sprite.y;
 
-	      this.fire = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
-	      console.log('fire', this.fire);
+	      this.bullet = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
+
+	      // Delay before they can fire again.
+	      this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
+	    }
+	  }, {
+	    key: 'resetFire',
+	    value: function resetFire() {
+	      this.bullet = null;
 	    }
 	  }]);
 
@@ -7672,7 +7704,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var SPEED = 100;
+	var SPEED = Phaser.Timer.HALF;
 	var SPRITE_CACHE = 'fire';
 
 	var Fire = (function () {
@@ -7688,7 +7720,7 @@
 	  _createClass(Fire, [{
 	    key: 'update',
 	    value: function update() {
-	      this.sprite.body.velocity.y = SPEED;
+	      this.sprite.body.velocity.y = -SPEED;
 	    }
 	  }]);
 
@@ -7696,62 +7728,6 @@
 	})();
 
 	exports['default'] = Fire;
-	module.exports = exports['default'];
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	/*global Phaser */
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var Mob = (function () {
-	  function Mob(game, x, y, img) {
-	    _classCallCheck(this, Mob);
-
-	    this.game = game;
-	    this.sprite = game.add.sprite(x, y, img);
-	  }
-
-	  _createClass(Mob, [{
-	    key: 'update',
-	    value: function update() {
-	      this.sprite.update();
-	      console.log(this.sprite.x);
-
-	      if (this.sprite.x <= 1024) {
-	        this.mobRight();
-	      } else {
-	        this.mobLeft();
-	      }
-	    }
-	  }, {
-	    key: 'mobLeft',
-	    value: function mobLeft() {
-	      this.sprite.x -= 5;
-	      console.log('left');
-	    }
-	  }, {
-	    key: 'mobRight',
-	    value: function mobRight() {
-	      console.log('right');
-	      this.sprite.x += 2;
-	    }
-	  }]);
-
-	  return Mob;
-	})();
-
-	exports['default'] = Mob;
 	module.exports = exports['default'];
 
 /***/ }
