@@ -5,11 +5,13 @@ class Mob {
   constructor(game, x, y, img) {
     this.game 	= game;
     this.sprite = game.add.sprite(x, y, img);
+    // PHYSICS!!!!!
+    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
   }
   
   update() {
     this.sprite.update();
-    console.log(this.game.width, this.game.height)
+    //console.log(this.game.width, this.game.height)
     this.mobRight(5);
   }
 

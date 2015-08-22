@@ -62,7 +62,8 @@
 	var _mobJs2 = _interopRequireDefault(_mobJs);
 
 	var player = undefined;
-	var mobs = [];
+	var mobs = undefined;
+	var mob = undefined;
 
 	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', {
 	  preload: preload,
@@ -81,15 +82,30 @@
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  player = new _dragonJs2['default'](game, 500, 500);
-	  mobs.push(new _mobJs2['default'](game, 300, 100, 'king'));
+	  mob = new _mobJs2['default'](game, 300, 100, 'king');
+
+	  // mobs = game.add.group();
+	  // mobs.enableBody = true;
+	  // mobs.physicsBodyType = Phaser.Physics.ARCADE;
+	  // //game.physics.enable(mobs, Phaser.Physics.ARCADE);
+	  // mobs.add((new Mob(game, 300, 100, 'king')).sprite);
 	}
 
 	function update() {
 	  player.update();
 
-	  mobs.forEach(function (mob) {
-	    mob.update();
-	  });
+	  if (player.bullet) {
+	    console.log('test bullet');
+	    game.physics.arcade.overlap(player.bullet, mob, collide);
+	  }
+	  //mobs.update();
+	  // mobs.forEach(function(mob) {
+	  //   mob.update();
+	  // });
+	}
+
+	function collide() {
+	  debugger;
 	}
 
 /***/ },
@@ -7602,8 +7618,8 @@
 
 	var SPEED = 100;
 	var SPRITE_CACHE = 'dragon';
-	var FIRE_OFFSET_Y = 0;
-	var FIRE_OFFSET_X = 50;
+	var FIRE_OFFSET_Y = -100;
+	var FIRE_OFFSET_X = 25;
 	var FIRE_SPEED = Phaser.Timer.HALF;
 
 	var Dragon = (function () {
@@ -7639,6 +7655,10 @@
 	      if (game.input.keyboard.isDown(SPACEBAR)) {
 	        this.fire();
 	      }
+
+	      if (this.bullet) {
+	        this.bullet.update();
+	      }
 	    }
 	  }, {
 	    key: 'fire',
@@ -7653,13 +7673,12 @@
 	      this.bullet = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
 
 	      // Delay before they can fire again.
-	      //this.game.time.add(FIRE_SPEED, this.resetFire, this);
+	      this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
 	    }
 	  }, {
 	    key: 'resetFire',
 	    value: function resetFire() {
 	      this.bullet = null;
-	      console.log('Chanrged!');
 	    }
 	  }]);
 
@@ -7685,7 +7704,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var SPEED = 100;
+	var SPEED = Phaser.Timer.HALF;
 	var SPRITE_CACHE = 'fire';
 
 	var Fire = (function () {
@@ -7701,7 +7720,7 @@
 	  _createClass(Fire, [{
 	    key: 'update',
 	    value: function update() {
-	      this.sprite.body.velocity.y = SPEED;
+	      this.sprite.body.velocity.y = -SPEED;
 	    }
 	  }]);
 
@@ -7733,13 +7752,15 @@
 
 	    this.game = game;
 	    this.sprite = game.add.sprite(x, y, img);
+	    // PHYSICS!!!!!
+	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	  }
 
 	  _createClass(Mob, [{
 	    key: 'update',
 	    value: function update() {
 	      this.sprite.update();
-	      console.log(this.game.width, this.game.height);
+	      //console.log(this.game.width, this.game.height)
 	      this.mobRight(5);
 	    }
 	  }, {

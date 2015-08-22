@@ -4,8 +4,8 @@ import Fire from './fire.js';
 
 const SPEED = 100;
 const SPRITE_CACHE = 'dragon';
-const FIRE_OFFSET_Y = 0;
-const FIRE_OFFSET_X = 50;
+const FIRE_OFFSET_Y = -100;
+const FIRE_OFFSET_X = 25;
 const FIRE_SPEED = Phaser.Timer.HALF;
 
 class Dragon {
@@ -36,6 +36,10 @@ class Dragon {
     if (game.input.keyboard.isDown(SPACEBAR)) {
       this.fire(); 
     }
+    
+    if (this.bullet) {
+      this.bullet.update();
+    }
   }
   
   fire() {
@@ -45,12 +49,11 @@ class Dragon {
     this.bullet = new Fire(this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
     
     // Delay before they can fire again.
-    //this.game.time.add(FIRE_SPEED, this.resetFire, this);
+    this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
   }
   
   resetFire() {
     this.bullet = null;
-    console.log('Chanrged!');
   }
 }
 export default Dragon;
