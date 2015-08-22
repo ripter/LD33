@@ -42,18 +42,72 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser */
+
 	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _dragonJs = __webpack_require__(1);
+
+	var _dragonJs2 = _interopRequireDefault(_dragonJs);
+
+	var player = undefined;
 
 	var game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', { preload: preload, create: create, update: update });
 
-	function preload() {}
+	function preload() {
+	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
+	}
 
-	function create() {}
+	function create() {
 
-	function update() {}
+	  player = new _dragonJs2['default'](game, 100, 100);
+	}
+
+	function update() {
+	  player.update();
+	}
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	/*global Phaser */
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var Dragon = (function () {
+	  function Dragon(game, x, y) {
+	    _classCallCheck(this, Dragon);
+
+	    console.log('Hello World');
+	    this.game = game;
+	    this.sprite = game.add.sprite(x, y, 'dragon');
+	  }
+
+	  _createClass(Dragon, [{
+	    key: 'update',
+	    value: function update() {
+	      this.sprite.update();
+	    }
+	  }]);
+
+	  return Dragon;
+	})();
+
+	exports['default'] = Dragon;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

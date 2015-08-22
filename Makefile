@@ -12,12 +12,12 @@ run: build server.PID
 
 js: dist/main.js
 	cp ./node_modules/phaser/dist/phaser.min.js dist/phaser.js
+	cp -R assets dist/assets
 
 clean:
 	npm cache clean
 	-rm -R node_modules/
 	-rm server.PID
-	-rm dist/
 
 lint:
 	$(BIN)/eslint --ext .js src/
