@@ -4,15 +4,17 @@ const SPEED = Phaser.Timer.HALF;
 const SPRITE_CACHE = 'fire';
 
 class Fire {
-  constructor(game, x, y) {
+  constructor(game, sprite) {
     this.game = game;
-    this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
+    this.sprite = sprite;
     // PHYSICS!!!!!
-    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    game.physics.enable(sprite, Phaser.Physics.ARCADE);
+    
+    // Start it flying!
+    //this.sprite.body.velocity.y = -SPEED;
   }
   
   update() {
-    this.sprite.body.velocity.y = -SPEED;
   }
 }
 export default Fire;

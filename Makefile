@@ -10,7 +10,8 @@ build: node_modules dist/main.js dist/index.html
 run: build server.PID
 	open http://localhost:3000/index.html
 
-js: dist/main.js
+js:
+	$(BIN)/webpack src/main.js dist/main.js
 	cp ./node_modules/phaser/dist/phaser.min.js dist/phaser.js
 	cp assets/* dist/assets/
 

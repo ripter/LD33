@@ -3,10 +3,12 @@ import R from 'ramda';
 
 import Dragon from './dragon.js';
 import Mob from './mob.js';
+import Fire from './fire.js';
 
 let player;
 let mobs;
 let mob;
+let fire;
 
 const game = new Phaser.Game(
   1024
@@ -29,29 +31,25 @@ function preload() {
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  player = new Dragon(game, 500, 500);
-  mob = new Mob(game, 300, 100, 'king');
+  player = game.add.sprite(500, 500, 'dragon');
+  mob = game.add.sprite(300, 100, 'king');
+  fire = game.add.sprite(300, 500, 'fire');
   
-  // mobs = game.add.group();
-  // mobs.enableBody = true;
-  // mobs.physicsBodyType = Phaser.Physics.ARCADE;
-  // //game.physics.enable(mobs, Phaser.Physics.ARCADE);
-  // mobs.add((new Mob(game, 300, 100, 'king')).sprite);
+  game.physics.enable([player, fire], Phaser.Physics.ARCADE); 
+  fire.body.velocity.y = -Phaser.Timer.HALF;
+  
+  mobs = game.add.group();
+  mobs.enableBody = true;
+  mobs.physicsBodyType = Phaser.Physics.ARCADE;
+  mobs.add(mob);
 }
 
 function update() {
-  player.update();
   
-  if (player.bullet) {
-    console.log('test bullet');
-    game.physics.arcade.overlap(player.bullet, mob, collide);
-  }
-  //mobs.update();
-  // mobs.forEach(function(mob) {
-  //   mob.update();
-  // });
+  game.physics.arcade.collide(fire, mobs, collide, null, this);
+
 }
 
-function collide() {
-  debugger;
+function collide(one, two) {
+  console.log('collide', arguments);
 }

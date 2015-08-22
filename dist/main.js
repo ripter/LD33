@@ -61,9 +61,14 @@
 
 	var _mobJs2 = _interopRequireDefault(_mobJs);
 
+	var _fireJs = __webpack_require__(3);
+
+	var _fireJs2 = _interopRequireDefault(_fireJs);
+
 	var player = undefined;
 	var mobs = undefined;
 	var mob = undefined;
+	var fire = undefined;
 
 	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', {
 	  preload: preload,
@@ -81,31 +86,26 @@
 	function create() {
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	  player = new _dragonJs2['default'](game, 500, 500);
-	  mob = new _mobJs2['default'](game, 300, 100, 'king');
+	  player = game.add.sprite(500, 500, 'dragon');
+	  mob = game.add.sprite(300, 100, 'king');
+	  fire = game.add.sprite(300, 500, 'fire');
 
-	  // mobs = game.add.group();
-	  // mobs.enableBody = true;
-	  // mobs.physicsBodyType = Phaser.Physics.ARCADE;
-	  // //game.physics.enable(mobs, Phaser.Physics.ARCADE);
-	  // mobs.add((new Mob(game, 300, 100, 'king')).sprite);
+	  game.physics.enable([player, fire], Phaser.Physics.ARCADE);
+	  fire.body.velocity.y = -Phaser.Timer.HALF;
+
+	  mobs = game.add.group();
+	  mobs.enableBody = true;
+	  mobs.physicsBodyType = Phaser.Physics.ARCADE;
+	  mobs.add(mob);
 	}
 
 	function update() {
-	  player.update();
 
-	  if (player.bullet) {
-	    console.log('test bullet');
-	    game.physics.arcade.overlap(player.bullet, mob, collide);
-	  }
-	  //mobs.update();
-	  // mobs.forEach(function(mob) {
-	  //   mob.update();
-	  // });
+	  game.physics.arcade.collide(fire, mobs, collide, null, this);
 	}
 
-	function collide() {
-	  debugger;
+	function collide(one, two) {
+	  console.log('collide', arguments);
 	}
 
 /***/ },
@@ -7623,11 +7623,11 @@
 	var FIRE_SPEED = Phaser.Timer.HALF;
 
 	var Dragon = (function () {
-	  function Dragon(game, x, y) {
+	  function Dragon(game, sprite) {
 	    _classCallCheck(this, Dragon);
 
 	    this.game = game;
-	    this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
+	    this.sprite = sprite;
 	    // PHYSICS!!!!!
 	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	    this.bullet = null;
@@ -7708,20 +7708,21 @@
 	var SPRITE_CACHE = 'fire';
 
 	var Fire = (function () {
-	  function Fire(game, x, y) {
+	  function Fire(game, sprite) {
 	    _classCallCheck(this, Fire);
 
 	    this.game = game;
-	    this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
+	    this.sprite = sprite;
 	    // PHYSICS!!!!!
-	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	    game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+	    // Start it flying!
+	    //this.sprite.body.velocity.y = -SPEED;
 	  }
 
 	  _createClass(Fire, [{
 	    key: 'update',
-	    value: function update() {
-	      this.sprite.body.velocity.y = -SPEED;
-	    }
+	    value: function update() {}
 	  }]);
 
 	  return Fire;

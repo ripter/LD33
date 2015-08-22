@@ -9,9 +9,9 @@ const FIRE_OFFSET_X = 25;
 const FIRE_SPEED = Phaser.Timer.HALF;
 
 class Dragon {
-  constructor(game, x, y) {
+  constructor(game, sprite) {
     this.game = game;
-    this.sprite = game.add.sprite(x, y, SPRITE_CACHE);
+    this.sprite = sprite;
     // PHYSICS!!!!!
     game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.bullet = null;
