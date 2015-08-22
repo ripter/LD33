@@ -106,11 +106,15 @@
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
 
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
+	  //window.mobs = mobs = spawnSprites(lvl1.mobs);
 	  window.mobs = mobs = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].mobs);
 	  window.props = props = (0, _levelLoaderJs.spawnProps)(_level1Js2['default'].props);
 
+	  // these mobs follow these waypoints
+	  Mob.run(mobs, waypoints);
+
 	  // start a mob moving
-	  Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
+	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 	}
 
 	function update() {
@@ -320,6 +324,8 @@
 	  value: true
 	});
 	exports.moveToPoint = moveToPoint;
+	exports.run = run;
+	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 
 	function moveToPoint(sprite, waypoint) {
@@ -328,6 +334,26 @@
 
 	  console.log('waypoint', x, y);
 	  game.physics.arcade.accelerateToXY(sprite, x, y, SPEED);
+	}
+
+	function run(group, waypoints) {
+	  var offscreen = waypoints.children[0];
+	  var onscreen = waypoints.children[1];
+	  var index = 0;
+
+	  game.time.events.repeat(DELAY, group.length, function () {
+	    var child = group.children[index];
+
+	    // init offscreen
+	    child.x = offscreen.x;
+	    child.y = offscreen.y;
+
+	    // move to the first onscreen point
+	    moveToPoint(child, onscreen);
+
+	    // work our why thought the list.
+	    index += 1;
+	  });
 	}
 
 /***/ },

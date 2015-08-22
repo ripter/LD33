@@ -52,11 +52,15 @@ function create() {
   window.bullets = bullets = createGroup();
 
   window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
+  //window.mobs = mobs = spawnSprites(lvl1.mobs);
   window.mobs = mobs = spawnSprites(lvl1.mobs);
   window.props = props = spawnProps(lvl1.props);
-  
+ 
+  // these mobs follow these waypoints
+  Mob.run(mobs, waypoints);
+
   // start a mob moving
-  Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
+  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 }
 
 function update() {
