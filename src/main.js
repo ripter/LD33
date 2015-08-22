@@ -35,15 +35,9 @@ function create() {
 
   //player = game.add.sprite(500, 500, 'dragon');
   player = new Dragon(game, 500, 500);
-  fire = new Fire(game, 300, 500);
+  //fire = new Fire(game, 300, 500);
   mob = new Mob(game, 300, 100, 'king');
 
-  //mob = game.add.sprite(300, 100, 'king');
-  //fire = game.add.sprite(300, 500, 'fire');
-  
-  //game.physics.enable(fire, Phaser.Physics.ARCADE); 
-  //fire.body.velocity.y = -Phaser.Timer.HALF;
-  
   window.mobs = mobs = game.add.group();
   mobs.enableBody = true;
   mobs.physicsBodyType = Phaser.Physics.ARCADE;
@@ -58,7 +52,9 @@ function update() {
   });
 
   //playerControl(game, player.sprite);
-  game.physics.arcade.collide(fire.sprite, mobs, collide, null, this);
+  if (player.bullet) {
+    game.physics.arcade.collide(player.bullet.sprite, mobs, collide, null, this);
+  }
 
 }
 

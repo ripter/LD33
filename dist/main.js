@@ -90,14 +90,8 @@
 
 	  //player = game.add.sprite(500, 500, 'dragon');
 	  player = new _dragonJs2['default'](game, 500, 500);
-	  fire = new _fireJs2['default'](game, 300, 500);
+	  //fire = new Fire(game, 300, 500);
 	  mob = new _mobJs2['default'](game, 300, 100, 'king');
-
-	  //mob = game.add.sprite(300, 100, 'king');
-	  //fire = game.add.sprite(300, 500, 'fire');
-
-	  //game.physics.enable(fire, Phaser.Physics.ARCADE);
-	  //fire.body.velocity.y = -Phaser.Timer.HALF;
 
 	  window.mobs = mobs = game.add.group();
 	  mobs.enableBody = true;
@@ -113,7 +107,9 @@
 	  });
 
 	  //playerControl(game, player.sprite);
-	  game.physics.arcade.collide(fire.sprite, mobs, collide, null, this);
+	  if (player.bullet) {
+	    game.physics.arcade.collide(player.bullet.sprite, mobs, collide, null, this);
+	  }
 	}
 
 	function collide(one, two) {
@@ -7617,6 +7613,7 @@
 	  value: true
 	});
 	exports.playerControl = playerControl;
+	exports.fire = fire;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -7624,7 +7621,12 @@
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
+	var FIRE_OFFSET_Y = -100;
+	var FIRE_OFFSET_X = 25;
+	var FIRE_SPEED = Phaser.Timer.HALF;
 	var SPEED = 100;
+
+	var bullet = undefined;
 
 	function playerControl(game, sprite) {
 	  var _Phaser$Keyboard = Phaser.Keyboard;
@@ -7640,6 +7642,19 @@
 	  } else {
 	    sprite.body.velocity.x = 0;
 	  }
+
+	  // FIRE!!!
+	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    fire(sprite);
+	  }
+	}
+
+	function fire(game, sprite) {
+	  var _sprite = this.sprite;
+	  var x = _sprite.x;
+	  var y = _sprite.y;
+
+	  bullet = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
 	}
 
 /***/ },
@@ -7714,10 +7729,6 @@
 	    if (game.input.keyboard.isDown(SPACEBAR)) {
 	      this.fire();
 	    }
-
-	    if (this.bullet) {
-	      this.bullet.update();
-	    }
 	  },
 
 	  fire: function fire() {
@@ -7739,58 +7750,6 @@
 	  }
 	};
 	exports['default'] = Dragon;
-
-	/*
-	class Dragon {
-	  constructor(game, sprite) {
-	    this.game = game;
-	    this.sprite = sprite;
-	    // PHYSICS!!!!!
-	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	    this.bullet = null;
-	  }
-	  
-	  update() {
-	    const game = this.game;
-	    const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
-	    
-	    // Movement keys
-	    if (game.input.keyboard.isDown(LEFT)) { 
-	      this.sprite.body.velocity.x = -SPEED;
-	    }
-	    else if (game.input.keyboard.isDown(RIGHT)) {
-	      this.sprite.body.velocity.x = SPEED;
-	    }
-	    else {
-	      this.sprite.body.velocity.x = 0;
-	    }
-	    
-	    // FIRE!!!
-	    if (game.input.keyboard.isDown(SPACEBAR)) {
-	      this.fire(); 
-	    }
-	    
-	    if (this.bullet) {
-	      this.bullet.update();
-	    }
-	  }
-	  
-	  fire() {
-	    if (this.bullet) { return; }
-	    const {x, y} = this.sprite;
-	    
-	    this.bullet = new Fire(this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
-	    
-	    // Delay before they can fire again.
-	    this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
-	  }
-	  
-	  resetFire() {
-	    this.bullet = null;
-	  }
-	}
-	export default Dragon;
-	*/
 	module.exports = exports['default'];
 
 /***/ },
@@ -7811,7 +7770,7 @@
 	}
 	Mob.prototype = {
 	  update: function update() {
-	    this.game.physics.arcade.moveToXY(this.sprite, 1000, 100, Phaser.Timer.SECOND);
+	    //this.game.physics.arcade.moveToXY(this.sprite, 1000, 100, Phaser.Timer.SECOND);
 	  }
 	};
 	exports['default'] = Mob;
