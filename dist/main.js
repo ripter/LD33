@@ -7806,6 +7806,7 @@
 	  update: function update() {
 	    this.game.physics.arcade.moveToXY(this.sprite, 1000, 100, Phaser.Timer.SECOND);
 	  }
+
 	};
 	exports['default'] = Mob;
 	module.exports = exports['default'];
