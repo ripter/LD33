@@ -9,7 +9,8 @@ export function spawnWaypoints(points) {
   let group = createGroup();
   
   points.forEach((point) => {
-    group.create(point.x, point.y, 'waypoint');
+    let sprite = group.create(point.x, point.y, 'waypoint');
+    sprite.anchor = {x: .5, y: 1};
   });
   
   return group;

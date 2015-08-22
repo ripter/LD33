@@ -310,7 +310,8 @@
 	  var group = (0, _groupsJs.createGroup)();
 
 	  points.forEach(function (point) {
-	    group.create(point.x, point.y, 'waypoint');
+	    var sprite = group.create(point.x, point.y, 'waypoint');
+	    sprite.anchor = { x: .5, y: 1 };
 	  });
 
 	  return group;
