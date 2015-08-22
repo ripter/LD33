@@ -4,7 +4,7 @@
 import {createGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
-import {spawnWaypoints} from './level-loader.js';
+import {spawnWaypoints, spawnMobs} from './level-loader.js';
 
 import lvl1 from './level1.js';
 
@@ -32,6 +32,7 @@ function preload() {
   game.load.image('fire', 'assets/fire.png', 64, 64);
   game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
 
+  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 }
 
 function create() {
@@ -40,9 +41,9 @@ function create() {
   
   // Setup groups!
   window.player = player = spawnDragon(500, 500);
-  window.mobs = mobs = createGroup();
   window.bullets = bullets = createGroup();
 
+  window.mobs = mobs = spawnMobs(lvl1.mobs);
   window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
 
   window.props = props = createGroup();

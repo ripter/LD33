@@ -79,6 +79,8 @@
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('fire', 'assets/fire.png', 64, 64);
 	  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
+
+	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 	}
 
 	function create() {
@@ -86,9 +88,9 @@
 
 	  // Setup groups!
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
-	  window.mobs = mobs = (0, _groupsJs.createGroup)();
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
 
+	  window.mobs = mobs = (0, _levelLoaderJs.spawnMobs)(_level1Js2['default'].mobs);
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
 
 	  window.props = props = (0, _groupsJs.createGroup)();
@@ -311,6 +313,12 @@
 
 	function spawnMobs(points) {
 	  var group = (0, _groupsJs.createGroup)();
+
+	  points.forEach(function (point) {
+	    group.create(point.x, point.y, point.spriteKey);
+	  });
+
+	  return group;
 	}
 
 /***/ },
@@ -321,13 +329,13 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-	  value: true
+		value: true
 	});
 	var Level = {
-	  waypoints: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
-	  background: 'level-1'
-	  // , mobs: [{'king'}, {'knight'}]
-	  //, props 		: [{x,y,'bush'}, {x,y,'bush'}, {x,y,'bush'}, {x,y,'fence'}]
+		waypoints: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
+		background: 'background',
+		mobs: [{ spriteKey: 'king' }, { spriteKey: 'knight' }]
+		//, props 		: [{x:0,y:0,'bush'}, {x:0,y:0,'bush'}, {x:0,y:0,'bush'}, {x:0,y:0,'fence'}]
 	};
 
 	exports['default'] = Level;

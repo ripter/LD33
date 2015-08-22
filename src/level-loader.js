@@ -17,4 +17,10 @@ export function spawnWaypoints(points) {
 
 export function spawnMobs(points) {
   let group = createGroup();
+
+  points.forEach((point) => {
+    group.create(point.x, point.y, point.spriteKey);  
+  });
+  
+  return group;
 }
