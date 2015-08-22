@@ -12,7 +12,7 @@ run: build server.PID
 
 js: dist/main.js
 	cp ./node_modules/phaser/dist/phaser.min.js dist/phaser.js
-	cp -R assets dist/assets
+	cp -R assets dist/
 
 clean:
 	npm cache clean
