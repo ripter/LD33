@@ -87,7 +87,6 @@
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  //game.load.image('fire', 'assets/fire.png', 64, 64);
 	  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
 
 	  game.load.image('tree', 'assets/tree.png', 64, 64);
@@ -239,7 +238,7 @@
 
 	var _fireJs = __webpack_require__(3);
 
-	var FIRE_SPEED = Phaser.Timer.HALF;
+	var FIRE_SPEED = Phaser.Timer.SECOND;
 	var SPEED = 100;
 
 	var canFire = true;
