@@ -53,24 +53,17 @@
 
 	var _ramda2 = _interopRequireDefault(_ramda);
 
-	var _playerJs = __webpack_require__(2);
+	var _groupsJs = __webpack_require__(2);
 
-	var _dragonJs = __webpack_require__(4);
+	var _dragonJs = __webpack_require__(3);
 
-	var _dragonJs2 = _interopRequireDefault(_dragonJs);
-
-	var _mobJs = __webpack_require__(5);
-
-	var _mobJs2 = _interopRequireDefault(_mobJs);
-
-	var _fireJs = __webpack_require__(3);
-
-	var _fireJs2 = _interopRequireDefault(_fireJs);
+	var _playerJs = __webpack_require__(5);
 
 	var player = undefined;
 	var mobs = undefined;
-	var mob = undefined;
-	var fire = undefined;
+	var bullets = undefined;
+	var waypoints = undefined;
+	var props = undefined;
 
 	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', {
 	  preload: preload,
@@ -88,32 +81,28 @@
 	function create() {
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	  //player = game.add.sprite(500, 500, 'dragon');
-	  player = new _dragonJs2['default'](game, 500, 500);
-	  //fire = new Fire(game, 300, 500);
-	  mob = new _mobJs2['default'](game, 300, 100, 'king');
-
-	  window.mobs = mobs = game.add.group();
-	  mobs.enableBody = true;
-	  mobs.physicsBodyType = Phaser.Physics.ARCADE;
-	  mobs.add(mob.sprite);
+	  // Setup groups!
+	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
+	  window.mobs = mobs = (0, _groupsJs.createGroup)();
+	  window.bullets = bullets = (0, _groupsJs.createGroup)();
+	  window.waypoints = waypoints = (0, _groupsJs.createGroup)();
+	  window.props = props = (0, _groupsJs.createGroup)();
 	}
 
 	function update() {
-	  player.update();
+	  game.physics.arcade.collide(bullets, mobs, collideBullet);
+	  game.physics.arcade.collide(bullets, props, collideBullet);
+	  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
 
-	  mobs.forEach(function (mobSprite) {
-	    mobSprite.host.update();
-	  });
-
-	  //playerControl(game, player.sprite);
-	  if (player.bullet) {
-	    game.physics.arcade.collide(player.bullet.sprite, mobs, collide, null, this);
-	  }
+	  (0, _playerJs.playerControl)(player);
 	}
 
-	function collide(one, two) {
-	  //console.log('collide', arguments);
+	function collideBullet(one, two) {
+	  console.log('collideBullet', one, two);
+	}
+
+	function collideWaypoint(one, two) {
+	  console.log('collideWaypoint', one, two);
 	}
 
 /***/ },
@@ -7604,106 +7593,40 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser, game*/
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.playerControl = playerControl;
-	exports.fire = fire;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _fireJs = __webpack_require__(3);
-
-	var _fireJs2 = _interopRequireDefault(_fireJs);
-
-	var FIRE_OFFSET_Y = -100;
-	var FIRE_OFFSET_X = 25;
-	var FIRE_SPEED = Phaser.Timer.HALF;
-	var SPEED = 100;
-
-	var bullet = undefined;
-
-	function playerControl(sprite) {
-	  var _Phaser$Keyboard = Phaser.Keyboard;
-	  var LEFT = _Phaser$Keyboard.LEFT;
-	  var RIGHT = _Phaser$Keyboard.RIGHT;
-	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
-
-	  // Movement keys
-	  if (game.input.keyboard.isDown(LEFT)) {
-	    sprite.body.velocity.x = -SPEED;
-	  } else if (game.input.keyboard.isDown(RIGHT)) {
-	    sprite.body.velocity.x = SPEED;
-	  } else {
-	    sprite.body.velocity.x = 0;
-	  }
-
-	  // FIRE!!!
-	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    fire(sprite);
-	  }
-	}
-
-	function fire(game, sprite) {
-	  var _sprite = this.sprite;
-	  var x = _sprite.x;
-	  var y = _sprite.y;
-
-	  bullet = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
-	}
-
-/***/ },
-/* 3 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
 	'use strict';
 
+	// create new group with physics!!
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports.spawnFire = spawnFire;
-	var SPEED = Phaser.Timer.HALF;
+	exports.createGroup = createGroup;
 
-	function Fire(game, x, y) {
-	  this.game = game;
-	  this.sprite = game.add.sprite(x, y, 'fire');
-	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-
-	  this.sprite.body.velocity.y = -SPEED;
-	}
-	exports['default'] = Fire;
-
-	// totally not a constructor
-	// constructors use NEW, we use SPAWN. Totally different! :)
-
-	function spawnFire(x, y) {
-	  var sprite = game.add.sprite(x, y, 'fire');
-
-	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	  this.sprite.body.velocity.y = -SPEED;
+	function createGroup() {
+	  var group = game.add.group();
+	  group.enableBody = true;
+	  group.physicsBodyType = Phaser.Physics.ARCADE;
+	  return group;
 	}
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*global Phaser */
+	/*global Phaser, game */
 
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	exports.spawnDragon = spawnDragon;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fireJs = __webpack_require__(3);
+	var _fireJs = __webpack_require__(4);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -7760,31 +7683,84 @@
 	  }
 	};
 	exports['default'] = Dragon;
-	module.exports = exports['default'];
+
+	function spawnDragon(x, y) {
+	  var sprite = game.add.sprite(x, y, 'dragon');
+	  game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+	  return sprite;
+	}
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports) {
 
-	/*global Phaser */
+	/*global Phaser, game, bullets */
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	function Mob(game, x, y, imageCache) {
-	  this.game = game;
-	  this.sprite = game.add.sprite(x, y, imageCache);
-	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	  this.sprite.host = this;
+	exports.spawnFire = spawnFire;
+	var SPEED = Phaser.Timer.HALF;
+	var OFFSET_Y = -100;
+	var OFFSET_X = 25;
+
+	// totally not a constructor
+	// constructors use NEW, we use SPAWN. Totally different! :)
+
+	function spawnFire(x, y) {
+	  var sprite = bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
+
+	  sprite.body.velocity.y = -SPEED;
+	  return sprite;
 	}
-	Mob.prototype = {
-	  update: function update() {
-	    //this.game.physics.arcade.moveToXY(this.sprite, 1000, 100, Phaser.Timer.SECOND);
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game*/
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.playerControl = playerControl;
+
+	var _fireJs = __webpack_require__(4);
+
+	var FIRE_SPEED = Phaser.Timer.HALF;
+	var SPEED = 100;
+
+	var canFire = true;
+
+	function playerControl(sprite) {
+	  var _Phaser$Keyboard = Phaser.Keyboard;
+	  var LEFT = _Phaser$Keyboard.LEFT;
+	  var RIGHT = _Phaser$Keyboard.RIGHT;
+	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+
+	  // Movement keys
+	  if (game.input.keyboard.isDown(LEFT)) {
+	    sprite.body.velocity.x = -SPEED;
+	  } else if (game.input.keyboard.isDown(RIGHT)) {
+	    sprite.body.velocity.x = SPEED;
+	  } else {
+	    sprite.body.velocity.x = 0;
 	  }
-	};
-	exports['default'] = Mob;
-	module.exports = exports['default'];
+
+	  // FIRE!!!
+	  if (canFire && game.input.keyboard.isDown(SPACEBAR)) {
+	    canFire = false;
+	    (0, _fireJs.spawnFire)(sprite.x, sprite.y);
+
+	    // Delay the firing
+	    game.time.events.add(FIRE_SPEED, function () {
+	      canFire = true;
+	    });
+	  }
+	}
 
 /***/ }
 /******/ ]);

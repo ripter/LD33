@@ -1,4 +1,4 @@
-/*global Phaser */
+/*global Phaser, game */
 
 import Fire from './fire.js';
 
@@ -51,3 +51,11 @@ Dragon.prototype = {
   }
 };
 export default Dragon;
+
+
+export function spawnDragon(x, y) {
+  let sprite = game.add.sprite(x, y, 'dragon');
+  game.physics.enable(sprite, Phaser.Physics.ARCADE);
+  
+  return sprite;
+}

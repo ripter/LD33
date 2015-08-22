@@ -2,15 +2,15 @@
 'use strict';
 import R from 'ramda';
 
+import {createGroup} from './groups.js';
+import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
-import Dragon from './dragon.js';
-import Mob from './mob.js';
-import Fire from './fire.js';
 
 let player;
 let mobs;
-let mob;
-let fire;
+let bullets;
+let waypoints;
+let props;
 
 const game = new Phaser.Game(
   1024
@@ -33,31 +33,27 @@ function preload() {
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  //player = game.add.sprite(500, 500, 'dragon');
-  player = new Dragon(game, 500, 500);
-  //fire = new Fire(game, 300, 500);
-  mob = new Mob(game, 300, 100, 'king');
-
-  window.mobs = mobs = game.add.group();
-  mobs.enableBody = true;
-  mobs.physicsBodyType = Phaser.Physics.ARCADE;
-  mobs.add(mob.sprite);
+  
+  // Setup groups!
+  window.player = player = spawnDragon(500, 500);
+  window.mobs = mobs = createGroup();
+  window.bullets = bullets = createGroup();
+  window.waypoints = waypoints = createGroup();
+  window.props = props = createGroup();
 }
 
 function update() {
-  player.update();
-
-  mobs.forEach((mobSprite) => {
-    mobSprite.host.update();
-  });
-
-  //playerControl(game, player.sprite);
-  if (player.bullet) {
-    game.physics.arcade.collide(player.bullet.sprite, mobs, collide, null, this);
-  }
-
+  game.physics.arcade.collide(bullets, mobs, collideBullet);
+  game.physics.arcade.collide(bullets, props, collideBullet);
+  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
+  
+  playerControl(player);  
 }
 
-function collide(one, two) {
-  //console.log('collide', arguments);
+function collideBullet(one, two) {
+  console.log('collideBullet', one, two);
+}
+
+function collideWaypoint(one, two) {
+  console.log('collideWaypoint', one, two);
 }

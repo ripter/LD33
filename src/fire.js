@@ -1,25 +1,17 @@
-/*global Phaser, game */
+/*global Phaser, game, bullets */
 'use strict';
 
 const SPEED = Phaser.Timer.HALF;
-
-function Fire(game, x, y) {
-  this.game = game;
-  this.sprite = game.add.sprite(x, y, 'fire');
-  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-
-  this.sprite.body.velocity.y = -SPEED;
-}
-export default Fire;
-
+const OFFSET_Y = -100;
+const OFFSET_X = 25;
 
 // totally not a constructor
 // constructors use NEW, we use SPAWN. Totally different! :)
 export function spawnFire(x, y) {
-  let sprite = game.add.sprite(x, y, 'fire'); 
+  let sprite = bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
-  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-  this.sprite.body.velocity.y = -SPEED;
+  sprite.body.velocity.y = -SPEED;
+  return sprite;
 }
 
 
