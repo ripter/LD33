@@ -9,7 +9,7 @@ function Mob(game, x, y, imageCache) {
 }
 Mob.prototype = {
   update() {
-    this.game.physics.arcade.moveToXY(this.sprite, 1000, 100, Phaser.Timer.SECOND);
+    this.game.physics.arcade.moveToPoint(this.sprite, lvl1.waypoints, Phaser.Timer.SECOND);
 	}
 
 
