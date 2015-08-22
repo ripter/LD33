@@ -1,4 +1,5 @@
 /*global Phaser */
+'use strict';
 
 const SPEED = Phaser.Timer.HALF;
 

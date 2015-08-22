@@ -90,28 +90,34 @@
 
 	  //player = game.add.sprite(500, 500, 'dragon');
 	  player = new _dragonJs2['default'](game, 500, 500);
-
-	  mob = game.add.sprite(300, 100, 'king');
-	  //fire = game.add.sprite(300, 500, 'fire');
 	  fire = new _fireJs2['default'](game, 300, 500);
+	  mob = new _mobJs2['default'](game, 300, 100, 'king');
+
+	  //mob = game.add.sprite(300, 100, 'king');
+	  //fire = game.add.sprite(300, 500, 'fire');
 
 	  //game.physics.enable(fire, Phaser.Physics.ARCADE);
 	  //fire.body.velocity.y = -Phaser.Timer.HALF;
 
-	  mobs = game.add.group();
+	  window.mobs = mobs = game.add.group();
 	  mobs.enableBody = true;
 	  mobs.physicsBodyType = Phaser.Physics.ARCADE;
-	  mobs.add(mob);
+	  mobs.add(mob.sprite);
 	}
 
 	function update() {
 	  player.update();
+
+	  mobs.forEach(function (mobSprite) {
+	    mobSprite.host.update();
+	  });
+
 	  //playerControl(game, player.sprite);
 	  game.physics.arcade.collide(fire.sprite, mobs, collide, null, this);
 	}
 
 	function collide(one, two) {
-	  console.log('collide', arguments);
+	  //console.log('collide', arguments);
 	}
 
 /***/ },
@@ -7763,7 +7769,6 @@
 /***/ function(module, exports) {
 
 	/*global Phaser */
-
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -7786,51 +7791,24 @@
 /***/ function(module, exports) {
 
 	/*global Phaser */
+	'use strict';
 
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Mob = (function () {
-	  function Mob(game, x, y, img) {
-	    _classCallCheck(this, Mob);
-
-	    this.game = game;
-	    this.sprite = game.add.sprite(x, y, img);
-
-	    // PHYSICS!!!!!
-	    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	function Mob(game, x, y, imageCache) {
+	  this.game = game;
+	  this.sprite = game.add.sprite(x, y, imageCache);
+	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	  this.sprite.host = this;
+	}
+	Mob.prototype = {
+	  update: function update() {
+	    this.game.physics.arcade.moveToXY(this.sprite, 1000, 100, Phaser.Timer.SECOND);
 	  }
-
-	  _createClass(Mob, [{
-	    key: "update",
-	    value: function update() {
-	      this.sprite.update();
-	      console.log(this.game.physics);
-	    }
-	  }, {
-	    key: "mobLeft",
-	    value: function mobLeft() {
-	      this.sprite.x -= 5;
-	    }
-	  }, {
-	    key: "mobRight",
-	    value: function mobRight() {
-	      this.sprite.x += 2;
-	    }
-	  }]);
-
-	  return Mob;
-	})();
-
-	exports["default"] = Mob;
-	module.exports = exports["default"];
+	};
+	exports['default'] = Mob;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
