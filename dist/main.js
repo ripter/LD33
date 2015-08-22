@@ -106,11 +106,15 @@
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
 
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
+	  //window.mobs = mobs = spawnSprites(lvl1.mobs);
 	  window.mobs = mobs = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].mobs);
 	  window.props = props = (0, _levelLoaderJs.spawnProps)(_level1Js2['default'].props);
 
+	  // these mobs follow these waypoints
+	  Mob.run(mobs, waypoints);
+
 	  // start a mob moving
-	  Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
+	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 	}
 
 	function update() {
@@ -128,12 +132,20 @@
 
 	function collideBulletMob(bullet, mob) {
 	  console.log('collideBulletMob', bullet, mob);
+	  bullet.kill();
+	  mob.kill();
 	}
 
-	function collideWaypoint(one, two) {
-	  console.log('collideWaypoint', one, two);
+	function collideWaypoint(mob, waypoint) {
+	  var lastIndex = waypoint.index;
+	  var nextIndex = lastIndex + 1;
+	  var nextWaypoint = waypoints.children[nextIndex];
+
+	  console.log('collideWaypoint', mob, waypoint);
+	  Mob.moveToPoint(mob, nextWaypoint);
 
 	  // move to the next one!
+	  // How get next waypoint for mob??
 	}
 
 /***/ },
@@ -175,64 +187,11 @@
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
-	var SPEED = 100;
-	var SPRITE_CACHE = 'dragon';
-	var FIRE_OFFSET_Y = -100;
-	var FIRE_OFFSET_X = 25;
-	var FIRE_SPEED = Phaser.Timer.HALF;
-
-	function Dragon(game, x, y) {
-	  this.game = game;
-	  this.sprite = game.add.sprite(x, y, 'dragon');
-	  game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	}
-	Dragon.prototype = {
-	  update: function update() {
-	    var game = this.game;
-	    var _Phaser$Keyboard = Phaser.Keyboard;
-	    var LEFT = _Phaser$Keyboard.LEFT;
-	    var RIGHT = _Phaser$Keyboard.RIGHT;
-	    var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
-
-	    // Movement keys
-	    if (game.input.keyboard.isDown(LEFT)) {
-	      this.sprite.body.velocity.x = -SPEED;
-	    } else if (game.input.keyboard.isDown(RIGHT)) {
-	      this.sprite.body.velocity.x = SPEED;
-	    } else {
-	      this.sprite.body.velocity.x = 0;
-	    }
-
-	    // FIRE!!!
-	    if (game.input.keyboard.isDown(SPACEBAR)) {
-	      this.fire();
-	    }
-	  },
-
-	  fire: function fire() {
-	    if (this.bullet) {
-	      return;
-	    }
-	    var _sprite = this.sprite;
-	    var x = _sprite.x;
-	    var y = _sprite.y;
-
-	    this.bullet = new _fireJs2['default'](this.game, x + FIRE_OFFSET_X, y + FIRE_OFFSET_Y);
-
-	    // Delay before they can fire again.
-	    this.game.time.events.add(FIRE_SPEED, this.resetFire, this);
-	  },
-
-	  resetFire: function resetFire() {
-	    this.bullet = null;
-	  }
-	};
-	exports['default'] = Dragon;
-
 	function spawnDragon(x, y) {
 	  var sprite = game.add.sprite(x, y, 'dragon');
 	  game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
+	  sprite.health = 3;
 	  return sprite;
 	}
 
@@ -318,13 +277,37 @@
 	  value: true
 	});
 	exports.moveToPoint = moveToPoint;
-	var SPEED = Phaser.Timer.SECOND;
+	exports.run = run;
+	var DELAY = Phaser.Timer.SECOND;
+	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 
 	function moveToPoint(sprite, waypoint) {
 	  var x = waypoint.x;
 	  var y = waypoint.y;
 
+	  console.log('waypoint', x, y);
+	  sprite.waypointIndex = waypoint.index;
 	  game.physics.arcade.accelerateToXY(sprite, x, y, SPEED);
+	}
+
+	function run(group, waypoints) {
+	  var offscreen = waypoints.children[0];
+	  var onscreen = waypoints.children[1];
+	  var index = 0;
+
+	  game.time.events.repeat(DELAY, group.length, function () {
+	    var child = group.children[index];
+
+	    // init offscreen
+	    child.x = offscreen.x;
+	    child.y = offscreen.y;
+
+	    // move to the first onscreen point
+	    moveToPoint(child, onscreen);
+
+	    // work our why thought the list.
+	    index += 1;
+	  });
 	}
 
 /***/ },
@@ -349,10 +332,13 @@
 	function spawnWaypoints(points) {
 	  var group = (0, _groupsJs.createGroup)();
 
-	  points.forEach(function (point) {
+	  points.forEach(function (point, index) {
 	    var sprite = group.create(point.x, point.y, 'waypoint');
 	    sprite.anchor = { x: .5, y: 1 };
 	    sprite.body.immovable = true;
+
+	    // set our stuff
+	    sprite.index = index;
 	  });
 
 	  return group;
