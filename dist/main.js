@@ -7704,15 +7704,15 @@
 
 	/*global Phaser */
 
-	"use strict";
+	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	var Mob = (function () {
 	  function Mob(game, x, y, img) {
@@ -7723,17 +7723,33 @@
 	  }
 
 	  _createClass(Mob, [{
-	    key: "update",
+	    key: 'update',
 	    value: function update() {
 	      this.sprite.update();
+	      console.log(this.game.width, this.game.height);
+	      this.mobRight(5);
+	    }
+	  }, {
+	    key: 'mobLeft',
+	    value: function mobLeft(x) {
+	      if (x === null || x === 'undefined') {
+	        this.sprite.x -= x;
+	      }
+	    }
+	  }, {
+	    key: 'mobRight',
+	    value: function mobRight(x) {
+	      if (x === null || x === 'undefined') {
+	        this.sprite.x += x;
+	      }
 	    }
 	  }]);
 
 	  return Mob;
 	})();
 
-	exports["default"] = Mob;
-	module.exports = exports["default"];
+	exports['default'] = Mob;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
