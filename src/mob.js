@@ -8,6 +8,7 @@ export function moveToPoint(sprite, waypoint) {
   let {x, y} = waypoint;
 
   console.log('waypoint', x, y);
+  sprite.waypointIndex = waypoint.index;
   game.physics.arcade.accelerateToXY(sprite, x, y, SPEED);
 }
 

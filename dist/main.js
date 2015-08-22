@@ -136,10 +136,16 @@
 	  mob.kill();
 	}
 
-	function collideWaypoint(one, two) {
-	  console.log('collideWaypoint', one, two);
+	function collideWaypoint(mob, waypoint) {
+	  var lastIndex = waypoint.index;
+	  var nextIndex = lastIndex + 1;
+	  var nextWaypoint = waypoints.children[nextIndex];
+
+	  console.log('collideWaypoint', mob, waypoint);
+	  Mob.moveToPoint(mob, nextWaypoint);
 
 	  // move to the next one!
+	  // How get next waypoint for mob??
 	}
 
 /***/ },
@@ -333,6 +339,7 @@
 	  var y = waypoint.y;
 
 	  console.log('waypoint', x, y);
+	  sprite.waypointIndex = waypoint.index;
 	  game.physics.arcade.accelerateToXY(sprite, x, y, SPEED);
 	}
 
@@ -378,10 +385,13 @@
 	function spawnWaypoints(points) {
 	  var group = (0, _groupsJs.createGroup)();
 
-	  points.forEach(function (point) {
+	  points.forEach(function (point, index) {
 	    var sprite = group.create(point.x, point.y, 'waypoint');
 	    sprite.anchor = { x: .5, y: 1 };
 	    sprite.body.immovable = true;
+
+	    // set our stuff
+	    sprite.index = index;
 	  });
 
 	  return group;
