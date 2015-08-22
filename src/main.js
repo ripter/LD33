@@ -10,5 +10,10 @@ window.game = game;
 game.state.add('start', startState);
 game.state.add('game', gameState);
 
+
+// prod
 game.state.start('start');
+// dev
+//game.state.start('game');
+
 

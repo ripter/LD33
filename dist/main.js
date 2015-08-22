@@ -63,7 +63,10 @@
 	game.state.add('start', _startStateJs2['default']);
 	game.state.add('game', _gameStateJs2['default']);
 
+	// prod
 	game.state.start('start');
+	// dev
+	//game.state.start('game');
 
 /***/ },
 /* 1 */
