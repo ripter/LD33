@@ -117,9 +117,7 @@
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
-	  //game.load.image('waypoint', 'assets/waypoint.png', 2, 2);
-	  //game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
+	  game.load.image('waypoint', 'assets/waypoint_20_20.png', 24, 24);
 
 	  game.load.image('tree', 'assets/tree.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
@@ -132,14 +130,13 @@
 	}
 
 	function create() {
-	  //game.physics.startSystem(Phaser.Physics.ARCADE);
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
 
 	  game.score = 0;
 	  game.scoreString = 'SCORE: ';
-	  game.text = game.add.text(700, 30, 'SCORE ' + game.score, { font: '24px Arial' });
+	  game.text = game.add.text(700, 30, game.scoreString + game.score, { font: '24px Arial' });
 
 	  // Setup groups!
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
@@ -151,17 +148,17 @@
 
 	  // these mobs follow these waypoints
 	  Mob.run(mobs, waypoints);
-	}
 
-	function score() {
-	  game.score++;
-	  console.log('score', game.score);
+	  // start a mob moving
+	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 	}
 
 	function updateScore() {
+
 	  game.score++;
 	  console.log('score', game.score);
 	  game.text.text = game.scoreString + game.score;
+	  localStorage.setItem('score', game.score);
 	}
 
 	function update() {
@@ -516,14 +513,20 @@
 
 	var _fontsJs = __webpack_require__(10);
 
+	var _gameStateJs = __webpack_require__(1);
+
 	//
 	// Lifecycle
 	//
-	function preload() {}
+	function preload() {
+	  debugger;
+	  console.log('state', game);
+	}
 
 	function create() {
-	  game.add.text(100, 100, 'You are Monster!', _fontsJs.headerFont);
-	  game.add.text(100, 300, 'Press Space NOW!!!', _fontsJs.headerFont);
+	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
+	  game.add.text(100, 150, 'Press Space NOW!!!', _fontsJs.headerFont);
+	  game.add.text(100, 200, 'Your score: ', _fontsJs.headerFont);
 	}
 
 	function update() {
