@@ -2,22 +2,31 @@
 'use strict';
 
 const Level = {
-	waypoints 		: [
-					{x:120, y:0}
-					, {x:120, y:138}
-					, {x:904, y:138}
-					, {x:904, y:229}
-					, {x:120, y:229}
-					, {x:120, y:354}
-					, {x:904, y:354}
-					, {x:904, y:470}
-					, {x:120, y:470}
-					, {x:120, y:523}
-					]
+	waypoints: {
+    mainPath: [
+      {x:120, y:0}
+      , {x:120, y:138}
+      , {x:904, y:138}
+      , {x:904, y:229}
+      , {x:120, y:229}
+      , {x:120, y:354}
+      , {x:904, y:354}
+      , {x:904, y:470}
+      , {x:120, y:470}
+      , {x:120, y:523}
+      ]
+    , guardPath: [
+      {x:904, y:229}
+      , {x:904, y:470}
+    ]
+  }
 
 	, background 	: 'background'
-	, mobs 			: [{x:120, y:0, spriteKey: 'king'}
-					, {x:120, y:0, spriteKey: 'knight'}]
+	, mobs: [
+    {x:120, y:0, spriteKey: 'king', tract: 'mainPath'}
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:904, y:0, spriteKey: 'knight', tract: 'guardPath'}
+  ]
 
 	, props 		: [
 			  {x:116,y:160, spriteKey: 'wall'}

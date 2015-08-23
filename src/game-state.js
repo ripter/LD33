@@ -5,10 +5,12 @@ import {createGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
 import * as Mob from './mob.js';
-import {spawnWaypoints, spawnProps, spawnMobs, spawnSprites} from './level-loader.js';
+import {loadLevel, loadTracts, spawnWaypoints, spawnProps, spawnMobs, spawnSprites} from './level-loader.js';
 
 window.Mob = Mob;
 import lvl1 from './level1.js';
+
+let level;
 
 let player;
 let mobs;
@@ -45,19 +47,29 @@ function create() {
   game.scoreString = 'SCORE: ';
   game.text = game.add.text(700, 30, game.scoreString + game.score, {font: '24px Arial'});
   
+  // load level!
+  level = loadLevel(lvl1);
+  
+  Mob.startTimedGame(level.mobs);
+  
+
+  /*
   // Setup groups!
   window.bullets = bullets = createGroup();
   window.player = player = spawnDragon(500, 500);
+
 
   window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
   window.mobs = mobs = spawnMobs(lvl1.mobs);
   window.props = props = spawnProps(lvl1.props);
  
   // these mobs follow these waypoints
+  Mob.loadTracts(mobs, waypoints, lvl1.waypoints);
   Mob.run(mobs, waypoints);
 
   // start a mob moving
   //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
+  */
 }
 
 function updateScore() {
@@ -80,11 +92,15 @@ function updateScore() {
 }
 
 function update() {
+  /*
   game.physics.arcade.collide(bullets, mobs, collideBulletMob);
   game.physics.arcade.collide(bullets, props, collideBulletProp);
 
   playerControl(player);
   Mob.checkWaypoints(mobs, waypoints);
+  */
+  
+  Mob.update(level.mobs);
 }
 
 function collideBulletProp(bullet, prop) {

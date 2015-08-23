@@ -69,9 +69,9 @@
 	game.state.add('end', _endStateJs2['default']);
 
 	// prod
-	game.state.start('start');
+	//game.state.start('start');
 	// dev
-	//game.state.start('game');
+	game.state.start('game');
 
 /***/ },
 /* 1 */
@@ -105,6 +105,8 @@
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
 	window.Mob = Mob;
+
+	var level = undefined;
 
 	var player = undefined;
 	var mobs = undefined;
@@ -140,19 +142,24 @@
 	  game.scoreString = 'SCORE: ';
 	  game.text = game.add.text(700, 30, game.scoreString + game.score, { font: '24px Arial' });
 
+	  // load level!
+	  level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+
+	  Mob.startTimedGame(level.mobs);
+
+	  /*
 	  // Setup groups!
-	  window.bullets = bullets = (0, _groupsJs.createGroup)();
-	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
-
-	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
-	  window.mobs = mobs = (0, _levelLoaderJs.spawnMobs)(_level1Js2['default'].mobs);
-	  window.props = props = (0, _levelLoaderJs.spawnProps)(_level1Js2['default'].props);
-
-	  // these mobs follow these waypoints
+	  window.bullets = bullets = createGroup();
+	  window.player = player = spawnDragon(500, 500);
+	    window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
+	  window.mobs = mobs = spawnMobs(lvl1.mobs);
+	  window.props = props = spawnProps(lvl1.props);
+	    // these mobs follow these waypoints
+	  Mob.loadTracts(mobs, waypoints, lvl1.waypoints);
 	  Mob.run(mobs, waypoints);
-
-	  // start a mob moving
+	   // start a mob moving
 	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
+	  */
 	}
 
 	function updateScore() {
@@ -173,11 +180,14 @@
 	}
 
 	function update() {
+	  /*
 	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
 	  game.physics.arcade.collide(bullets, props, collideBulletProp);
-
-	  (0, _playerJs.playerControl)(player);
+	   playerControl(player);
 	  Mob.checkWaypoints(mobs, waypoints);
+	  */
+
+	  Mob.update(level.mobs);
 	}
 
 	function collideBulletProp(bullet, prop) {
@@ -209,9 +219,9 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports.createGroup = createGroup;
+	exports.physicsGroup = physicsGroup;
 
-	function createGroup() {
+	function physicsGroup() {
 	  var group = game.add.group();
 	  group.enableBody = true;
 	  group.physicsBodyType = Phaser.Physics.ARCADE;
@@ -334,37 +344,132 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	exports.spawn = spawn;
+	exports.startTimedGame = startTimedGame;
+	exports.update = update;
 	exports.moveToPoint = moveToPoint;
+	exports.moveToWaypoint_OLD = moveToWaypoint_OLD;
 	exports.run = run;
 	exports.checkWaypoints = checkWaypoints;
+	exports.loadTracts = loadTracts;
 	var DELAY = Phaser.Timer.SECOND * 5;
 	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 	var HIT_RANGE = 5;
 
-	function moveToPoint(sprite, waypoint) {
-	  var x = waypoint.x;
-	  var y = waypoint.y;
+	// Spawn a new sprite in the group.
 
-	  sprite.waypointIndex = waypoint.index;
-	  game.physics.arcade.moveToXY(sprite, x, y, SPEED);
+	function spawn(group, data) {
+	  var x = data.x;
+	  var y = data.y;
+	  var spriteKey = data.spriteKey;
+
+	  var sprite = group.create(x, y, spriteKey);
+
+	  sprite.alive = false;
+	  sprite.anchor = { x: .5, y: 1 };
+	  sprite.data = data;
+
+	  return sprite;
 	}
 
-	function run(group, waypoints) {
-	  var offscreen = waypoints.children[0];
-	  var onscreen = waypoints.children[1];
+	// start the timed game
+
+	function startTimedGame(mobData) {
+	  var list = mobData.list;
+	  var group = mobData.group;
+
+	  var length = group.length;
 	  var index = 0;
 
 	  // 'spawn' one human at a time with a time delay
-	  game.time.events.repeat(DELAY, group.length, function () {
-	    var child = group.children[index];
+	  game.time.events.repeat(DELAY, length, function () {
+	    var mob = group.getAt(index);
 
-	    // init offscreen
-	    child.x = offscreen.x;
-	    child.y = offscreen.y;
-	    child.alive = true;
+	    mob.alive = true;
+	    mob.tractIndex = -1;
 
+	    moveToNextWaypoint(mob);
+
+	    // work our why thought the list.
+	    index += 1;
+	  });
+	}
+
+	// Start the mob moving to the next waypoint
+	function moveToNextWaypoint(sprite) {
+	  var tract = sprite.data.tract;
+	  var nextIndex = sprite.tractIndex + 1;
+
+	  if (nextIndex === tract.length) {
+	    // loop back.
+	    nextIndex = 0;
+	  }
+
+	  var _tract$nextIndex = tract[nextIndex];
+	  var x = _tract$nextIndex.x;
+	  var y = _tract$nextIndex.y;
+
+	  sprite.tractIndex = nextIndex;
+	  game.physics.arcade.moveToXY(sprite, x, y, SPEED);
+	}
+
+	// collision checks
+
+	function update(mobData) {
+	  var group = mobData.group;
+
+	  group.forEachAlive(function (sprite) {
+	    var tract = sprite.data.tract;
+	    var index = sprite.tractIndex;
+	    var _tract$index = tract[index];
+	    var x = _tract$index.x;
+	    var y = _tract$index.y;
+
+	    var dist = game.physics.arcade.distanceToXY(sprite, x, y);
+
+	    if (dist <= HIT_RANGE) {
+	      moveToNextWaypoint(sprite);
+	    }
+	  });
+	}
+
+	//
+	// --------------
+	//
+
+	function moveToPoint(sprite, waypoint) {
+	  var x = waypoint.x;
+	  var y = waypoint.y;
+	  var tract = waypoint.tract;
+	  var index = waypoint.index;
+
+	  debugger;
+	  sprite.waypointIndex = index;
+	  sprite.nextWaypoint = tract[index + 1];
+	  game.physics.arcade.moveToXY(sprite, x, y, SPEED);
+	}
+
+	function moveToWaypoint_OLD(mob, index) {
+	  var tract = mob.tract;
+	  var nextIndex = index + 1;
+	  var _tract$nextIndex2 = tract[nextIndex];
+	  var x = _tract$nextIndex2.x;
+	  var y = _tract$nextIndex2.y;
+
+	  mob.tractIndex = nextIndex;
+	  game.physics.arcade.moveToXY(mob, x, y, SPEED);
+	}
+
+	function run(mobs, waypoints) {
+	  var index = 0;
+
+	  // 'spawn' one human at a time with a time delay
+	  game.time.events.repeat(DELAY, mobs.length, function () {
+	    var mob = mobs.getAt(index);
+
+	    mob.alive = true;
 	    // move to the first onscreen point
-	    moveToPoint(child, onscreen);
+	    moveToWaypoint(mob, 0);
 
 	    // work our why thought the list.
 	    index += 1;
@@ -372,21 +477,30 @@
 	}
 
 	function checkWaypoints(group, waypoints) {
-
 	  group.forEachAlive(function (mob) {
-	    if (mob.health === 0) {
-	      return;
-	    }
-	    var lastIndex = mob.waypointIndex;
-	    var nextIndex = lastIndex + 1;
-	    var nextWaypoint = waypoints.children[nextIndex];
-	    var point = waypoints.children[lastIndex];
-	    var dist = game.physics.arcade.distanceToXY(mob, point.x, point.y);
+	    var tract = mob.tract;
+	    var index = mob.tractIndex;
+	    var _tract$index2 = tract[index];
+	    var x = _tract$index2.x;
+	    var y = _tract$index2.y;
 
-	    //console.log('dist', dist);
+	    var dist = game.physics.arcade.distanceToXY(mob, x, y);
+
+	    console.log('dist', dist);
 	    if (dist <= HIT_RANGE) {
-	      moveToPoint(mob, nextWaypoint);
+	      moveToWaypoint(mob, index + 1);
 	    }
+	  });
+	}
+
+	function loadTracts(mobs, waypoints, lvlWaypoints) {
+	  //uhhhhhhh, just do it the stupid way
+	  mobs.forEach(function (mob) {
+	    var tractName = mob.tractName;
+	    var tract = lvlWaypoints[tractName];
+
+	    mob.tract = tract;
+	    mob.tractIndex = 0;
 	  });
 	}
 
@@ -397,33 +511,78 @@
 	/*global Phaser, game, bullets */
 	'use strict';
 
-	// Groups with physics.
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	exports.loadLevel = loadLevel;
 	exports.spawnWaypoints = spawnWaypoints;
 	exports.spawnProps = spawnProps;
 	exports.spawnMobs = spawnMobs;
 	exports.spawnSprites = spawnSprites;
 
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	var _mobJs = __webpack_require__(6);
+
+	var Mob = _interopRequireWildcard(_mobJs);
+
+	// Groups with physics.
+
 	var _groupsJs = __webpack_require__(2);
+
+	// Load the level from a lvl object.
+
+	function loadLevel(lvl) {
+	  var mobList = loadMobList(lvl.mobs, lvl.waypoints);
+	  var mobGroup = spawnMobGroup(mobList);
+
+	  return {
+	    mobs: {
+	      list: mobList,
+	      group: mobGroup
+	    }
+	  };
+	}
+
+	// Join the mob with the tract data.
+	// this way every mob knows their entire tract
+	function loadMobList(lvlMobs, lvlWaypoints) {
+	  return lvlMobs.map(function (lvlMob) {
+	    var tractName = lvlMob.tract;
+
+	    lvlMob.tractName = tractName;
+	    lvlMob.tract = lvlWaypoints[tractName];
+	    return lvlMob;
+	  });
+	}
+
+	function spawnMobGroup(mobList) {
+	  var group = (0, _groupsJs.physicsGroup)();
+
+	  mobList.forEach(function (data) {
+	    var mob = Mob.spawn(group, data);
+	  });
+
+	  return group;
+	}
 
 	// create a group of waypoints that exist at [{x,y} ...]
 
-	function spawnWaypoints(points) {
-	  //let group = createGroup();
+	function spawnWaypoints(lvlData) {
 	  var group = game.add.group();
 
-	  // no collision
-	  //group.enableBody = false;
+	  Object.keys(lvlData).forEach(function (name) {
+	    var tract = lvlData[name];
 
-	  points.forEach(function (point, index) {
-	    var sprite = group.create(point.x, point.y, 'waypoint');
-	    sprite.anchor = { x: .5, y: 1 };
-	    //sprite.body.immovable = true;
+	    tract.forEach(function (point, index) {
+	      var sprite = group.create(point.x, point.y, 'waypoint');
+	      sprite.anchor = { x: .5, y: 1 };
 
-	    // set our stuff
-	    sprite.index = index;
+	      // set our stuff
+	      sprite.waypointIndex = index;
+	      sprite.tract = tract;
+	      sprite.tractName = name;
+	    });
 	  });
 
 	  return group;
@@ -441,6 +600,7 @@
 	  var group = spawnSprites(list);
 
 	  group.forEach(function (mob) {
+	    mob.tractName = mob.data.tract;
 	    mob.waypointIndex = 0;
 	    mob.alive = false;
 	  });
@@ -449,11 +609,12 @@
 	}
 
 	function spawnSprites(list) {
-	  var group = (0, _groupsJs.createGroup)();
+	  var group = createGroup();
 
 	  list.forEach(function (point) {
 	    var sprite = group.create(point.x, point.y, point.spriteKey);
 	    sprite.anchor = { x: .5, y: 1 };
+	    sprite.data = point;
 	  });
 
 	  return group;
@@ -467,15 +628,18 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-					value: true
+	  value: true
 	});
 	var Level = {
-					waypoints: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
+	  waypoints: {
+	    mainPath: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
+	    guardPath: [{ x: 904, y: 229 }, { x: 904, y: 470 }]
+	  },
 
-					background: 'background',
-					mobs: [{ x: 120, y: 0, spriteKey: 'king' }, { x: 120, y: 0, spriteKey: 'knight' }],
+	  background: 'background',
+	  mobs: [{ x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 904, y: 0, spriteKey: 'knight', tract: 'guardPath' }],
 
-					props: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }, { x: 120, y: 520, spriteKey: 'balloon' }]
+	  props: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }, { x: 120, y: 520, spriteKey: 'balloon' }]
 	};
 
 	exports['default'] = Level;
