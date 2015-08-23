@@ -57,11 +57,16 @@
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
+	var _endStateJs = __webpack_require__(11);
+
+	var _endStateJs2 = _interopRequireDefault(_endStateJs);
+
 	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content');
 	window.game = game;
 
 	game.state.add('start', _startStateJs2['default']);
 	game.state.add('game', _gameStateJs2['default']);
+	game.state.add('end', _endStateJs2['default']);
 
 	// prod
 	game.state.start('start');
@@ -287,6 +292,7 @@
 	  var LEFT = _Phaser$Keyboard.LEFT;
 	  var RIGHT = _Phaser$Keyboard.RIGHT;
 	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+	  var ESC = _Phaser$Keyboard.ESC;
 
 	  // Movement keys
 	  if (game.input.keyboard.isDown(LEFT)) {
@@ -306,6 +312,11 @@
 	    game.time.events.add(FIRE_SPEED, function () {
 	      canFire = true;
 	    });
+	  }
+
+	  // DEBUG
+	  if (game.input.keyboard.isDown(ESC)) {
+	    console.log('rose is: ', game.rose);
 	  }
 	}
 
@@ -456,7 +467,7 @@
 	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
 
 	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    console.log('AHHHHHHHHHHHH');
+	    game.rose = 'a puppy';
 	    game.state.start('game');
 	  }
 	}
@@ -482,6 +493,43 @@
 	  fill: '#fff'
 	};
 	exports.headerFont = headerFont;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _fontsJs = __webpack_require__(10);
+
+	//
+	// Lifecycle
+	//
+	function preload() {}
+
+	function create() {
+	  game.add.text(100, 100, 'You are Monster!', _fontsJs.headerFont);
+	  game.add.text(100, 300, 'Press Space NOW!!!', _fontsJs.headerFont);
+	}
+
+	function update() {
+	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
+
+	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    game.state.start('game');
+	  }
+	}
+	exports['default'] = {
+	  preload: preload,
+	  create: create,
+	  update: update
+	};
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
