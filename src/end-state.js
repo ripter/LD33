@@ -11,8 +11,7 @@ function preload() {
 }
 
 function create() {
-  game.add.text(100, 100, 'You are dragon.', headerFont);
-  game.add.text(100, 200, 'Win dragon lady friend a stuffed princess.', headerFont);
+  game.add.text(100, 100, 'You are Monster!', headerFont);
   game.add.text(100, 300, 'Press Space NOW!!!', headerFont);
 }
 
@@ -20,7 +19,6 @@ function update() {
   const {SPACEBAR} = Phaser.Keyboard;
   
   if (game.input.keyboard.isDown(SPACEBAR)) {
-    game.rose = 'a puppy';
     game.state.start('game');
   }
 

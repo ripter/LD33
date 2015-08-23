@@ -21,7 +21,9 @@ function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('knight', 'assets/knight.png', 64, 64);
-  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
+  game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
+  //game.load.image('waypoint', 'assets/waypoint.png', 2, 2);
+  //game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 
   game.load.image('tree', 'assets/tree.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
@@ -34,12 +36,14 @@ function preload() {
 }
 
 function create() {
+  //game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.add.sprite(0,0, lvl1.background);
 
   game.score = 0;
-  game.scoreBoard = game.add.text(30, 30, 'SCORE \n ', game.score)
+  game.scoreString = 'SCORE: ';
+  game.text = game.add.text(700, 30, `SCORE ${game.score}`, {font: '24px Arial'});
   
   // Setup groups!
   window.bullets = bullets = createGroup();
@@ -51,26 +55,23 @@ function create() {
  
   // these mobs follow these waypoints
   Mob.run(mobs, waypoints);
-
-  // start a mob moving
-  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 }
 
 function score() {
   game.score++;
-  console.log('score', game.score)
+  console.log('score', game.score);
 }
 
 function updateScore() {
-
+  game.score++;
+  console.log('score', game.score);
+  game.text.text = game.scoreString + game.score;
 }
 
 function update() {
   game.physics.arcade.collide(bullets, mobs, collideBulletMob);
   game.physics.arcade.collide(bullets, props, collideBulletProp);
   game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
-
-  updateScore();
   
   playerControl(player);  
 }
@@ -82,7 +83,7 @@ function collideBulletProp(bullet, prop) {
 
 function collideBulletMob(bullet, mob) {
   console.log('collideBulletMob', bullet, mob);
-  score();
+  updateScore();
   bullet.kill();
   mob.kill();
 }

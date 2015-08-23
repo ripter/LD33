@@ -57,11 +57,16 @@
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
+	var _endStateJs = __webpack_require__(11);
+
+	var _endStateJs2 = _interopRequireDefault(_endStateJs);
+
 	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content');
 	window.game = game;
 
 	game.state.add('start', _startStateJs2['default']);
 	game.state.add('game', _gameStateJs2['default']);
+	game.state.add('end', _endStateJs2['default']);
 
 	// prod
 	game.state.start('start');
@@ -112,7 +117,9 @@
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
+	  game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
+	  //game.load.image('waypoint', 'assets/waypoint.png', 2, 2);
+	  //game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 
 	  game.load.image('tree', 'assets/tree.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
@@ -125,12 +132,14 @@
 	}
 
 	function create() {
+	  //game.physics.startSystem(Phaser.Physics.ARCADE);
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
 
 	  game.score = 0;
-	  game.scoreBoard = game.add.text(30, 30, 'SCORE \n ', game.score);
+	  game.scoreString = 'SCORE: ';
+	  game.text = game.add.text(700, 30, 'SCORE ' + game.score, { font: '24px Arial' });
 
 	  // Setup groups!
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
@@ -142,9 +151,6 @@
 
 	  // these mobs follow these waypoints
 	  Mob.run(mobs, waypoints);
-
-	  // start a mob moving
-	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 	}
 
 	function score() {
@@ -152,14 +158,16 @@
 	  console.log('score', game.score);
 	}
 
-	function updateScore() {}
+	function updateScore() {
+	  game.score++;
+	  console.log('score', game.score);
+	  game.text.text = game.scoreString + game.score;
+	}
 
 	function update() {
 	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
 	  game.physics.arcade.collide(bullets, props, collideBulletProp);
 	  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
-
-	  updateScore();
 
 	  (0, _playerJs.playerControl)(player);
 	}
@@ -171,7 +179,7 @@
 
 	function collideBulletMob(bullet, mob) {
 	  console.log('collideBulletMob', bullet, mob);
-	  score();
+	  updateScore();
 	  bullet.kill();
 	  mob.kill();
 	}
@@ -293,6 +301,7 @@
 	  var LEFT = _Phaser$Keyboard.LEFT;
 	  var RIGHT = _Phaser$Keyboard.RIGHT;
 	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+	  var ESC = _Phaser$Keyboard.ESC;
 
 	  // Movement keys
 	  if (game.input.keyboard.isDown(LEFT)) {
@@ -312,6 +321,11 @@
 	    game.time.events.add(FIRE_SPEED, function () {
 	      canFire = true;
 	    });
+	  }
+
+	  // DEBUG
+	  if (game.input.keyboard.isDown(ESC)) {
+	    console.log('rose is: ', game.rose);
 	  }
 	}
 
@@ -423,7 +437,7 @@
 					value: true
 	});
 	var Level = {
-					waypoints: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
+					waypoints: [{ x: 120, y: 100 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
 
 					background: 'background',
 					mobs: [{ x: 120, y: 0, spriteKey: 'king' }, { x: 120, y: 0, spriteKey: 'knight' }],
@@ -462,7 +476,7 @@
 	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
 
 	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    console.log('AHHHHHHHHHHHH');
+	    game.rose = 'a puppy';
 	    game.state.start('game');
 	  }
 	}
@@ -488,6 +502,43 @@
 	  fill: '#fff'
 	};
 	exports.headerFont = headerFont;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _fontsJs = __webpack_require__(10);
+
+	//
+	// Lifecycle
+	//
+	function preload() {}
+
+	function create() {
+	  game.add.text(100, 100, 'You are Monster!', _fontsJs.headerFont);
+	  game.add.text(100, 300, 'Press Space NOW!!!', _fontsJs.headerFont);
+	}
+
+	function update() {
+	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
+
+	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    game.state.start('game');
+	  }
+	}
+	exports['default'] = {
+	  preload: preload,
+	  create: create,
+	  update: update
+	};
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);
