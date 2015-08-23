@@ -24,15 +24,38 @@ const Level = {
 	, background 	: 'background'
 	, mobs: [
     // We don't need x,y for these because we know tract
-    {x:120, y:0, spriteKey: 'king', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    // the order listed is the order they appear
+    {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
     , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
     , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
+
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
     , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
     , {x:120, y:0, spriteKey: 'king', tract: 'mainPath'}
+
+    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
+    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
     , {x:1064, y: 290, spriteKey: 'horse', tract: 'guardPath'}
+
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+
+    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
+    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
+    , {x:1064, y: 290, spriteKey: 'horse', tract: 'guardPath'}
+
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+
+    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
+    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
+    , {x:1064, y: 290, spriteKey: 'horse', tract: 'guardPath'}
+
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:120, y:0, spriteKey: 'king', tract: 'mainPath'}
   ]
 
 	, foreground: [
@@ -51,7 +74,8 @@ const Level = {
     , {x: 120, y: 376, spriteKey: 'wall'}
 
     // mainPath y: 470
-    , {x: 806, y: 490, spriteKey: 'shrub'}
+    , {x: 904, y: 490, spriteKey: 'shrub'}
+    , {x: 300, y: 490, spriteKey: 'shrub'}
   ]
   , balloons: [
     {x:120,y:520, spriteKey: 'balloon'}
