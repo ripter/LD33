@@ -21,6 +21,7 @@ function preload() {
   game.load.image('dragon', 'assets/dragon2.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('knight', 'assets/knight.png', 64, 64);
+  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
   //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
   game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 
@@ -35,7 +36,7 @@ function preload() {
 }
 
 function create() {
-  const levelData = Object.assign({}, lvl1);
+  const levelData = lvl1;
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.currentScore = 0;

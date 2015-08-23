@@ -118,6 +118,7 @@
 	  game.load.image('dragon', 'assets/dragon2.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
+	  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
 	  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
 	  game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 
@@ -132,7 +133,7 @@
 	}
 
 	function create() {
-	  var levelData = Object.assign({}, _level1Js2['default']);
+	  var levelData = _level1Js2['default'];
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
@@ -293,7 +294,7 @@
 
 	var _fireJs = __webpack_require__(4);
 
-	var FIRE_SPEED = Phaser.Timer.HALF;
+	var FIRE_SPEED = Phaser.Timer.SECOND;
 	var SPEED = 100;
 
 	var canFire = true;
@@ -631,9 +632,22 @@
 	  },
 
 	  background: 'background',
-	  mobs: [{ x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }],
+	  mobs: [
+	  // We don't need x,y for these because we know tract
+	  { x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'horse', tract: 'guardPath' }],
 
-	  foreground: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }],
+	  foreground: [
+	  // mainPath y: 138
+	  { x: 120, y: 160, spriteKey: 'wall' }, { x: 304, y: 160, spriteKey: 'wall' }, { x: 370, y: 160, spriteKey: 'wall' }
+
+	  // mainPath y: 229
+	  , { x: 438, y: 240, spriteKey: 'tree' }, { x: 438, y: 240, spriteKey: 'tree' }, { x: 904, y: 240, spriteKey: 'wall' }
+
+	  // mainPath y: 354
+	  , { x: 638, y: 376, spriteKey: 'tree' }, { x: 120, y: 376, spriteKey: 'wall' }
+
+	  // mainPath y: 470
+	  , { x: 806, y: 490, spriteKey: 'shrub' }],
 	  balloons: [{ x: 120, y: 520, spriteKey: 'balloon' }]
 	};
 
