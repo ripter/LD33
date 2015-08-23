@@ -6,7 +6,8 @@ import {createGroup} from './groups.js';
 
 // create a group of waypoints that exist at [{x,y} ...]
 export function spawnWaypoints(points) {
-  let group = createGroup();
+  //let group = createGroup();
+  let group = game.add.group();
   
   // no collision
   //group.enableBody = false;
@@ -14,7 +15,7 @@ export function spawnWaypoints(points) {
   points.forEach((point, index) => {
     let sprite = group.create(point.x, point.y, 'waypoint');
     sprite.anchor = {x: .5, y: 1};
-    sprite.body.immovable = true;
+    //sprite.body.immovable = true;
 
     // set our stuff
     sprite.index = index;
@@ -27,6 +28,17 @@ export function spawnProps(list) {
   let group = spawnSprites(list);
   
   group.setAll('body.immovable', true);
+
+  return group;
+}
+
+export function spawnMobs(list) {
+  let group = spawnSprites(list);
+  
+  group.forEach((mob) => {
+    mob.waypointIndex = 0;
+    mob.alive = false;
+  });
 
   return group;
 }
