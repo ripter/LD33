@@ -84,6 +84,7 @@ function collideBulletProp(bullet, prop) {
 function collideBulletMob(bullet, mob) {
   const {mobs} = level;
 
+  debugger;
   updateScore();
   bullet.kill();
   mob.kill();

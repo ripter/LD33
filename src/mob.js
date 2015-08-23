@@ -8,9 +8,12 @@ const HIT_RANGE = 5;
 // Spawn a new sprite in the group.
 export function spawn(group, data) {
   const {spriteKey} = data;
-  let sprite = group.create(-100, -100, spriteKey);  
+  const {x, y} = data.tract[0];
+
+  let sprite = group.create(x, y, spriteKey);  
 
   sprite.alive = false;
+  sprite.visible = false;
   sprite.anchor = {x: .5, y: 1};
   sprite.data = data;
   
@@ -29,6 +32,7 @@ export function startTimedGame(mobData) {
     const mob = group.getAt(index);
     
     mob.alive = true;
+    mob.visible = true;
     mob.tractIndex = -1;
     
     moveToNextWaypoint(mob);

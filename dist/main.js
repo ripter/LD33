@@ -184,6 +184,7 @@
 	  var _level2 = level;
 	  var mobs = _level2.mobs;
 
+	  debugger;
 	  updateScore();
 	  bullet.kill();
 	  mob.kill();
@@ -353,13 +354,15 @@
 	// Spawn a new sprite in the group.
 
 	function spawn(group, data) {
-	  var x = data.x;
-	  var y = data.y;
 	  var spriteKey = data.spriteKey;
+	  var _data$tract$0 = data.tract[0];
+	  var x = _data$tract$0.x;
+	  var y = _data$tract$0.y;
 
 	  var sprite = group.create(x, y, spriteKey);
 
 	  sprite.alive = false;
+	  sprite.visible = false;
 	  sprite.anchor = { x: .5, y: 1 };
 	  sprite.data = data;
 
@@ -380,6 +383,7 @@
 	    var mob = group.getAt(index);
 
 	    mob.alive = true;
+	    mob.visible = true;
 	    mob.tractIndex = -1;
 
 	    moveToNextWaypoint(mob);
@@ -628,14 +632,13 @@
 	var Level = {
 	  waypoints: {
 	    mainPath: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
-	    guardPath: [{ x: 200, y: 290 }, { x: 1024, y: 290 }]
+	    guardPath: [{ x: 1024, y: 290 }, { x: 200, y: 290 }]
 	  },
 
 	  background: 'background',
 	  mobs: [
-	  // We don't need x,y for these because we know tract
 	  // the order listed is the order they appear
-	  { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 1064, y: 290, spriteKey: 'horse', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 1064, y: 290, spriteKey: 'horse', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 1064, y: 290, spriteKey: 'horse', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }],
+	  { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'king', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'horse', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'horse', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'horse', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'king', tract: 'mainPath' }],
 
 	  foreground: [
 	  // mainPath y: 138
