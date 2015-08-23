@@ -9,14 +9,13 @@ import {updateScore} from './game-state.js';
 //
 function preload() {
 	game.currentScore = JSON.parse(localStorage.getItem('current'));
-	game.storedScore = JSON.parse(localStorage.getItem('scores')); 
+	// game.storedScore = JSON.parse(localStorage.getItem('scores')); 
 }
 
 function create() {
   game.add.text(100, 100, 'You are Monster END!', headerFont);
   game.add.text(100, 150, 'Press Space NOW!!!', headerFont);
   game.add.text(100, 200, 'Your score: ' + game.currentScore, headerFont);
-  scoreList();
 }
 
 function update() {
@@ -29,20 +28,19 @@ function update() {
 }
 
 
-function scoreList() {
-	if(game.storedScore === null){
-console.log('gameScorer', game.storedScore)
-		game.storedScore = []
-	}
+// function scoreList() {
+// 	if(game.storedScore === null){
+		
+// 		game.storedScore = []
+// 	}
 
-	game.storedScore.unshift(game.currentScore);
+// 	game.storedScore.unshift(game.currentScore);
 
-  if (game.storedScore.legth > 5) {
-    game.storedScore.pop();
-  }
-  localStorage.setItem('scores', game.storedScore);
-console.log('scores', game.storedScore)
-}
+//   if (game.storedScore.legth > 5) {
+//     game.storedScore.pop();
+//   }
+//   localStorage.setItem('scores', game.storedScore);
+// }
 
 
 export default {
