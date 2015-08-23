@@ -53,8 +53,20 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content', _gameStateJs2['default']);
+	var _startStateJs = __webpack_require__(9);
+
+	var _startStateJs2 = _interopRequireDefault(_startStateJs);
+
+	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content');
 	window.game = game;
+
+	game.state.add('start', _startStateJs2['default']);
+	game.state.add('game', _gameStateJs2['default']);
+
+	// prod
+	game.state.start('start');
+	// dev
+	//game.state.start('game');
 
 /***/ },
 /* 1 */
@@ -421,6 +433,61 @@
 
 	exports['default'] = Level;
 	module.exports = exports['default'];
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _fontsJs = __webpack_require__(10);
+
+	//
+	// Lifecycle
+	//
+	function preload() {}
+
+	function create() {
+	  game.add.text(100, 100, 'You are dragon.', _fontsJs.headerFont);
+	  game.add.text(100, 200, 'Win dragon lady friend a stuffed princess.', _fontsJs.headerFont);
+	  game.add.text(100, 300, 'Press Space NOW!!!', _fontsJs.headerFont);
+	}
+
+	function update() {
+	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
+
+	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    console.log('AHHHHHHHHHHHH');
+	    game.state.start('game');
+	  }
+	}
+	exports['default'] = {
+	  preload: preload,
+	  create: create,
+	  update: update
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var headerFont = {
+	  font: '20pt Georgia',
+	  fill: '#fff'
+	};
+	exports.headerFont = headerFont;
 
 /***/ }
 /******/ ]);
