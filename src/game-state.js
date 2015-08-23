@@ -21,7 +21,9 @@ function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('knight', 'assets/knight.png', 64, 64);
-  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
+  game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
+  //game.load.image('waypoint', 'assets/waypoint.png', 2, 2);
+  //game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 
   game.load.image('tree', 'assets/tree.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
@@ -34,12 +36,13 @@ function preload() {
 }
 
 function create() {
+  //game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.add.sprite(0,0, lvl1.background);
 
   game.score = 0;
-  game.scoreBoard = game.add.text(30, 30, 'SCORE \n ', game.score)
+  game.scoreBoard = game.add.text(30, 30, 'SCORE \n ', game.score);
   
   // Setup groups!
   window.bullets = bullets = createGroup();
@@ -58,7 +61,7 @@ function create() {
 
 function score() {
   game.score++;
-  console.log('score', game.score)
+  console.log('score', game.score);
 }
 
 function updateScore() {

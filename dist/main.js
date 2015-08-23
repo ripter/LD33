@@ -117,7 +117,9 @@
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  game.load.image('waypoint', 'assets/waypoint.png', 24, 24);
+	  game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
+	  //game.load.image('waypoint', 'assets/waypoint.png', 2, 2);
+	  //game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 
 	  game.load.image('tree', 'assets/tree.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
@@ -130,6 +132,7 @@
 	}
 
 	function create() {
+	  //game.physics.startSystem(Phaser.Physics.ARCADE);
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
@@ -434,7 +437,7 @@
 					value: true
 	});
 	var Level = {
-					waypoints: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
+					waypoints: [{ x: 120, y: 100 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
 
 					background: 'background',
 					mobs: [{ x: 120, y: 0, spriteKey: 'king' }, { x: 120, y: 0, spriteKey: 'knight' }],
