@@ -40,9 +40,10 @@ function create() {
   game.add.sprite(0,0, lvl1.background);
 
 
-  game.score = 0;
+  game.currentScore = 0;
+  game.storedScore = [];
   game.scoreString = 'SCORE: ';
-  game.text = game.add.text(700, 30, game.scoreString + game.score, {font: '24px Arial'});
+  game.text = game.add.text(700, 30, game.scoreString + game.currentScore, {font: '24px Arial'});
   
   // Setup groups!
   window.bullets = bullets = createGroup();
@@ -60,9 +61,11 @@ function create() {
 }
 
 function updateScore() {
-  game.score++;
-  game.text.text = game.scoreString + game.score;
-  localStorage.setItem('score', game.score);
+
+  game.currentScore++;
+  console.log('scores', game.currentScore);
+  game.text.text = game.scoreString + game.currentScore;
+  localStorage.setItem('current', game.currentScore);
 }
 
 function update() {

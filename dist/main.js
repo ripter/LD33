@@ -135,9 +135,10 @@
 
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
 
-	  game.score = 0;
+	  game.currentScore = 0;
+	  game.storedScore = [];
 	  game.scoreString = 'SCORE: ';
-	  game.text = game.add.text(700, 30, game.scoreString + game.score, { font: '24px Arial' });
+	  game.text = game.add.text(700, 30, game.scoreString + game.currentScore, { font: '24px Arial' });
 
 	  // Setup groups!
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
@@ -155,9 +156,11 @@
 	}
 
 	function updateScore() {
-	  game.score++;
-	  game.text.text = game.scoreString + game.score;
-	  localStorage.setItem('score', game.score);
+
+	  game.currentScore++;
+	  console.log('scores', game.currentScore);
+	  game.text.text = game.scoreString + game.currentScore;
+	  localStorage.setItem('current', game.currentScore);
 	}
 
 	function update() {
@@ -543,14 +546,14 @@
 	// Lifecycle
 	//
 	function preload() {
-	  debugger;
-	  console.log('state', game);
+	  game.currentScore = JSON.parse(localStorage.getItem('current'));
+	  // game.storedScore = JSON.parse(localStorage.getItem('scores'));
 	}
 
 	function create() {
 	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
 	  game.add.text(100, 150, 'Press Space NOW!!!', _fontsJs.headerFont);
-	  game.add.text(100, 200, 'Your score: ', _fontsJs.headerFont);
+	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
 	}
 
 	function update() {
@@ -560,6 +563,21 @@
 	    game.state.start('game');
 	  }
 	}
+
+	// function scoreList() {
+	// 	if(game.storedScore === null){
+
+	// 		game.storedScore = []
+	// 	}
+
+	// 	game.storedScore.unshift(game.currentScore);
+
+	//   if (game.storedScore.legth > 5) {
+	//     game.storedScore.pop();
+	//   }
+	//   localStorage.setItem('scores', game.storedScore);
+	// }
+
 	exports['default'] = {
 	  preload: preload,
 	  create: create,

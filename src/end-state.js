@@ -8,14 +8,14 @@ import {updateScore} from './game-state.js';
 // Lifecycle
 //
 function preload() {
-	debugger;
-	console.log('state', game)
+	game.currentScore = JSON.parse(localStorage.getItem('current'));
+	// game.storedScore = JSON.parse(localStorage.getItem('scores')); 
 }
 
 function create() {
   game.add.text(100, 100, 'You are Monster END!', headerFont);
   game.add.text(100, 150, 'Press Space NOW!!!', headerFont);
-  game.add.text(100, 200, 'Your score: ', headerFont);
+  game.add.text(100, 200, 'Your score: ' + game.currentScore, headerFont);
 }
 
 function update() {
@@ -26,6 +26,23 @@ function update() {
   }
 
 }
+
+
+// function scoreList() {
+// 	if(game.storedScore === null){
+		
+// 		game.storedScore = []
+// 	}
+
+// 	game.storedScore.unshift(game.currentScore);
+
+//   if (game.storedScore.legth > 5) {
+//     game.storedScore.pop();
+//   }
+//   localStorage.setItem('scores', game.storedScore);
+// }
+
+
 export default {
   preload: preload
   , create: create
