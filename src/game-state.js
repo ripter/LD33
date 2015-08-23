@@ -64,7 +64,8 @@ function update() {
   playerControl(player);
   Mob.update(mobs);
 
-  game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
+  game.physics.arcade.overlap(bullets, mobs.group, collideBulletMob);
+  //game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
   game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
   game.physics.arcade.collide(mobs.group, balloons, collideBalloon); 
 }
@@ -84,10 +85,11 @@ function collideBulletProp(bullet, prop) {
 function collideBulletMob(bullet, mob) {
   const {mobs} = level;
 
-  debugger;
-  updateScore();
+  // Bullets only collide once
+  if (!bullet.alive) { return; }
   bullet.kill();
   mob.kill();
+  updateScore();
 
   // Game Over check
   if (Mob.mobsLeft(mobs) === 0) {
