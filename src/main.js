@@ -16,5 +16,3 @@ game.state.add('end', endState);
 //game.state.start('start');
 // dev
 game.state.start('game');
-
-

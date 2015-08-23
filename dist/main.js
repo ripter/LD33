@@ -53,7 +53,7 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(10);
+	var _startStateJs = __webpack_require__(11);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
@@ -100,7 +100,9 @@
 
 	var _levelLoaderJs = __webpack_require__(7);
 
-	var _level1Js = __webpack_require__(9);
+	var _fontsJs = __webpack_require__(9);
+
+	var _level1Js = __webpack_require__(10);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
@@ -133,28 +135,15 @@
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
-	  game.storedScore = [];
-	  game.scoreString = 'SCORE: ';
-	  game.text = game.add.text(700, 30, game.scoreString + game.currentScore, { font: '24px Arial' });
 
 	  // load level!
 	  window.level = level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
 	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
-	  Mob.startTimedGame(level.mobs);
+	  game.textScore = game.add.text(800, 10, 'SCORE: 0', _fontsJs.headerFont);
 
-	  /*
-	  // Setup groups!
-	    window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
-	  window.mobs = mobs = spawnMobs(lvl1.mobs);
-	  window.props = props = spawnProps(lvl1.props);
-	    // these mobs follow these waypoints
-	  Mob.loadTracts(mobs, waypoints, lvl1.waypoints);
-	  Mob.run(mobs, waypoints);
-	   // start a mob moving
-	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
-	  */
+	  Mob.startTimedGame(level.mobs);
 	}
 
 	function update() {
@@ -170,11 +159,8 @@
 	}
 
 	function updateScore() {
-
-	  game.currentScore++;
-	  console.log('scores', game.currentScore);
-	  game.text.text = game.scoreString + game.currentScore;
-	  localStorage.setItem('current', game.currentScore);
+	  game.currentScore += 1;
+	  game.textScore.setText('SCORE: ' + game.currentScore);
 	}
 
 	function collideBulletProp(bullet, prop) {
@@ -334,11 +320,6 @@
 	exports.spawn = spawn;
 	exports.startTimedGame = startTimedGame;
 	exports.update = update;
-	exports.moveToPoint = moveToPoint;
-	exports.moveToWaypoint_OLD = moveToWaypoint_OLD;
-	exports.run = run;
-	exports.checkWaypoints = checkWaypoints;
-	exports.loadTracts = loadTracts;
 	var DELAY = Phaser.Timer.SECOND * 1;
 	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 	var HIT_RANGE = 5;
@@ -420,77 +401,6 @@
 	  });
 	}
 
-	//
-	// --------------
-	//
-
-	function moveToPoint(sprite, waypoint) {
-	  var x = waypoint.x;
-	  var y = waypoint.y;
-	  var tract = waypoint.tract;
-	  var index = waypoint.index;
-
-	  debugger;
-	  sprite.waypointIndex = index;
-	  sprite.nextWaypoint = tract[index + 1];
-	  game.physics.arcade.moveToXY(sprite, x, y, SPEED);
-	}
-
-	function moveToWaypoint_OLD(mob, index) {
-	  var tract = mob.tract;
-	  var nextIndex = index + 1;
-	  var _tract$nextIndex2 = tract[nextIndex];
-	  var x = _tract$nextIndex2.x;
-	  var y = _tract$nextIndex2.y;
-
-	  mob.tractIndex = nextIndex;
-	  game.physics.arcade.moveToXY(mob, x, y, SPEED);
-	}
-
-	function run(mobs, waypoints) {
-	  var index = 0;
-
-	  // 'spawn' one human at a time with a time delay
-	  game.time.events.repeat(DELAY, mobs.length, function () {
-	    var mob = mobs.getAt(index);
-
-	    mob.alive = true;
-	    // move to the first onscreen point
-	    moveToWaypoint(mob, 0);
-
-	    // work our why thought the list.
-	    index += 1;
-	  });
-	}
-
-	function checkWaypoints(group, waypoints) {
-	  group.forEachAlive(function (mob) {
-	    var tract = mob.tract;
-	    var index = mob.tractIndex;
-	    var _tract$index2 = tract[index];
-	    var x = _tract$index2.x;
-	    var y = _tract$index2.y;
-
-	    var dist = game.physics.arcade.distanceToXY(mob, x, y);
-
-	    console.log('dist', dist);
-	    if (dist <= HIT_RANGE) {
-	      moveToWaypoint(mob, index + 1);
-	    }
-	  });
-	}
-
-	function loadTracts(mobs, waypoints, lvlWaypoints) {
-	  //uhhhhhhh, just do it the stupid way
-	  mobs.forEach(function (mob) {
-	    var tractName = mob.tractName;
-	    var tract = lvlWaypoints[tractName];
-
-	    mob.tract = tract;
-	    mob.tractIndex = 0;
-	  });
-	}
-
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
@@ -502,10 +412,6 @@
 	  value: true
 	});
 	exports.loadLevel = loadLevel;
-	exports.spawnWaypoints = spawnWaypoints;
-	exports.spawnProps = spawnProps;
-	exports.spawnMobs = spawnMobs;
-	exports.spawnSprites = spawnSprites;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -572,64 +478,6 @@
 	  return group;
 	}
 
-	//
-	// ---------------------------
-	//
-
-	// create a group of waypoints that exist at [{x,y} ...]
-
-	function spawnWaypoints(lvlData) {
-	  var group = game.add.group();
-
-	  Object.keys(lvlData).forEach(function (name) {
-	    var tract = lvlData[name];
-
-	    tract.forEach(function (point, index) {
-	      var sprite = group.create(point.x, point.y, 'waypoint');
-	      sprite.anchor = { x: .5, y: 1 };
-
-	      // set our stuff
-	      sprite.waypointIndex = index;
-	      sprite.tract = tract;
-	      sprite.tractName = name;
-	    });
-	  });
-
-	  return group;
-	}
-
-	function spawnProps(list) {
-	  var group = spawnSprites(list);
-
-	  group.setAll('body.immovable', true);
-
-	  return group;
-	}
-
-	function spawnMobs(list) {
-	  var group = spawnSprites(list);
-
-	  group.forEach(function (mob) {
-	    mob.tractName = mob.data.tract;
-	    mob.waypointIndex = 0;
-	    mob.alive = false;
-	  });
-
-	  return group;
-	}
-
-	function spawnSprites(list) {
-	  var group = createGroup();
-
-	  list.forEach(function (point) {
-	    var sprite = group.create(point.x, point.y, point.spriteKey);
-	    sprite.anchor = { x: .5, y: 1 };
-	    sprite.data = point;
-	  });
-
-	  return group;
-	}
-
 /***/ },
 /* 8 */
 /***/ function(module, exports) {
@@ -660,6 +508,22 @@
 /* 9 */
 /***/ function(module, exports) {
 
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var headerFont = {
+	  font: '20pt Georgia',
+	  fill: '#fff'
+	};
+	exports.headerFont = headerFont;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
 	/*global Phaser */
 	'use strict';
 
@@ -682,7 +546,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -692,7 +556,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(11);
+	var _fontsJs = __webpack_require__(9);
 
 	//
 	// Lifecycle
@@ -721,22 +585,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	/*global Phaser, game */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	var headerFont = {
-	  font: '20pt Georgia',
-	  fill: '#fff'
-	};
-	exports.headerFont = headerFont;
-
-/***/ },
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -747,7 +595,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(11);
+	var _fontsJs = __webpack_require__(9);
 
 	var _gameStateJs = __webpack_require__(1);
 

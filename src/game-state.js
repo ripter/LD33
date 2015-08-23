@@ -5,7 +5,8 @@ import {physicsGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
 import * as Mob from './mob.js';
-import {loadLevel, loadTracts, spawnWaypoints, spawnProps, spawnMobs, spawnSprites} from './level-loader.js';
+import {loadLevel} from './level-loader.js';
+import {headerFont} from './fonts.js';
 
 window.Mob = Mob;
 import lvl1 from './level1.js';
@@ -27,7 +28,7 @@ function preload() {
   game.load.image('wall', 'assets/wall.png', 64, 64);
   game.load.image('shrub', 'assets/shrub.png', 64, 64);
   game.load.image('balloon', 'assets/balloon.png', 64, 64);
-  
+
   game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
@@ -37,34 +38,15 @@ function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.currentScore = 0;
-  game.storedScore = [];
-  game.scoreString = 'SCORE: ';
-  game.text = game.add.text(700, 30, game.scoreString + game.currentScore, {font: '24px Arial'});
-  
 
   // load level!
   window.level = level = loadLevel(lvl1);
   window.bullets = bullets = physicsGroup();
   window.player = player = spawnDragon(500, 500);
-  
+
+  game.textScore = game.add.text(800, 10, 'SCORE: 0', headerFont);
+
   Mob.startTimedGame(level.mobs);
-  
-
-  /*
-  // Setup groups!
-
-
-  window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
-  window.mobs = mobs = spawnMobs(lvl1.mobs);
-  window.props = props = spawnProps(lvl1.props);
- 
-  // these mobs follow these waypoints
-  Mob.loadTracts(mobs, waypoints, lvl1.waypoints);
-  Mob.run(mobs, waypoints);
-
-  // start a mob moving
-  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
-  */
 }
 
 function update() {
@@ -79,11 +61,8 @@ function update() {
 
 
 function updateScore() {
-
-  game.currentScore++;
-  console.log('scores', game.currentScore);
-  game.text.text = game.scoreString + game.currentScore;
-  localStorage.setItem('current', game.currentScore);
+  game.currentScore += 1;
+  game.textScore.setText(`SCORE: ${game.currentScore}`);
 }
 
 function collideBulletProp(bullet, prop) {
@@ -100,5 +79,5 @@ function collideBulletMob(bullet, mob) {
 export default {
   preload: preload
   , create: create
-  , update: update 
+  , update: update
 };
