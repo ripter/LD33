@@ -69,9 +69,9 @@
 	game.state.add('end', _endStateJs2['default']);
 
 	// prod
-	game.state.start('start');
+	//game.state.start('start');
 	// dev
-	//game.state.start('game');
+	game.state.start('game');
 
 /***/ },
 /* 1 */
@@ -706,12 +706,13 @@
 	// Lifecycle
 	//
 	function preload() {
-	  //game.currentScore = JSON.parse(localStorage.getItem('current'));
-	  // game.storedScore = JSON.parse(localStorage.getItem('scores'));
+	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
+	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
 	}
 
 	function create() {
-	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
+	  addGameOver();
+	  //game.add.text(100, 100, 'You are Monster END!', headerFont);
 	  //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
 	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
 
@@ -723,6 +724,21 @@
 
 	  if (game.input.keyboard.isDown(ENTER)) {
 	    game.state.start('game', true);
+	  }
+	}
+
+	function addGameOver() {
+	  var score = game.currentScore;
+	  // REFACTOR: i'm using window.level
+	  var mobCount = level.mobs.list.length;
+	  var didWin = score === mobCount;
+
+	  if (didWin) {
+	    game.add.text(100, 100, 'You WIN!', _fontsJs.headerFont);
+	    game.add.image(500, 100, 'stuffedPrincess');
+	  } else {
+	    game.add.text(100, 100, 'You LOST!', _fontsJs.headerFont);
+	    game.add.image(100, 300, 'carnie');
 	  }
 	}
 

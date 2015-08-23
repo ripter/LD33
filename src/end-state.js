@@ -8,12 +8,13 @@ import {updateScore} from './game-state.js';
 // Lifecycle
 //
 function preload() {
-	//game.currentScore = JSON.parse(localStorage.getItem('current'));
-	// game.storedScore = JSON.parse(localStorage.getItem('scores')); 
+  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
+  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
 }
 
 function create() {
-  game.add.text(100, 100, 'You are Monster END!', headerFont);
+  addGameOver();
+  //game.add.text(100, 100, 'You are Monster END!', headerFont);
   //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
   game.add.text(100, 200, 'Your score: ' + game.currentScore, headerFont);
 
@@ -27,6 +28,23 @@ function update() {
     game.state.start('game', true);
   }
 
+}
+
+
+function addGameOver() {
+  const score = game.currentScore;
+  // REFACTOR: i'm using window.level
+  const mobCount = level.mobs.list.length;
+  const didWin = score === mobCount;
+  
+  if (didWin) {
+    game.add.text(100, 100, 'You WIN!', headerFont);
+    game.add.image(500, 100, 'stuffedPrincess');
+  }
+  else {
+    game.add.text(100, 100, 'You LOST!', headerFont);
+    game.add.image(100, 300, 'carnie');
+  }
 }
 
 

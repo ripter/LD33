@@ -13,6 +13,6 @@ game.state.add('game', gameState);
 game.state.add('end', endState);
 
 // prod
-game.state.start('start');
+//game.state.start('start');
 // dev
-//game.state.start('game');
+game.state.start('game');
