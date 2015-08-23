@@ -134,7 +134,8 @@
 
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
 
-	  game.score = 0;
+	  game.currentScore = 0;
+	  game.storedScore = [];
 	  game.scoreString = 'SCORE: ';
 	  game.text = game.add.text(700, 30, game.scoreString + game.score, { font: '24px Arial' });
 
@@ -155,10 +156,19 @@
 
 	function updateScore() {
 
+	  var scoreArray = JSON.parse(localStorage.getItem('scores'));
+
+	  if (scoreArray != null || scoreArray != undefined) {
+	    game.storedScore = scoreArray;
+	  } else {}
+
+	  console.log('Storedscore', game.storedScore);
+
 	  game.score++;
-	  console.log('score', game.score);
-	  game.text.text = game.scoreString + game.score;
-	  localStorage.setItem('score', game.score);
+	  console.log('scores', game.currentScore, game.storedScore);
+	  game.text.text = game.scoreString + game.currentScore;
+	  localStorage.setItem('current', game.currentScore);
+	  localStorage.setItem('scores', game.storedScore);
 	}
 
 	function update() {
@@ -545,14 +555,15 @@
 	// Lifecycle
 	//
 	function preload() {
-	  debugger;
-	  console.log('state', game);
+	  game.currentScore = JSON.parse(localStorage.getItem('current'));
+	  game.storedScore = JSON.parse(localStorage.getItem('scores'));
 	}
 
 	function create() {
 	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
 	  game.add.text(100, 150, 'Press Space NOW!!!', _fontsJs.headerFont);
-	  game.add.text(100, 200, 'Your score: ', _fontsJs.headerFont);
+	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
+	  scoreList();
 	}
 
 	function update() {
@@ -562,6 +573,22 @@
 	    game.state.start('game');
 	  }
 	}
+
+	function scoreList() {
+	  if (game.storedScore === null) {
+	    console.log('gameScorer', game.storedScore);
+	    game.storedScore = [];
+	  }
+
+	  game.storedScore.unshift(game.currentScore);
+
+	  if (game.storedScore.legth > 5) {
+	    game.storedScore.pop();
+	  }
+	  localStorage.setItem('scores', game.storedScore);
+	  console.log('scores', game.storedScore);
+	}
+
 	exports['default'] = {
 	  preload: preload,
 	  create: create,

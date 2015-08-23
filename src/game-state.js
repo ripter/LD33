@@ -39,7 +39,8 @@ function create() {
   game.add.sprite(0,0, lvl1.background);
 
 
-  game.score = 0;
+  game.currentScore = 0;
+  game.storedScore = [];
   game.scoreString = 'SCORE: ';
   game.text = game.add.text(700, 30, game.scoreString + game.score, {font: '24px Arial'});
   
@@ -60,11 +61,21 @@ function create() {
 
 function updateScore() {
 
+  let scoreArray = JSON.parse(localStorage.getItem('scores'));
+
+  if (scoreArray != null || scoreArray != undefined) {
+    game.storedScore = scoreArray;
+  } else {
+
+  }
+
+  console.log('Storedscore', game.storedScore);
 
   game.score++;
-  console.log('score', game.score)
-  game.text.text = game.scoreString + game.score;
-  localStorage.setItem('score', game.score);
+  console.log('scores', game.currentScore, game.storedScore);
+  game.text.text = game.scoreString + game.currentScore;
+  localStorage.setItem('current', game.currentScore);
+  localStorage.setItem('scores', game.storedScore);
 }
 
 function update() {
