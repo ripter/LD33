@@ -16,7 +16,6 @@ let bullets;
 let waypoints;
 let props;
 let balloons;
-let score = 0;
 
 function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
@@ -38,6 +37,9 @@ function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.add.sprite(0,0, lvl1.background);
+
+  game.score = 0;
+  game.scoreBoard = game.add.text(30, 30, 'SCORE \n ', game.score)
   
   // Setup groups!
   window.bullets = bullets = createGroup();
@@ -55,14 +57,20 @@ function create() {
 }
 
 function score() {
-  console.log('score', score)
-  score += 1;
+  game.score++;
+  console.log('score', game.score)
+}
+
+function updateScore() {
+
 }
 
 function update() {
   game.physics.arcade.collide(bullets, mobs, collideBulletMob);
   game.physics.arcade.collide(bullets, props, collideBulletProp);
   game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
+
+  updateScore();
   
   playerControl(player);  
 }
