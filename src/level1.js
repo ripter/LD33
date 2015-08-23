@@ -35,6 +35,8 @@ const Level = {
       , {x:806,y:490, spriteKey: 'shrub'}
       , {x:645,y:490, spriteKey: 'tree'}
       , {x:237,y:490, spriteKey: 'shrub'}
+      , {x:120,y:374, spriteKey: 'tree'}
+      , {x:900,y:482, spriteKey: 'tree'}
       , {x:120,y:520, spriteKey: 'balloon'}
 			]
 };
