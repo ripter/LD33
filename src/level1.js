@@ -23,39 +23,38 @@ const Level = {
 
 	, background 	: 'background'
 	, mobs: [
-    // We don't need x,y for these because we know tract
     // the order listed is the order they appear
-    {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
+    {spriteKey: 'knight', tract: 'guardPath'}
+    , {spriteKey: 'knight', tract: 'guardPath'}
+    , {spriteKey: 'knight', tract: 'guardPath'}
 
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'king', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'king', tract: 'mainPath'}
 
-    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:1064, y: 290, spriteKey: 'horse', tract: 'guardPath'}
+    , {spriteKey: 'knight', tract: 'guardPath'}
+    , {spriteKey: 'knight', tract: 'guardPath'}
+    , {spriteKey: 'horse', tract: 'guardPath'}
 
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
 
-    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:1064, y: 290, spriteKey: 'horse', tract: 'guardPath'}
+    , {spriteKey: 'knight', tract: 'guardPath'}
+    , {spriteKey: 'knight', tract: 'guardPath'}
+    , {spriteKey: 'horse', tract: 'guardPath'}
 
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
 
-    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
-    , {x:1064, y: 290, spriteKey: 'horse', tract: 'guardPath'}
+    , {spriteKey: 'knight', tract: 'guardPath'}
+    , {spriteKey: 'knight', tract: 'guardPath'}
+    , {spriteKey: 'horse', tract: 'guardPath'}
 
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:120, y:0, spriteKey: 'king', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'knight', tract: 'mainPath'}
+    , {spriteKey: 'king', tract: 'mainPath'}
   ]
 
 	, foreground: [

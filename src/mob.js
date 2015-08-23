@@ -7,8 +7,8 @@ const HIT_RANGE = 5;
 
 // Spawn a new sprite in the group.
 export function spawn(group, data) {
-  const {x, y, spriteKey} = data;
-  let sprite = group.create(x, y, spriteKey);  
+  const {spriteKey} = data;
+  let sprite = group.create(-100, -100, spriteKey);  
 
   sprite.alive = false;
   sprite.anchor = {x: .5, y: 1};
