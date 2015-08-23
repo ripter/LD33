@@ -1,7 +1,7 @@
 /*global Phaser, game */
 'use strict';
 
-import {createGroup} from './groups.js';
+import {physicsGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
 import * as Mob from './mob.js';
@@ -13,10 +13,7 @@ import lvl1 from './level1.js';
 let level;
 
 let player;
-let mobs;
 let bullets;
-let waypoints;
-let props;
 let balloons;
 
 function preload() {
@@ -39,24 +36,22 @@ function preload() {
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  game.add.sprite(0,0, lvl1.background);
-
-
   game.currentScore = 0;
   game.storedScore = [];
   game.scoreString = 'SCORE: ';
   game.text = game.add.text(700, 30, game.scoreString + game.score, {font: '24px Arial'});
   
+
   // load level!
-  level = loadLevel(lvl1);
+  window.level = level = loadLevel(lvl1);
+  window.bullets = bullets = physicsGroup();
+  window.player = player = spawnDragon(500, 500);
   
   Mob.startTimedGame(level.mobs);
   
 
   /*
   // Setup groups!
-  window.bullets = bullets = createGroup();
-  window.player = player = spawnDragon(500, 500);
 
 
   window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
@@ -71,6 +66,17 @@ function create() {
   //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
   */
 }
+
+function update() {
+  const {mobs, fgGroup} = level;
+
+  playerControl(player);
+  Mob.update(level.mobs);
+
+  game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
+  game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
+}
+
 
 function updateScore() {
 
@@ -89,18 +95,6 @@ function updateScore() {
   game.text.text = game.scoreString + game.currentScore;
   localStorage.setItem('current', game.currentScore);
   localStorage.setItem('scores', game.storedScore);
-}
-
-function update() {
-  /*
-  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
-  game.physics.arcade.collide(bullets, props, collideBulletProp);
-
-  playerControl(player);
-  Mob.checkWaypoints(mobs, waypoints);
-  */
-  
-  Mob.update(level.mobs);
 }
 
 function collideBulletProp(bullet, prop) {

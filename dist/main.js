@@ -53,11 +53,11 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(9);
+	var _startStateJs = __webpack_require__(10);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(11);
+	var _endStateJs = __webpack_require__(12);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -100,7 +100,7 @@
 
 	var _levelLoaderJs = __webpack_require__(7);
 
-	var _level1Js = __webpack_require__(8);
+	var _level1Js = __webpack_require__(9);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
@@ -109,10 +109,7 @@
 	var level = undefined;
 
 	var player = undefined;
-	var mobs = undefined;
 	var bullets = undefined;
-	var waypoints = undefined;
-	var props = undefined;
 	var balloons = undefined;
 
 	function preload() {
@@ -135,22 +132,20 @@
 	function create() {
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	  game.add.sprite(0, 0, _level1Js2['default'].background);
-
 	  game.currentScore = 0;
 	  game.storedScore = [];
 	  game.scoreString = 'SCORE: ';
 	  game.text = game.add.text(700, 30, game.scoreString + game.score, { font: '24px Arial' });
 
 	  // load level!
-	  level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+	  window.level = level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
+	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
 	  Mob.startTimedGame(level.mobs);
 
 	  /*
 	  // Setup groups!
-	  window.bullets = bullets = createGroup();
-	  window.player = player = spawnDragon(500, 500);
 	    window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
 	  window.mobs = mobs = spawnMobs(lvl1.mobs);
 	  window.props = props = spawnProps(lvl1.props);
@@ -160,6 +155,18 @@
 	   // start a mob moving
 	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 	  */
+	}
+
+	function update() {
+	  var _level = level;
+	  var mobs = _level.mobs;
+	  var fgGroup = _level.fgGroup;
+
+	  (0, _playerJs.playerControl)(player);
+	  Mob.update(level.mobs);
+
+	  game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
+	  game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
 	}
 
 	function updateScore() {
@@ -177,17 +184,6 @@
 	  game.text.text = game.scoreString + game.currentScore;
 	  localStorage.setItem('current', game.currentScore);
 	  localStorage.setItem('scores', game.storedScore);
-	}
-
-	function update() {
-	  /*
-	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
-	  game.physics.arcade.collide(bullets, props, collideBulletProp);
-	   playerControl(player);
-	  Mob.checkWaypoints(mobs, waypoints);
-	  */
-
-	  Mob.update(level.mobs);
 	}
 
 	function collideBulletProp(bullet, prop) {
@@ -352,7 +348,7 @@
 	exports.run = run;
 	exports.checkWaypoints = checkWaypoints;
 	exports.loadTracts = loadTracts;
-	var DELAY = Phaser.Timer.SECOND * 5;
+	var DELAY = Phaser.Timer.SECOND * 1;
 	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 	var HIT_RANGE = 5;
 
@@ -526,6 +522,10 @@
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
+	var _foregroundJs = __webpack_require__(8);
+
+	var Foreground = _interopRequireWildcard(_foregroundJs);
+
 	// Groups with physics.
 
 	var _groupsJs = __webpack_require__(2);
@@ -533,14 +533,19 @@
 	// Load the level from a lvl object.
 
 	function loadLevel(lvl) {
+	  // These are in order by z-index
+	  var background = game.add.image(0, 0, lvl.background);
 	  var mobList = loadMobList(lvl.mobs, lvl.waypoints);
 	  var mobGroup = spawnMobGroup(mobList);
+	  var fgGroup = spawnForegroundGroup(lvl.foreground);
 
 	  return {
+	    background: background,
 	    mobs: {
 	      list: mobList,
 	      group: mobGroup
-	    }
+	    },
+	    fgGroup: fgGroup
 	  };
 	}
 
@@ -560,11 +565,25 @@
 	  var group = (0, _groupsJs.physicsGroup)();
 
 	  mobList.forEach(function (data) {
-	    var mob = Mob.spawn(group, data);
+	    var sprite = Mob.spawn(group, data);
 	  });
 
 	  return group;
 	}
+
+	function spawnForegroundGroup(foregroundList) {
+	  var group = (0, _groupsJs.physicsGroup)();
+
+	  foregroundList.forEach(function (data) {
+	    var sprite = Foreground.spawn(group, data);
+	  });
+
+	  return group;
+	}
+
+	//
+	// ---------------------------
+	//
 
 	// create a group of waypoints that exist at [{x,y} ...]
 
@@ -624,6 +643,32 @@
 /* 8 */
 /***/ function(module, exports) {
 
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.spawn = spawn;
+
+	function spawn(group, data) {
+	  var x = data.x;
+	  var y = data.y;
+	  var spriteKey = data.spriteKey;
+
+	  var sprite = group.create(x, y, spriteKey);
+
+	  sprite.anchor = { x: .5, y: 1 };
+	  sprite.data = data;
+	  sprite.body.immovable = true;
+
+	  return sprite;
+	}
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
 	/*global Phaser */
 	'use strict';
 
@@ -639,14 +684,14 @@
 	  background: 'background',
 	  mobs: [{ x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 904, y: 0, spriteKey: 'knight', tract: 'guardPath' }],
 
-	  props: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }, { x: 120, y: 520, spriteKey: 'balloon' }]
+	  foreground: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }, { x: 120, y: 520, spriteKey: 'balloon' }]
 	};
 
 	exports['default'] = Level;
 	module.exports = exports['default'];
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -656,7 +701,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(10);
+	var _fontsJs = __webpack_require__(11);
 
 	//
 	// Lifecycle
@@ -685,7 +730,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -701,7 +746,7 @@
 	exports.headerFont = headerFont;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -711,7 +756,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(10);
+	var _fontsJs = __webpack_require__(11);
 
 	var _gameStateJs = __webpack_require__(1);
 

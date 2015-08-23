@@ -28,7 +28,7 @@ const Level = {
     , {x:904, y:0, spriteKey: 'knight', tract: 'guardPath'}
   ]
 
-	, props 		: [
+	, foreground: [
 			  {x:116,y:160, spriteKey: 'wall'}
       , {x:180,y:160, spriteKey: 'wall'}
       , {x:244,y:160, spriteKey: 'wall'}

@@ -1,7 +1,7 @@
 /*global Phaser, game */
 'use strict';
 
-const DELAY = Phaser.Timer.SECOND * 5;
+const DELAY = Phaser.Timer.SECOND * 1;
 const SPEED = 100; //Phaser.Timer.MINUTE * 4;
 const HIT_RANGE = 5;
 

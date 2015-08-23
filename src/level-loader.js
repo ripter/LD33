@@ -2,19 +2,26 @@
 'use strict';
 
 import * as Mob from './mob.js';
+import * as Foreground from './foreground.js';
+
 // Groups with physics.
 import {physicsGroup} from './groups.js';
 
 // Load the level from a lvl object.
 export function loadLevel(lvl) {
+  // These are in order by z-index
+  const background = game.add.image(0, 0, lvl.background);
   const mobList = loadMobList(lvl.mobs, lvl.waypoints);
   const mobGroup = spawnMobGroup(mobList);
+  const fgGroup = spawnForegroundGroup(lvl.foreground);
   
   return {
-    mobs: {
+    background: background
+    , mobs: {
       list: mobList
       , group : mobGroup
     }
+    , fgGroup: fgGroup
   };
 }
 
@@ -34,12 +41,26 @@ function spawnMobGroup(mobList) {
   let group = physicsGroup();
   
   mobList.forEach((data) => {
-    const mob = Mob.spawn(group, data);
+    const sprite = Mob.spawn(group, data);
   });
 
   return group;
 }
 
+function spawnForegroundGroup(foregroundList) {
+  let group = physicsGroup();
+
+  foregroundList.forEach((data) => {
+    const sprite = Foreground.spawn(group, data);
+  });
+
+  return group;
+}
+
+
+//
+// ---------------------------
+//
 
 // create a group of waypoints that exist at [{x,y} ...]
 export function spawnWaypoints(lvlData) {
