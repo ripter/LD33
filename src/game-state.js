@@ -42,7 +42,8 @@ function create() {
   game.add.sprite(0,0, lvl1.background);
 
   game.score = 0;
-  game.scoreBoard = game.add.text(30, 30, 'SCORE \n ', game.score);
+  game.scoreString = 'SCORE: ';
+  game.text = game.add.text(700, 30, `SCORE ${game.score}`, {font: '24px Arial'});
   
   // Setup groups!
   window.bullets = bullets = createGroup();
@@ -54,9 +55,6 @@ function create() {
  
   // these mobs follow these waypoints
   Mob.run(mobs, waypoints);
-
-  // start a mob moving
-  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 }
 
 function score() {
@@ -65,15 +63,15 @@ function score() {
 }
 
 function updateScore() {
-
+  game.score++;
+  console.log('score', game.score);
+  game.text.text = game.scoreString + game.score;
 }
 
 function update() {
   game.physics.arcade.collide(bullets, mobs, collideBulletMob);
   game.physics.arcade.collide(bullets, props, collideBulletProp);
   game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
-
-  updateScore();
   
   playerControl(player);  
 }
@@ -85,7 +83,7 @@ function collideBulletProp(bullet, prop) {
 
 function collideBulletMob(bullet, mob) {
   console.log('collideBulletMob', bullet, mob);
-  score();
+  updateScore();
   bullet.kill();
   mob.kill();
 }
