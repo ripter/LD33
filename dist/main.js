@@ -140,9 +140,16 @@
 	  // load level!
 	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelData);
 	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
-	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
+	  // Score!
 	  game.textScore = game.add.text(800, 10, 'SCORE: 0', _fontsJs.headerFont);
+
+	  // How to Play
+	  game.add.text(50, 540, 'ARROW KEYS: <- move ->', _fontsJs.infoFont);
+	  game.add.text(50, 560, 'SPACEBAR: [Fire]', _fontsJs.infoFont);
+
+	  // player on top of everything
+	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
 	  Mob.startTimedGame(level.mobs);
 	}
@@ -599,7 +606,13 @@
 	  font: '20pt Georgia',
 	  fill: '#fff'
 	};
+
 	exports.headerFont = headerFont;
+	var infoFont = {
+	  fill: '#fff',
+	  font: '12pt Tahoma'
+	};
+	exports.infoFont = infoFont;
 
 /***/ },
 /* 11 */

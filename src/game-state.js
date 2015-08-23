@@ -6,7 +6,7 @@ import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
 import * as Mob from './mob.js';
 import {loadLevel} from './level-loader.js';
-import {headerFont} from './fonts.js';
+import {headerFont, infoFont} from './fonts.js';
 
 window.Mob = Mob;
 import lvl1 from './level1.js';
@@ -43,9 +43,16 @@ function create() {
   // load level!
   window.level = level = loadLevel(levelData);
   window.bullets = bullets = physicsGroup();
-  window.player = player = spawnDragon(500, 500);
 
+  // Score!
   game.textScore = game.add.text(800, 10, 'SCORE: 0', headerFont);
+  
+  // How to Play
+  game.add.text(50, 540, 'ARROW KEYS: <- move ->', infoFont);
+  game.add.text(50, 560, 'SPACEBAR: [Fire]', infoFont);
+  
+  // player on top of everything
+  window.player = player = spawnDragon(500, 500);
 
   Mob.startTimedGame(level.mobs);
 }
