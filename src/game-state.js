@@ -5,7 +5,7 @@ import {createGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
 import * as Mob from './mob.js';
-import {spawnWaypoints, spawnProps, spawnSprites} from './level-loader.js';
+import {spawnWaypoints, spawnProps, spawnMobs, spawnSprites} from './level-loader.js';
 
 window.Mob = Mob;
 import lvl1 from './level1.js';
@@ -21,7 +21,8 @@ function preload() {
   game.load.image('dragon', 'assets/dragon.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('knight', 'assets/knight.png', 64, 64);
-  game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
+  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
+  game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 
   game.load.image('tree', 'assets/tree.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
@@ -49,7 +50,7 @@ function create() {
   window.player = player = spawnDragon(500, 500);
 
   window.waypoints = waypoints = spawnWaypoints(lvl1.waypoints);
-  window.mobs = mobs = spawnSprites(lvl1.mobs);
+  window.mobs = mobs = spawnMobs(lvl1.mobs);
   window.props = props = spawnProps(lvl1.props);
  
   // these mobs follow these waypoints
@@ -82,9 +83,6 @@ function update() {
   game.physics.arcade.collide(bullets, mobs, collideBulletMob);
   game.physics.arcade.collide(bullets, props, collideBulletProp);
 
-  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
-  //game.physics.arcade.overlap(mobs, waypoints, overlapWaypoint);
-  
   playerControl(player);
   Mob.checkWaypoints(mobs, waypoints);
 }
@@ -95,23 +93,9 @@ function collideBulletProp(bullet, prop) {
 }
 
 function collideBulletMob(bullet, mob) {
-  console.log('collideBulletMob', bullet, mob);
   updateScore();
   bullet.kill();
   mob.kill();
-}
-
-function collideWaypoint(mob, waypoint) {
-  console.log('collideWaypoint', mob, waypoint);
-  const lastIndex = waypoint.index;
-  const nextIndex = lastIndex + 1;
-  const nextWaypoint = waypoints.children[nextIndex];
-
-  Mob.moveToPoint(mob, nextWaypoint);
-}
-
-function overlapWaypoint(mob, waypoint) {
-  console.log('overlapWaypoint', mob, waypoint);
 }
 
 export default {

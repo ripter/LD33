@@ -117,7 +117,8 @@
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
+	  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
+	  game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 
 	  game.load.image('tree', 'assets/tree.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
@@ -144,7 +145,7 @@
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
 	  window.waypoints = waypoints = (0, _levelLoaderJs.spawnWaypoints)(_level1Js2['default'].waypoints);
-	  window.mobs = mobs = (0, _levelLoaderJs.spawnSprites)(_level1Js2['default'].mobs);
+	  window.mobs = mobs = (0, _levelLoaderJs.spawnMobs)(_level1Js2['default'].mobs);
 	  window.props = props = (0, _levelLoaderJs.spawnProps)(_level1Js2['default'].props);
 
 	  // these mobs follow these waypoints
@@ -175,9 +176,6 @@
 	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
 	  game.physics.arcade.collide(bullets, props, collideBulletProp);
 
-	  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
-	  //game.physics.arcade.overlap(mobs, waypoints, overlapWaypoint);
-
 	  (0, _playerJs.playerControl)(player);
 	  Mob.checkWaypoints(mobs, waypoints);
 	}
@@ -188,23 +186,9 @@
 	}
 
 	function collideBulletMob(bullet, mob) {
-	  console.log('collideBulletMob', bullet, mob);
 	  updateScore();
 	  bullet.kill();
 	  mob.kill();
-	}
-
-	function collideWaypoint(mob, waypoint) {
-	  console.log('collideWaypoint', mob, waypoint);
-	  var lastIndex = waypoint.index;
-	  var nextIndex = lastIndex + 1;
-	  var nextWaypoint = waypoints.children[nextIndex];
-
-	  Mob.moveToPoint(mob, nextWaypoint);
-	}
-
-	function overlapWaypoint(mob, waypoint) {
-	  console.log('overlapWaypoint', mob, waypoint);
 	}
 
 	exports['default'] = {
@@ -355,14 +339,14 @@
 	exports.checkWaypoints = checkWaypoints;
 	var DELAY = Phaser.Timer.SECOND * 5;
 	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
+	var HIT_RANGE = 5;
 
 	function moveToPoint(sprite, waypoint) {
 	  var x = waypoint.x;
 	  var y = waypoint.y;
 
-	  console.log('waypoint', x, y);
 	  sprite.waypointIndex = waypoint.index;
-	  game.physics.arcade.accelerateToXY(sprite, x, y, SPEED);
+	  game.physics.arcade.moveToXY(sprite, x, y, SPEED);
 	}
 
 	function run(group, waypoints) {
@@ -370,12 +354,14 @@
 	  var onscreen = waypoints.children[1];
 	  var index = 0;
 
+	  // 'spawn' one human at a time with a time delay
 	  game.time.events.repeat(DELAY, group.length, function () {
 	    var child = group.children[index];
 
 	    // init offscreen
 	    child.x = offscreen.x;
 	    child.y = offscreen.y;
+	    child.alive = true;
 
 	    // move to the first onscreen point
 	    moveToPoint(child, onscreen);
@@ -387,20 +373,21 @@
 
 	function checkWaypoints(group, waypoints) {
 
-	  /*
-	  group.forEach((mob) => {
-	    game.physics.arcade.overlap(mob, waypoints, (mob, waypoint) => {
-	      debugger;
-	    });
-	  });
-	  */
+	  group.forEachAlive(function (mob) {
+	    if (mob.health === 0) {
+	      return;
+	    }
+	    var lastIndex = mob.waypointIndex;
+	    var nextIndex = lastIndex + 1;
+	    var nextWaypoint = waypoints.children[nextIndex];
+	    var point = waypoints.children[lastIndex];
+	    var dist = game.physics.arcade.distanceToXY(mob, point.x, point.y);
 
-	  /*
-	  let yes = game.physics.arcade.overlap(group, waypoints)
-	  if (yes) {
-	    debugger;
-	  }
-	  */
+	    //console.log('dist', dist);
+	    if (dist <= HIT_RANGE) {
+	      moveToPoint(mob, nextWaypoint);
+	    }
+	  });
 	}
 
 /***/ },
@@ -416,6 +403,7 @@
 	});
 	exports.spawnWaypoints = spawnWaypoints;
 	exports.spawnProps = spawnProps;
+	exports.spawnMobs = spawnMobs;
 	exports.spawnSprites = spawnSprites;
 
 	var _groupsJs = __webpack_require__(2);
@@ -423,7 +411,8 @@
 	// create a group of waypoints that exist at [{x,y} ...]
 
 	function spawnWaypoints(points) {
-	  var group = (0, _groupsJs.createGroup)();
+	  //let group = createGroup();
+	  var group = game.add.group();
 
 	  // no collision
 	  //group.enableBody = false;
@@ -431,7 +420,7 @@
 	  points.forEach(function (point, index) {
 	    var sprite = group.create(point.x, point.y, 'waypoint');
 	    sprite.anchor = { x: .5, y: 1 };
-	    sprite.body.immovable = true;
+	    //sprite.body.immovable = true;
 
 	    // set our stuff
 	    sprite.index = index;
@@ -444,6 +433,17 @@
 	  var group = spawnSprites(list);
 
 	  group.setAll('body.immovable', true);
+
+	  return group;
+	}
+
+	function spawnMobs(list) {
+	  var group = spawnSprites(list);
+
+	  group.forEach(function (mob) {
+	    mob.waypointIndex = 0;
+	    mob.alive = false;
+	  });
 
 	  return group;
 	}
