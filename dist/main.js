@@ -435,6 +435,7 @@
 	  var mobList = loadMobList(lvl.mobs, lvl.waypoints);
 	  var mobGroup = spawnMobGroup(mobList);
 	  var fgGroup = spawnForegroundGroup(lvl.foreground);
+	  //const waypointGroup = spawnWaypointsGroup(lvl.waypoints);
 
 	  return {
 	    background: background,
@@ -443,6 +444,7 @@
 	      group: mobGroup
 	    },
 	    fgGroup: fgGroup
+
 	  };
 	}
 
@@ -473,6 +475,18 @@
 
 	  foregroundList.forEach(function (data) {
 	    var sprite = Foreground.spawn(group, data);
+	  });
+
+	  return group;
+	}
+
+	function spawnWaypointsGroup(waypoints) {
+	  var group = game.add.group();
+
+	  Object.keys(waypoints).forEach(function (tractName) {
+	    waypoints[tractName].forEach(function (point) {
+	      group.create(point.x, point.y, 'waypoint');
+	    });
 	  });
 
 	  return group;
@@ -533,11 +547,11 @@
 	var Level = {
 	  waypoints: {
 	    mainPath: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
-	    guardPath: [{ x: 904, y: 229 }, { x: 904, y: 470 }]
+	    guardPath: [{ x: 200, y: 280 }, { x: 1024, y: 280 }]
 	  },
 
 	  background: 'background',
-	  mobs: [{ x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 904, y: 0, spriteKey: 'knight', tract: 'guardPath' }],
+	  mobs: [{ x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1024, y: 280, spriteKey: 'knight', tract: 'guardPath' }],
 
 	  foreground: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }, { x: 120, y: 520, spriteKey: 'balloon' }]
 	};
