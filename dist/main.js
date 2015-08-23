@@ -112,7 +112,6 @@
 	var waypoints = undefined;
 	var props = undefined;
 	var balloons = undefined;
-	var score = 0;
 
 	function preload() {
 	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
@@ -135,6 +134,9 @@
 
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
 
+	  game.score = 0;
+	  game.scoreBoard = game.add.text(30, 30, 'SCORE \n ', game.score);
+
 	  // Setup groups!
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
@@ -151,14 +153,18 @@
 	}
 
 	function score() {
-	  console.log('score', score);
-	  score += 1;
+	  game.score++;
+	  console.log('score', game.score);
 	}
+
+	function updateScore() {}
 
 	function update() {
 	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
 	  game.physics.arcade.collide(bullets, props, collideBulletProp);
 	  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
+
+	  updateScore();
 
 	  (0, _playerJs.playerControl)(player);
 	}
@@ -282,7 +288,7 @@
 
 	var _fireJs = __webpack_require__(4);
 
-	var FIRE_SPEED = Phaser.Timer.SECOND;
+	var FIRE_SPEED = Phaser.Timer.HALF;
 	var SPEED = 100;
 
 	var canFire = true;
