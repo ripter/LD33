@@ -167,9 +167,12 @@
 	function update() {
 	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
 	  game.physics.arcade.collide(bullets, props, collideBulletProp);
+
 	  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
+	  //game.physics.arcade.overlap(mobs, waypoints, overlapWaypoint);
 
 	  (0, _playerJs.playerControl)(player);
+	  Mob.checkWaypoints(mobs, waypoints);
 	}
 
 	function collideBulletProp(bullet, prop) {
@@ -185,15 +188,16 @@
 	}
 
 	function collideWaypoint(mob, waypoint) {
+	  console.log('collideWaypoint', mob, waypoint);
 	  var lastIndex = waypoint.index;
 	  var nextIndex = lastIndex + 1;
 	  var nextWaypoint = waypoints.children[nextIndex];
 
-	  console.log('collideWaypoint', mob, waypoint);
 	  Mob.moveToPoint(mob, nextWaypoint);
+	}
 
-	  // move to the next one!
-	  // How get next waypoint for mob??
+	function overlapWaypoint(mob, waypoint) {
+	  console.log('overlapWaypoint', mob, waypoint);
 	}
 
 	exports['default'] = {
@@ -341,6 +345,7 @@
 	});
 	exports.moveToPoint = moveToPoint;
 	exports.run = run;
+	exports.checkWaypoints = checkWaypoints;
 	var DELAY = Phaser.Timer.SECOND * 5;
 	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 
@@ -373,6 +378,24 @@
 	  });
 	}
 
+	function checkWaypoints(group, waypoints) {
+
+	  /*
+	  group.forEach((mob) => {
+	    game.physics.arcade.overlap(mob, waypoints, (mob, waypoint) => {
+	      debugger;
+	    });
+	  });
+	  */
+
+	  /*
+	  let yes = game.physics.arcade.overlap(group, waypoints)
+	  if (yes) {
+	    debugger;
+	  }
+	  */
+	}
+
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
@@ -394,6 +417,9 @@
 
 	function spawnWaypoints(points) {
 	  var group = (0, _groupsJs.createGroup)();
+
+	  // no collision
+	  //group.enableBody = false;
 
 	  points.forEach(function (point, index) {
 	    var sprite = group.create(point.x, point.y, 'waypoint');
@@ -437,7 +463,7 @@
 					value: true
 	});
 	var Level = {
-					waypoints: [{ x: 120, y: 100 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
+					waypoints: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
 
 					background: 'background',
 					mobs: [{ x: 120, y: 0, spriteKey: 'king' }, { x: 120, y: 0, spriteKey: 'knight' }],

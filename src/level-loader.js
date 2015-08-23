@@ -8,6 +8,9 @@ import {createGroup} from './groups.js';
 export function spawnWaypoints(points) {
   let group = createGroup();
   
+  // no collision
+  //group.enableBody = false;
+  
   points.forEach((point, index) => {
     let sprite = group.create(point.x, point.y, 'waypoint');
     sprite.anchor = {x: .5, y: 1};

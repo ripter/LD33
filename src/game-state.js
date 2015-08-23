@@ -71,9 +71,12 @@ function updateScore() {
 function update() {
   game.physics.arcade.collide(bullets, mobs, collideBulletMob);
   game.physics.arcade.collide(bullets, props, collideBulletProp);
+
   game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
+  //game.physics.arcade.overlap(mobs, waypoints, overlapWaypoint);
   
-  playerControl(player);  
+  playerControl(player);
+  Mob.checkWaypoints(mobs, waypoints);
 }
 
 function collideBulletProp(bullet, prop) {
@@ -89,15 +92,16 @@ function collideBulletMob(bullet, mob) {
 }
 
 function collideWaypoint(mob, waypoint) {
+  console.log('collideWaypoint', mob, waypoint);
   const lastIndex = waypoint.index;
   const nextIndex = lastIndex + 1;
   const nextWaypoint = waypoints.children[nextIndex];
 
-  console.log('collideWaypoint', mob, waypoint);
   Mob.moveToPoint(mob, nextWaypoint);
-  
-  // move to the next one!
-  // How get next waypoint for mob??
+}
+
+function overlapWaypoint(mob, waypoint) {
+  console.log('overlapWaypoint', mob, waypoint);
 }
 
 export default {

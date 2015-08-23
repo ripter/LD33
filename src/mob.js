@@ -32,3 +32,21 @@ export function run(group, waypoints) {
     index += 1;
   });
 }
+
+export function checkWaypoints(group, waypoints) {
+
+  /*
+  group.forEach((mob) => {
+    game.physics.arcade.overlap(mob, waypoints, (mob, waypoint) => {
+      debugger;
+    });
+  });
+  */
+  
+  /*
+  let yes = game.physics.arcade.overlap(group, waypoints)
+  if (yes) {
+    debugger;
+  }
+  */
+}
