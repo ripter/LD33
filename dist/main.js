@@ -69,9 +69,9 @@
 	game.state.add('end', _endStateJs2['default']);
 
 	// prod
-	//game.state.start('start');
+	game.state.start('start');
 	// dev
-	game.state.start('game');
+	//game.state.start('game');
 
 /***/ },
 /* 1 */
