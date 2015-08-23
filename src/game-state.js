@@ -41,7 +41,6 @@ function create() {
   game.currentScore = 0;
 
   // load level!
-  console.log('loading level');
   window.level = level = loadLevel(levelData);
   window.bullets = bullets = physicsGroup();
   window.player = player = spawnDragon(500, 500);
@@ -52,14 +51,14 @@ function create() {
 }
 
 function update() {
-  const {mobs, fgGroup} = level;
+  const {mobs, fgGroup, balloons} = level;
 
   playerControl(player);
   Mob.update(mobs);
 
   game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
   game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
-  
+  game.physics.arcade.collide(mobs.group, balloons, collideBalloon); 
 }
 
 
@@ -83,9 +82,13 @@ function collideBulletMob(bullet, mob) {
 
   // Game Over check
   if (Mob.mobsLeft(mobs) === 0) {
-    console.log('Game Over!');
     game.state.start('end');
   }
+}
+
+function collideBalloon(mob, balloon) {
+  balloon.kill();
+  game.state.start('end');
 }
 
 

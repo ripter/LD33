@@ -3,6 +3,7 @@
 
 import * as Mob from './mob.js';
 import * as Foreground from './foreground.js';
+import * as Balloon from './balloon.js';
 
 // Groups with physics.
 import {physicsGroup} from './groups.js';
@@ -14,6 +15,7 @@ export function loadLevel(lvl) {
   const mobList = loadMobList(lvl.mobs, lvl.waypoints);
   const mobGroup = spawnMobGroup(mobList);
   const fgGroup = spawnForegroundGroup(lvl.foreground);
+  const balloonGroup = spawnBalloonGroup(lvl.balloons);
   //const waypointGroup = spawnWaypointsGroup(lvl.waypoints);
 
   return {
@@ -24,6 +26,7 @@ export function loadLevel(lvl) {
       , group : mobGroup
     }
     , fgGroup: fgGroup
+    , balloons: balloonGroup
   };
 }
 
@@ -54,6 +57,16 @@ function spawnForegroundGroup(foregroundList) {
 
   foregroundList.forEach((data) => {
     const sprite = Foreground.spawn(group, data);
+  });
+
+  return group;
+}
+
+function spawnBalloonGroup(balloonList) {
+  let group = physicsGroup();
+  
+  balloonList.forEach((data) => {
+    const sprite = Balloon.spawn(group, data);
   });
 
   return group;

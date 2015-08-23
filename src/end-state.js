@@ -14,8 +14,10 @@ function preload() {
 
 function create() {
   game.add.text(100, 100, 'You are Monster END!', headerFont);
-  game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
+  //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
   game.add.text(100, 200, 'Your score: ' + game.currentScore, headerFont);
+
+  game.add.text(100, 150, 'Refresh page to play again', headerFont);
 }
 
 function update() {

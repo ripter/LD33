@@ -53,11 +53,11 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(11);
+	var _startStateJs = __webpack_require__(12);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(12);
+	var _endStateJs = __webpack_require__(13);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -69,9 +69,9 @@
 	game.state.add('end', _endStateJs2['default']);
 
 	// prod
-	//game.state.start('start');
+	game.state.start('start');
 	// dev
-	game.state.start('game');
+	//game.state.start('game');
 
 /***/ },
 /* 1 */
@@ -100,9 +100,9 @@
 
 	var _levelLoaderJs = __webpack_require__(7);
 
-	var _fontsJs = __webpack_require__(9);
+	var _fontsJs = __webpack_require__(10);
 
-	var _level1Js = __webpack_require__(10);
+	var _level1Js = __webpack_require__(11);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
@@ -138,7 +138,6 @@
 	  game.currentScore = 0;
 
 	  // load level!
-	  console.log('loading level');
 	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelData);
 	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
@@ -152,12 +151,14 @@
 	  var _level = level;
 	  var mobs = _level.mobs;
 	  var fgGroup = _level.fgGroup;
+	  var balloons = _level.balloons;
 
 	  (0, _playerJs.playerControl)(player);
 	  Mob.update(mobs);
 
 	  game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
 	  game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
+	  game.physics.arcade.collide(mobs.group, balloons, collideBalloon);
 	}
 
 	function updateScore() {
@@ -181,9 +182,13 @@
 
 	  // Game Over check
 	  if (Mob.mobsLeft(mobs) === 0) {
-	    console.log('Game Over!');
 	    game.state.start('end');
 	  }
+	}
+
+	function collideBalloon(mob, balloon) {
+	  balloon.kill();
+	  game.state.start('end');
 	}
 
 	exports['default'] = {
@@ -443,6 +448,10 @@
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
+	var _balloonJs = __webpack_require__(9);
+
+	var Balloon = _interopRequireWildcard(_balloonJs);
+
 	// Groups with physics.
 
 	var _groupsJs = __webpack_require__(2);
@@ -455,6 +464,7 @@
 	  var mobList = loadMobList(lvl.mobs, lvl.waypoints);
 	  var mobGroup = spawnMobGroup(mobList);
 	  var fgGroup = spawnForegroundGroup(lvl.foreground);
+	  var balloonGroup = spawnBalloonGroup(lvl.balloons);
 	  //const waypointGroup = spawnWaypointsGroup(lvl.waypoints);
 
 	  return {
@@ -464,7 +474,8 @@
 	      list: mobList,
 	      group: mobGroup
 	    },
-	    fgGroup: fgGroup
+	    fgGroup: fgGroup,
+	    balloons: balloonGroup
 	  };
 	}
 
@@ -495,6 +506,16 @@
 
 	  foregroundList.forEach(function (data) {
 	    var sprite = Foreground.spawn(group, data);
+	  });
+
+	  return group;
+	}
+
+	function spawnBalloonGroup(balloonList) {
+	  var group = (0, _groupsJs.physicsGroup)();
+
+	  balloonList.forEach(function (data) {
+	    var sprite = Balloon.spawn(group, data);
 	  });
 
 	  return group;
@@ -548,6 +569,32 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	exports.spawn = spawn;
+
+	function spawn(group, data) {
+	  var x = data.x;
+	  var y = data.y;
+	  var spriteKey = data.spriteKey;
+
+	  var sprite = group.create(x, y, spriteKey);
+
+	  sprite.anchor = { x: .5, y: 1 };
+	  sprite.data = data;
+	  sprite.body.immovable = true;
+
+	  return sprite;
+	}
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 	var headerFont = {
 	  font: '20pt Georgia',
 	  fill: '#fff'
@@ -555,7 +602,7 @@
 	exports.headerFont = headerFont;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -573,14 +620,15 @@
 	  background: 'background',
 	  mobs: [{ x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }],
 
-	  foreground: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }, { x: 120, y: 520, spriteKey: 'balloon' }]
+	  foreground: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }],
+	  balloons: [{ x: 120, y: 520, spriteKey: 'balloon' }]
 	};
 
 	exports['default'] = Level;
 	module.exports = exports['default'];
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -590,17 +638,25 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(9);
+	var _fontsJs = __webpack_require__(10);
 
 	//
 	// Lifecycle
 	//
-	function preload() {}
+	function preload() {
+	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
+	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
+	}
 
 	function create() {
+	  // place somet nice things
+	  game.add.image(800, 100, 'stuffedPrincess');
+	  game.add.image(100, 300, 'carnie');
+
+	  // instructions
 	  game.add.text(100, 100, 'You are dragon.', _fontsJs.headerFont);
 	  game.add.text(100, 200, 'Win dragon lady friend a stuffed princess.', _fontsJs.headerFont);
-	  game.add.text(100, 300, 'Press Space NOW!!!', _fontsJs.headerFont);
+	  game.add.text(400, 500, 'Press Space to try your luck!', _fontsJs.headerFont);
 	}
 
 	function update() {
@@ -619,7 +675,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -629,7 +685,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(9);
+	var _fontsJs = __webpack_require__(10);
 
 	var _gameStateJs = __webpack_require__(1);
 
@@ -643,8 +699,10 @@
 
 	function create() {
 	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
-	  game.add.text(100, 150, 'Press [ENTER] NOW!!!', _fontsJs.headerFont);
+	  //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
 	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
+
+	  game.add.text(100, 150, 'Refresh page to play again', _fontsJs.headerFont);
 	}
 
 	function update() {
