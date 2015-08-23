@@ -43,7 +43,7 @@ function create() {
   game.currentScore = 0;
   game.storedScore = [];
   game.scoreString = 'SCORE: ';
-  game.text = game.add.text(700, 30, game.scoreString + game.score, {font: '24px Arial'});
+  game.text = game.add.text(700, 30, game.scoreString + game.currentScore, {font: '24px Arial'});
   
   // Setup groups!
   window.bullets = bullets = createGroup();
@@ -62,21 +62,10 @@ function create() {
 
 function updateScore() {
 
-  let scoreArray = JSON.parse(localStorage.getItem('scores'));
-
-  if (scoreArray != null || scoreArray != undefined) {
-    game.storedScore = scoreArray;
-  } else {
-
-  }
-
-  console.log('Storedscore', game.storedScore);
-
-  game.score++;
-  console.log('scores', game.currentScore, game.storedScore);
+  game.currentScore++;
+  console.log('scores', game.currentScore);
   game.text.text = game.scoreString + game.currentScore;
   localStorage.setItem('current', game.currentScore);
-  localStorage.setItem('scores', game.storedScore);
 }
 
 function update() {

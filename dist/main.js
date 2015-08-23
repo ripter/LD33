@@ -138,7 +138,7 @@
 	  game.currentScore = 0;
 	  game.storedScore = [];
 	  game.scoreString = 'SCORE: ';
-	  game.text = game.add.text(700, 30, game.scoreString + game.score, { font: '24px Arial' });
+	  game.text = game.add.text(700, 30, game.scoreString + game.currentScore, { font: '24px Arial' });
 
 	  // Setup groups!
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
@@ -157,19 +157,10 @@
 
 	function updateScore() {
 
-	  var scoreArray = JSON.parse(localStorage.getItem('scores'));
-
-	  if (scoreArray != null || scoreArray != undefined) {
-	    game.storedScore = scoreArray;
-	  } else {}
-
-	  console.log('Storedscore', game.storedScore);
-
-	  game.score++;
-	  console.log('scores', game.currentScore, game.storedScore);
+	  game.currentScore++;
+	  console.log('scores', game.currentScore);
 	  game.text.text = game.scoreString + game.currentScore;
 	  localStorage.setItem('current', game.currentScore);
-	  localStorage.setItem('scores', game.storedScore);
 	}
 
 	function update() {
@@ -556,14 +547,13 @@
 	//
 	function preload() {
 	  game.currentScore = JSON.parse(localStorage.getItem('current'));
-	  game.storedScore = JSON.parse(localStorage.getItem('scores'));
+	  // game.storedScore = JSON.parse(localStorage.getItem('scores'));
 	}
 
 	function create() {
 	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
 	  game.add.text(100, 150, 'Press Space NOW!!!', _fontsJs.headerFont);
 	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
-	  scoreList();
 	}
 
 	function update() {
@@ -574,20 +564,19 @@
 	  }
 	}
 
-	function scoreList() {
-	  if (game.storedScore === null) {
-	    console.log('gameScorer', game.storedScore);
-	    game.storedScore = [];
-	  }
+	// function scoreList() {
+	// 	if(game.storedScore === null){
 
-	  game.storedScore.unshift(game.currentScore);
+	// 		game.storedScore = []
+	// 	}
 
-	  if (game.storedScore.legth > 5) {
-	    game.storedScore.pop();
-	  }
-	  localStorage.setItem('scores', game.storedScore);
-	  console.log('scores', game.storedScore);
-	}
+	// 	game.storedScore.unshift(game.currentScore);
+
+	//   if (game.storedScore.legth > 5) {
+	//     game.storedScore.pop();
+	//   }
+	//   localStorage.setItem('scores', game.storedScore);
+	// }
 
 	exports['default'] = {
 	  preload: preload,
