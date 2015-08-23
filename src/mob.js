@@ -55,6 +55,7 @@ function moveToNextWaypoint(sprite) {
 }
 
 // collision checks
+// @param {group} mobData
 export function update(mobData) {
   const group = mobData.group;
   
@@ -68,4 +69,10 @@ export function update(mobData) {
       moveToNextWaypoint(sprite);
     }
   });
+}
+
+export function mobsLeft(mobData) {
+  const {group} = mobData;
+
+  return group.countLiving();
 }

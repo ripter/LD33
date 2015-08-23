@@ -18,7 +18,7 @@ let bullets;
 let balloons;
 
 function preload() {
-  game.load.image('dragon', 'assets/dragon.png', 128, 128);
+  game.load.image('dragon', 'assets/dragon2.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('knight', 'assets/knight.png', 64, 64);
   //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
@@ -35,12 +35,14 @@ function preload() {
 }
 
 function create() {
+  const levelData = Object.assign({}, lvl1);
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.currentScore = 0;
 
   // load level!
-  window.level = level = loadLevel(lvl1);
+  console.log('loading level');
+  window.level = level = loadLevel(levelData);
   window.bullets = bullets = physicsGroup();
   window.player = player = spawnDragon(500, 500);
 
@@ -53,10 +55,11 @@ function update() {
   const {mobs, fgGroup} = level;
 
   playerControl(player);
-  Mob.update(level.mobs);
+  Mob.update(mobs);
 
   game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
   game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
+  
 }
 
 
@@ -65,19 +68,30 @@ function updateScore() {
   game.textScore.setText(`SCORE: ${game.currentScore}`);
 }
 
+// Props/foreground are indistructable
 function collideBulletProp(bullet, prop) {
   // kill the bullet
   bullet.kill();
 }
 
 function collideBulletMob(bullet, mob) {
+  const {mobs} = level;
+
   updateScore();
   bullet.kill();
   mob.kill();
+
+  // Game Over check
+  if (Mob.mobsLeft(mobs) === 0) {
+    console.log('Game Over!');
+    game.state.start('end');
+  }
 }
+
 
 export default {
   preload: preload
   , create: create
   , update: update
 };
+

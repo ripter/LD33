@@ -18,12 +18,12 @@ export function loadLevel(lvl) {
 
   return {
     background: background
+    , score: 0
     , mobs: {
       list: mobList
       , group : mobGroup
     }
     , fgGroup: fgGroup
-
   };
 }
 

@@ -16,8 +16,8 @@ const Level = {
       , {x:120, y:523}
       ]
     , guardPath: [
-      {x: 200, y: 280}
-      , {x: 1024, y: 280}
+      {x: 200, y: 290}
+      , {x: 1024, y: 290}
     ]
   }
 
@@ -25,7 +25,10 @@ const Level = {
 	, mobs: [
     {x:120, y:0, spriteKey: 'king', tract: 'mainPath'}
     , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
-    , {x:1024, y: 280, spriteKey: 'knight', tract: 'guardPath'}
+    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:120, y:0, spriteKey: 'knight', tract: 'mainPath'}
+    , {x:1064, y: 290, spriteKey: 'knight', tract: 'guardPath'}
   ]
 
 	, foreground: [

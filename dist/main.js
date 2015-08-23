@@ -115,7 +115,7 @@
 	var balloons = undefined;
 
 	function preload() {
-	  game.load.image('dragon', 'assets/dragon.png', 128, 128);
+	  game.load.image('dragon', 'assets/dragon2.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
 	  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
@@ -132,12 +132,14 @@
 	}
 
 	function create() {
+	  var levelData = Object.assign({}, _level1Js2['default']);
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
 
 	  // load level!
-	  window.level = level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+	  console.log('loading level');
+	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelData);
 	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
@@ -152,7 +154,7 @@
 	  var fgGroup = _level.fgGroup;
 
 	  (0, _playerJs.playerControl)(player);
-	  Mob.update(level.mobs);
+	  Mob.update(mobs);
 
 	  game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
 	  game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
@@ -163,15 +165,25 @@
 	  game.textScore.setText('SCORE: ' + game.currentScore);
 	}
 
+	// Props/foreground are indistructable
 	function collideBulletProp(bullet, prop) {
 	  // kill the bullet
 	  bullet.kill();
 	}
 
 	function collideBulletMob(bullet, mob) {
+	  var _level2 = level;
+	  var mobs = _level2.mobs;
+
 	  updateScore();
 	  bullet.kill();
 	  mob.kill();
+
+	  // Game Over check
+	  if (Mob.mobsLeft(mobs) === 0) {
+	    console.log('Game Over!');
+	    game.state.start('end');
+	  }
 	}
 
 	exports['default'] = {
@@ -241,7 +253,7 @@
 	exports.spawnFire = spawnFire;
 	var SPEED = 300;
 	var OFFSET_Y = 0;
-	var OFFSET_X = 50;
+	var OFFSET_X = 63;
 
 	// totally not a constructor
 	// constructors use NEW, we use SPAWN. Totally different! :)
@@ -320,6 +332,7 @@
 	exports.spawn = spawn;
 	exports.startTimedGame = startTimedGame;
 	exports.update = update;
+	exports.mobsLeft = mobsLeft;
 	var DELAY = Phaser.Timer.SECOND * 1;
 	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
 	var HIT_RANGE = 5;
@@ -382,6 +395,7 @@
 	}
 
 	// collision checks
+	// @param {group} mobData
 
 	function update(mobData) {
 	  var group = mobData.group;
@@ -399,6 +413,12 @@
 	      moveToNextWaypoint(sprite);
 	    }
 	  });
+	}
+
+	function mobsLeft(mobData) {
+	  var group = mobData.group;
+
+	  return group.countLiving();
 	}
 
 /***/ },
@@ -439,12 +459,12 @@
 
 	  return {
 	    background: background,
+	    score: 0,
 	    mobs: {
 	      list: mobList,
 	      group: mobGroup
 	    },
 	    fgGroup: fgGroup
-
 	  };
 	}
 
@@ -547,11 +567,11 @@
 	var Level = {
 	  waypoints: {
 	    mainPath: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
-	    guardPath: [{ x: 200, y: 280 }, { x: 1024, y: 280 }]
+	    guardPath: [{ x: 200, y: 290 }, { x: 1024, y: 290 }]
 	  },
 
 	  background: 'background',
-	  mobs: [{ x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1024, y: 280, spriteKey: 'knight', tract: 'guardPath' }],
+	  mobs: [{ x: 120, y: 0, spriteKey: 'king', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 120, y: 0, spriteKey: 'knight', tract: 'mainPath' }, { x: 1064, y: 290, spriteKey: 'knight', tract: 'guardPath' }],
 
 	  foreground: [{ x: 116, y: 160, spriteKey: 'wall' }, { x: 180, y: 160, spriteKey: 'wall' }, { x: 244, y: 160, spriteKey: 'wall' }, { x: 308, y: 160, spriteKey: 'wall' }, { x: 372, y: 160, spriteKey: 'wall' }, { x: 638, y: 160, spriteKey: 'tree' }, { x: 744, y: 160, spriteKey: 'tree' }, { x: 868, y: 160, spriteKey: 'tree' }, { x: 498, y: 250, spriteKey: 'tree' }, { x: 435, y: 378, spriteKey: 'tree' }, { x: 638, y: 378, spriteKey: 'tree' }, { x: 745, y: 378, spriteKey: 'shrub' }, { x: 806, y: 490, spriteKey: 'shrub' }, { x: 645, y: 490, spriteKey: 'tree' }, { x: 237, y: 490, spriteKey: 'shrub' }, { x: 120, y: 374, spriteKey: 'tree' }, { x: 900, y: 482, spriteKey: 'tree' }, { x: 120, y: 520, spriteKey: 'balloon' }]
 	};
@@ -617,21 +637,21 @@
 	// Lifecycle
 	//
 	function preload() {
-	  game.currentScore = JSON.parse(localStorage.getItem('current'));
+	  //game.currentScore = JSON.parse(localStorage.getItem('current'));
 	  // game.storedScore = JSON.parse(localStorage.getItem('scores'));
 	}
 
 	function create() {
 	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
-	  game.add.text(100, 150, 'Press Space NOW!!!', _fontsJs.headerFont);
+	  game.add.text(100, 150, 'Press [ENTER] NOW!!!', _fontsJs.headerFont);
 	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
 	}
 
 	function update() {
-	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
+	  var ENTER = Phaser.Keyboard.ENTER;
 
-	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    game.state.start('game');
+	  if (game.input.keyboard.isDown(ENTER)) {
+	    game.state.start('game', true);
 	  }
 	}
 

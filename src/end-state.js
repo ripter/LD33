@@ -8,21 +8,21 @@ import {updateScore} from './game-state.js';
 // Lifecycle
 //
 function preload() {
-	game.currentScore = JSON.parse(localStorage.getItem('current'));
+	//game.currentScore = JSON.parse(localStorage.getItem('current'));
 	// game.storedScore = JSON.parse(localStorage.getItem('scores')); 
 }
 
 function create() {
   game.add.text(100, 100, 'You are Monster END!', headerFont);
-  game.add.text(100, 150, 'Press Space NOW!!!', headerFont);
+  game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
   game.add.text(100, 200, 'Your score: ' + game.currentScore, headerFont);
 }
 
 function update() {
-  const {SPACEBAR} = Phaser.Keyboard;
+  const {ENTER} = Phaser.Keyboard;
   
-  if (game.input.keyboard.isDown(SPACEBAR)) {
-    game.state.start('game');
+  if (game.input.keyboard.isDown(ENTER)) {
+    game.state.start('game', true);
   }
 
 }
