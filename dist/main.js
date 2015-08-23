@@ -130,7 +130,8 @@
 	  game.add.sprite(0, 0, _level1Js2['default'].background);
 
 	  game.score = 0;
-	  game.scoreBoard = game.add.text(30, 30, 'SCORE \n ', game.score);
+	  game.scoreString = 'SCORE: ';
+	  game.text = game.add.text(700, 30, game.scoreString + game.score, { font: '24px Arial' });
 
 	  // Setup groups!
 	  window.bullets = bullets = (0, _groupsJs.createGroup)();
@@ -147,19 +148,18 @@
 	  //Mob.moveToPoint(mobs.children[0], waypoints.children[2]);
 	}
 
-	function score() {
+	function score() {}
+
+	function updateScore() {
 	  game.score++;
 	  console.log('score', game.score);
+	  game.text.text = game.scoreString + game.score;
 	}
-
-	function updateScore() {}
 
 	function update() {
 	  game.physics.arcade.collide(bullets, mobs, collideBulletMob);
 	  game.physics.arcade.collide(bullets, props, collideBulletProp);
 	  game.physics.arcade.collide(mobs, waypoints, collideWaypoint);
-
-	  updateScore();
 
 	  (0, _playerJs.playerControl)(player);
 	}
@@ -171,7 +171,7 @@
 
 	function collideBulletMob(bullet, mob) {
 	  console.log('collideBulletMob', bullet, mob);
-	  score();
+	  updateScore();
 	  bullet.kill();
 	  mob.kill();
 	}
