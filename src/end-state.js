@@ -33,9 +33,7 @@ function update() {
 
 function addGameOver() {
   const score = game.currentScore;
-  // REFACTOR: i'm using window.level
-  const mobCount = level.mobs.list.length;
-  const didWin = score === mobCount;
+  const didWin = level.state === 'win';
   
   if (didWin) {
     game.add.text(100, 100, 'You WIN!', headerFont);

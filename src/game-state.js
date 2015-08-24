@@ -87,8 +87,8 @@ function update() {
 }
 
 
-function updateScore() {
-  game.currentScore += 1;
+function updateScore(points) {
+  game.currentScore += points;
   game.textScore.setText(`SCORE: ${game.currentScore}`);
 }
 
@@ -100,23 +100,28 @@ function collideBulletProp(bullet, prop) {
 }
 
 function collideBulletMob(bullet, mob) {
-  const {mobs} = level;
-
   // Bullets only collide once
   if (!bullet.alive) { return; }
+
+  const {mobs} = level;
+  const points = mob.data.points || 1;
+
   bullet.kill();
   mob.kill();
-  updateScore();
+  updateScore(points);
   sfx.score.play();
 
   // Game Over check
   if (Mob.mobsLeft(mobs) === 0) {
+    level.state = 'win';
     game.state.start('end');
   }
 }
 
 function collideBalloon(mob, balloon) {
+  debugger;
   balloon.kill();
+  level.state = 'lost';
   game.state.start('end');
 }
 

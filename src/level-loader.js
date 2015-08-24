@@ -20,6 +20,7 @@ export function loadLevel(lvl) {
 
   return {
     background: background
+    , state: 'pregame'
     , score: 0
     , mobs: {
       list: mobList

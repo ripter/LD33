@@ -185,8 +185,8 @@
 	  }
 	}
 
-	function updateScore() {
-	  game.currentScore += 1;
+	function updateScore(points) {
+	  game.currentScore += points;
 	  game.textScore.setText('SCORE: ' + game.currentScore);
 	}
 
@@ -198,26 +198,32 @@
 	}
 
 	function collideBulletMob(bullet, mob) {
-	  var _level2 = level;
-	  var mobs = _level2.mobs;
-
 	  // Bullets only collide once
 	  if (!bullet.alive) {
 	    return;
 	  }
+
+	  var _level2 = level;
+	  var mobs = _level2.mobs;
+
+	  var points = mob.data.points || 1;
+
 	  bullet.kill();
 	  mob.kill();
-	  updateScore();
+	  updateScore(points);
 	  sfx.score.play();
 
 	  // Game Over check
 	  if (Mob.mobsLeft(mobs) === 0) {
+	    level.state = 'win';
 	    game.state.start('end');
 	  }
 	}
 
 	function collideBalloon(mob, balloon) {
+	  debugger;
 	  balloon.kill();
+	  level.state = 'lost';
 	  game.state.start('end');
 	}
 
@@ -497,6 +503,7 @@
 
 	  return {
 	    background: background,
+	    state: 'pregame',
 	    score: 0,
 	    mobs: {
 	      list: mobList,
@@ -654,7 +661,7 @@
 	  background: 'background',
 	  mobs: [
 	  // the order listed is the order they appear
-	  { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'king', tract: 'mainPath', speed: 90 }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 200 }, { spriteKey: 'horse', tract: 'mainPath', speed: 200 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 200 }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 200 }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'horse', tract: 'guardPath', speed: 200 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 200 }, { spriteKey: 'king', tract: 'mainPath', speed: 90 }],
+	  { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'king', tract: 'mainPath', speed: 90, points: 3 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 200, points: 2 }, { spriteKey: 'horse', tract: 'mainPath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2 }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'horse', tract: 'mainPath', speed: 270, points: 2 }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'horse', tract: 'guardPath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 250, points: 2 }, { spriteKey: 'king', tract: 'mainPath', speed: 120, points: 3 }],
 
 	  foreground: [
 	  // mainPath y: 138
@@ -762,9 +769,7 @@
 
 	function addGameOver() {
 	  var score = game.currentScore;
-	  // REFACTOR: i'm using window.level
-	  var mobCount = level.mobs.list.length;
-	  var didWin = score === mobCount;
+	  var didWin = level.state === 'win';
 
 	  if (didWin) {
 	    game.add.text(100, 100, 'You WIN!', _fontsJs.headerFont);
