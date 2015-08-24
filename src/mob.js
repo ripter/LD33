@@ -45,6 +45,7 @@ export function startTimedGame(mobData) {
 // Start the mob moving to the next waypoint
 function moveToNextWaypoint(sprite) {
   const tract = sprite.data.tract;
+  const speed = sprite.data.speed || SPEED;
   let nextIndex = sprite.tractIndex + 1;
   
   if (nextIndex === tract.length) {
@@ -55,7 +56,7 @@ function moveToNextWaypoint(sprite) {
   const {x, y} = tract[nextIndex];
 
   sprite.tractIndex = nextIndex;
-  game.physics.arcade.moveToXY(sprite, x, y, SPEED);
+  game.physics.arcade.moveToXY(sprite, x, y, speed);
 }
 
 // collision checks
