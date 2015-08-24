@@ -28,6 +28,7 @@ function preload() {
 
   game.load.image('tree', 'assets/tree.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
+  game.load.image('tower', 'assets/tower.png', 64, 64);
   game.load.image('shrub', 'assets/shrub.png', 64, 64);
   game.load.image('balloon', 'assets/balloon.png', 64, 64);
 
@@ -119,7 +120,6 @@ function collideBulletMob(bullet, mob) {
 }
 
 function collideBalloon(mob, balloon) {
-  debugger;
   balloon.kill();
   level.state = 'lost';
   game.state.start('end');
