@@ -9,7 +9,7 @@ const SPEED = 100;
 let canFire = true;
 
 export function playerControl(sprite) {
-  const {LEFT, RIGHT, SPACEBAR, ESC} = Phaser.Keyboard;
+  const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
 
   // Movement keys
   if (game.input.keyboard.isDown(LEFT)) { 
@@ -31,10 +31,5 @@ export function playerControl(sprite) {
     game.time.events.add(FIRE_SPEED, () => {
       canFire = true;
     });
-  }
-  
-  // DEBUG
-  if (game.input.keyboard.isDown(ESC)) {
-    console.log('rose is: ', game.rose);  
   }
 }

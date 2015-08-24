@@ -27,7 +27,6 @@ function update() {
   const {SPACEBAR} = Phaser.Keyboard;
   
   if (game.input.keyboard.isDown(SPACEBAR)) {
-    game.rose = 'a puppy';
     game.state.start('game');
   }
 
