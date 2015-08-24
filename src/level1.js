@@ -99,12 +99,15 @@ const Level = {
     , {x: 904, y: 240, spriteKey: 'wall'}
 
     // mainPath y: 354
-    , {x: 638, y: 376, spriteKey: 'tree'}
+    , {x: 438, y: 376, spriteKey: 'tree'}
+    , {x: 538, y: 376, spriteKey: 'tree'}
     , {x: 120, y: 376, spriteKey: 'wall'}
     , {x: 155, y: 300, spriteKey: 'tower'}
 
     // mainPath y: 470
-    , {x: 904, y: 490, spriteKey: 'shrub'}
+    , {x: 904, y: 490, spriteKey: 'tower'}
+    , {x: 804, y: 490, spriteKey: 'shrub'}
+    , {x: 654, y: 490, spriteKey: 'shrub'}
     , {x: 300, y: 490, spriteKey: 'shrub'}
   ]
   , balloons: [

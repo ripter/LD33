@@ -4,6 +4,7 @@
 import {physicsGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
 import {playerControl} from './player.js';
+import * as Props from './foreground.js';
 import * as Mob from './mob.js';
 import {loadLevel} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
@@ -25,14 +26,14 @@ function preload() {
   game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
   //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
   game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
-
-  game.load.image('tree', 'assets/tree.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
   game.load.image('tower', 'assets/tower.png', 64, 64);
-  game.load.image('shrub', 'assets/shrub.png', 64, 64);
-  game.load.image('balloon', 'assets/balloon.png', 64, 64);
 
+  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
+  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
   game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
+
+  game.load.image('balloon', 'assets/balloon.png', 64, 64);
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
   
   game.load.audio('hit', 'assets/hit.wav');
@@ -95,9 +96,14 @@ function updateScore(points) {
 
 // Props/foreground are indistructable
 function collideBulletProp(bullet, prop) {
+  // Bullets only collide once
+  if (!bullet.alive) { return; }
+
   // kill the bullet
   bullet.kill();
   sfx.hit.play();
+  
+  Props.onHit(prop);
 }
 
 function collideBulletMob(bullet, mob) {

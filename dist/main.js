@@ -94,11 +94,15 @@
 
 	var _playerJs = __webpack_require__(5);
 
-	var _mobJs = __webpack_require__(6);
+	var _foregroundJs = __webpack_require__(6);
+
+	var Props = _interopRequireWildcard(_foregroundJs);
+
+	var _mobJs = __webpack_require__(7);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _levelLoaderJs = __webpack_require__(7);
+	var _levelLoaderJs = __webpack_require__(8);
 
 	var _fontsJs = __webpack_require__(10);
 
@@ -122,14 +126,14 @@
 	  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
 	  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
 	  game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
-
-	  game.load.image('tree', 'assets/tree.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
 	  game.load.image('tower', 'assets/tower.png', 64, 64);
-	  game.load.image('shrub', 'assets/shrub.png', 64, 64);
-	  game.load.image('balloon', 'assets/balloon.png', 64, 64);
 
+	  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
+	  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
 	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
+
+	  game.load.image('balloon', 'assets/balloon.png', 64, 64);
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
 
 	  game.load.audio('hit', 'assets/hit.wav');
@@ -193,9 +197,16 @@
 
 	// Props/foreground are indistructable
 	function collideBulletProp(bullet, prop) {
+	  // Bullets only collide once
+	  if (!bullet.alive) {
+	    return;
+	  }
+
 	  // kill the bullet
 	  bullet.kill();
 	  sfx.hit.play();
+
+	  Props.onHit(prop);
 	}
 
 	function collideBulletMob(bullet, mob) {
@@ -365,6 +376,114 @@
 	  value: true
 	});
 	exports.spawn = spawn;
+	exports.onHit = onHit;
+
+	function spawn(group, data) {
+	  var x = data.x;
+	  var y = data.y;
+	  var spriteKey = data.spriteKey;
+
+	  var sprite = group.create(x, y, spriteKey);
+
+	  sprite.anchor = { x: .5, y: 1 };
+	  sprite.data = data;
+	  sprite.body.immovable = true;
+
+	  switch (spriteKey) {
+	    case 'shrub':
+	      sprite = toShrub(sprite);
+	      break;
+	    case 'tree':
+	      sprite = toTree(sprite);
+	      break;
+	  }
+
+	  return sprite;
+	}
+
+	function toShrub(sprite) {
+	  sprite.health = 2;
+	  // set the animations
+	  sprite.animations.add('norm', [0]);
+	  sprite.animations.add('burn', [1]);
+	  sprite.animations.add('dead', [2]);
+	  sprite.animations.play('norm', 24, true);
+
+	  return sprite;
+	}
+
+	function toTree(sprite) {
+	  sprite.health = 3;
+	  // set the animations
+	  sprite.animations.add('norm', [0]);
+	  sprite.animations.add('burn', [1]);
+	  sprite.animations.add('dead', [2]);
+	  sprite.animations.play('norm', 24, true);
+
+	  return sprite;
+	}
+
+	function onHit(sprite) {
+	  var _sprite = sprite;
+	  var key = _sprite.key;
+
+	  switch (key) {
+	    case 'shrub':
+	      sprite = hitShrub(sprite);
+	      break;
+	    case 'tree':
+	      sprite = hitTree(sprite);
+	      break;
+	  }
+
+	  return sprite;
+	}
+
+	function hitShrub(sprite) {
+	  var health = sprite.health - 1;
+
+	  if (health === 1) {
+	    sprite.animations.play('dead');
+	  }
+
+	  if (health === 0) {
+	    sprite.kill();
+	  }
+
+	  sprite.health = health;
+	  return sprite;
+	}
+
+	function hitTree(sprite) {
+	  var health = sprite.health - 1;
+
+	  if (health === 2) {
+	    sprite.animations.play('burn');
+	  }
+
+	  if (health === 1) {
+	    sprite.animations.play('dead');
+	  }
+
+	  if (health === 0) {
+	    sprite.kill();
+	  }
+
+	  sprite.health = health;
+	  return sprite;
+	}
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.spawn = spawn;
 	exports.startTimedGame = startTimedGame;
 	exports.update = update;
 	exports.mobsLeft = mobsLeft;
@@ -461,7 +580,7 @@
 	}
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
@@ -474,11 +593,11 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _mobJs = __webpack_require__(6);
+	var _mobJs = __webpack_require__(7);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _foregroundJs = __webpack_require__(8);
+	var _foregroundJs = __webpack_require__(6);
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
@@ -569,32 +688,6 @@
 	}
 
 /***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	/*global Phaser, game */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.spawn = spawn;
-
-	function spawn(group, data) {
-	  var x = data.x;
-	  var y = data.y;
-	  var spriteKey = data.spriteKey;
-
-	  var sprite = group.create(x, y, spriteKey);
-
-	  sprite.anchor = { x: .5, y: 1 };
-	  sprite.data = data;
-	  sprite.body.immovable = true;
-
-	  return sprite;
-	}
-
-/***/ },
 /* 9 */
 /***/ function(module, exports) {
 
@@ -672,10 +765,10 @@
 	  , { x: 438, y: 240, spriteKey: 'tree' }, { x: 438, y: 240, spriteKey: 'tree' }, { x: 904, y: 240, spriteKey: 'wall' }
 
 	  // mainPath y: 354
-	  , { x: 638, y: 376, spriteKey: 'tree' }, { x: 120, y: 376, spriteKey: 'wall' }, { x: 155, y: 300, spriteKey: 'tower' }
+	  , { x: 438, y: 376, spriteKey: 'tree' }, { x: 538, y: 376, spriteKey: 'tree' }, { x: 120, y: 376, spriteKey: 'wall' }, { x: 155, y: 300, spriteKey: 'tower' }
 
 	  // mainPath y: 470
-	  , { x: 904, y: 490, spriteKey: 'shrub' }, { x: 300, y: 490, spriteKey: 'shrub' }],
+	  , { x: 904, y: 490, spriteKey: 'tower' }, { x: 804, y: 490, spriteKey: 'shrub' }, { x: 654, y: 490, spriteKey: 'shrub' }, { x: 300, y: 490, spriteKey: 'shrub' }],
 	  balloons: [{ x: 120, y: 520, spriteKey: 'balloon' }]
 	};
 
