@@ -334,7 +334,7 @@
 	var _fireJs = __webpack_require__(4);
 
 	var FIRE_SPEED = Phaser.Timer.SECOND;
-	var SPEED = 100;
+	var SPEED = 150;
 
 	var canFire = true;
 
