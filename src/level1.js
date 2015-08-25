@@ -43,12 +43,10 @@ const Level = {
     , {spriteKey: 'knight', tract: 'mainPath'}
     , {spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2}
     , {spriteKey: 'knight', tract: 'mainPath'}
-    , {spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2}
     , {spriteKey: 'king', tract: 'mainPath', speed: 90, points: 3}
 
     , {spriteKey: 'knight', tract: 'guardPath', speed: 150}
     , {spriteKey: 'knight', tract: 'guardPath', speed: 150}
-    , {spriteKey: 'horse', tract: 'horsePath', speed: 250}
     , {spriteKey: 'horse', tract: 'horsePath', speed: 250}
 
     , {spriteKey: 'knight', tract: 'mainPath'}
@@ -65,10 +63,6 @@ const Level = {
     , {spriteKey: 'horse', tract: 'horsePath', speed: 250}
 
 
-    , {spriteKey: 'knight', tract: 'mainPath', speed: 150}
-    , {spriteKey: 'knight', tract: 'mainPath', speed: 150}
-    , {spriteKey: 'knight', tract: 'mainPath', speed: 150}
-    , {spriteKey: 'horse', tract: 'mainPath', speed: 270, points: 2}
     , {spriteKey: 'knight', tract: 'mainPath', speed: 150}
     , {spriteKey: 'knight', tract: 'mainPath', speed: 150}
     , {spriteKey: 'knight', tract: 'mainPath', speed: 150}
