@@ -20,11 +20,15 @@ function create() {
 }
 
 function update() {
-  const {SPACEBAR} = Phaser.Keyboard;
+  const {SPACEBAR, E} = Phaser.Keyboard;
   
   if (game.input.keyboard.isDown(SPACEBAR)) {
     game.state.start('game');
   }
+  else if (game.input.keyboard.isDown(E)) {
+    game.state.start('editor');
+  }
+  
 
 }
 export default {

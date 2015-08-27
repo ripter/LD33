@@ -35,6 +35,19 @@ export function loadLevel(lvl) {
   };
 }
 
+// Make a loaded level editable (for editor)
+export function makeEditable(level) {
+  return Object.assign({}, level, {
+    fgGroup: level.fgGroup.forEach(makeDragable, this)
+  });
+}
+  
+function makeDragable(sprite) {
+  sprite.inputEnabled = true;
+  sprite.input.enableDrag(true);
+  return sprite;
+}
+
 // Join the mob with the tract data.
 // this way every mob knows their entire tract
 function loadMobList(lvlMobs, lvlWaypoints) {

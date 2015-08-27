@@ -63,17 +63,23 @@
 
 	var _statesEndJs2 = _interopRequireDefault(_statesEndJs);
 
+	var _statesEditorJs = __webpack_require__(16);
+
+	var _statesEditorJs2 = _interopRequireDefault(_statesEditorJs);
+
 	var game = new Phaser.Game(1136, 640, Phaser.AUTO, 'content');
 	window.game = game;
 
 	game.state.add('start', _statesStartJs2['default']);
 	game.state.add('game', _statesGameJs2['default']);
 	game.state.add('end', _statesEndJs2['default']);
+	game.state.add('editor', _statesEditorJs2['default']);
 
 	// prod
-	game.state.start('start');
+	//game.state.start('start');
 	// dev
 	//game.state.start('game');
+	game.state.start('editor');
 
 /***/ },
 /* 1 */
@@ -651,6 +657,7 @@
 	  value: true
 	});
 	exports.loadLevel = loadLevel;
+	exports.makeEditable = makeEditable;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -696,6 +703,20 @@
 	    balloons: balloonGroup,
 	    bullets: (0, _groupsJs.physicsGroup)()
 	  };
+	}
+
+	// Make a loaded level editable (for editor)
+
+	function makeEditable(level) {
+	  return Object.assign({}, level, {
+	    fgGroup: level.fgGroup.forEach(makeDragable, this)
+	  });
+	}
+
+	function makeDragable(sprite) {
+	  sprite.inputEnabled = true;
+	  sprite.input.enableDrag(true);
+	  return sprite;
 	}
 
 	// Join the mob with the tract data.
@@ -872,10 +893,14 @@
 	}
 
 	function update() {
-	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
+	  var _Phaser$Keyboard = Phaser.Keyboard;
+	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+	  var E = _Phaser$Keyboard.E;
 
 	  if (game.input.keyboard.isDown(SPACEBAR)) {
 	    game.state.start('game');
+	  } else if (game.input.keyboard.isDown(E)) {
+	    game.state.start('editor');
 	  }
 	}
 	exports['default'] = {
@@ -948,6 +973,52 @@
 	//   }
 	//   localStorage.setItem('scores', game.storedScore);
 	// }
+
+	exports['default'] = {
+	  create: create,
+	  update: update,
+	  preload: _preloadJs.preload
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _preloadJs = __webpack_require__(3);
+
+	var _fontsJs = __webpack_require__(12);
+
+	var _levelLoaderJs = __webpack_require__(10);
+
+	var _level1Js = __webpack_require__(13);
+
+	var _level1Js2 = _interopRequireDefault(_level1Js);
+
+	function create() {
+	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
+
+	  var level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+	  // make the level editable
+	  level = (0, _levelLoaderJs.makeEditable)(level);
+	}
+
+	function update() {
+	  var ENTER = Phaser.Keyboard.ENTER;
+
+	  if (game.input.keyboard.isDown(ENTER)) {
+	    console.log('you click long time!');
+	  }
+	}
 
 	exports['default'] = {
 	  create: create,
