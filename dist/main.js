@@ -51,29 +51,35 @@
 
 	__webpack_require__(1);
 
-	var _gameStateJs = __webpack_require__(2);
+	var _statesGameJs = __webpack_require__(2);
 
-	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
+	var _statesGameJs2 = _interopRequireDefault(_statesGameJs);
 
-	var _startStateJs = __webpack_require__(13);
+	var _statesStartJs = __webpack_require__(14);
 
-	var _startStateJs2 = _interopRequireDefault(_startStateJs);
+	var _statesStartJs2 = _interopRequireDefault(_statesStartJs);
 
-	var _endStateJs = __webpack_require__(14);
+	var _statesEndJs = __webpack_require__(15);
 
-	var _endStateJs2 = _interopRequireDefault(_endStateJs);
+	var _statesEndJs2 = _interopRequireDefault(_statesEndJs);
 
-	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content');
+	var _statesEditorJs = __webpack_require__(16);
+
+	var _statesEditorJs2 = _interopRequireDefault(_statesEditorJs);
+
+	var game = new Phaser.Game(1136, 640, Phaser.AUTO, 'content');
 	window.game = game;
 
-	game.state.add('start', _startStateJs2['default']);
-	game.state.add('game', _gameStateJs2['default']);
-	game.state.add('end', _endStateJs2['default']);
+	game.state.add('start', _statesStartJs2['default']);
+	game.state.add('game', _statesGameJs2['default']);
+	game.state.add('end', _statesEndJs2['default']);
+	game.state.add('editor', _statesEditorJs2['default']);
 
 	// prod
-	//game.state.start('start');
+	game.state.start('start');
 	// dev
-	game.state.start('game');
+	//game.state.start('game');
+	//game.state.start('editor');
 
 /***/ },
 /* 1 */
@@ -130,25 +136,27 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _groupsJs = __webpack_require__(3);
+	var _preloadJs = __webpack_require__(3);
 
-	var _dragonJs = __webpack_require__(4);
+	var _groupsJs = __webpack_require__(4);
 
-	var _playerJs = __webpack_require__(6);
+	var _dragonJs = __webpack_require__(5);
 
-	var _foregroundJs = __webpack_require__(7);
+	var _playerJs = __webpack_require__(7);
+
+	var _foregroundJs = __webpack_require__(8);
 
 	var Props = _interopRequireWildcard(_foregroundJs);
 
-	var _mobJs = __webpack_require__(8);
+	var _mobJs = __webpack_require__(9);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _levelLoaderJs = __webpack_require__(9);
+	var _levelLoaderJs = __webpack_require__(10);
 
-	var _fontsJs = __webpack_require__(11);
+	var _fontsJs = __webpack_require__(12);
 
-	var _level1Js = __webpack_require__(12);
+	var _level1Js = __webpack_require__(13);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
@@ -157,30 +165,8 @@
 	var level = undefined;
 
 	var player = undefined;
-	var bullets = undefined;
 	var balloons = undefined;
 	var sfx = undefined;
-
-	function preload() {
-	  game.load.image('dragon', 'assets/dragon2.png', 128, 128);
-	  game.load.image('king', 'assets/king.png', 64, 64);
-	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
-	  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
-	  game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
-	  game.load.image('wall', 'assets/wall.png', 64, 64);
-	  game.load.image('tower', 'assets/tower.png', 64, 64);
-
-	  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
-	  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
-	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
-
-	  game.load.image('balloon', 'assets/balloon.png', 64, 64);
-	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
-
-	  game.load.audio('hit', 'assets/hit.wav');
-	  game.load.audio('score', 'assets/shoot.wav');
-	}
 
 	function create() {
 	  var levelData = _level1Js2['default'];
@@ -191,8 +177,6 @@
 	  // load level!
 	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelData);
 
-	  // Should be in level state:
-	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
 	  // player on top of everything
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
@@ -217,6 +201,7 @@
 	  var mobs = _level.mobs;
 	  var fgGroup = _level.fgGroup;
 	  var balloons = _level.balloons;
+	  var bullets = _level.bullets;
 	  var ESC = Phaser.Keyboard.ESC;
 
 	  (0, _playerJs.playerControl)(player);
@@ -282,14 +267,53 @@
 	}
 
 	exports['default'] = {
-	  preload: preload,
 	  create: create,
-	  update: update
+	  update: update,
+	  preload: _preloadJs.preload
 	};
 	module.exports = exports['default'];
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.preload = preload;
+
+	function preload() {
+	  // Player
+	  game.load.image('dragon', 'assets/dragon2.png', 128, 128);
+	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
+	  game.load.image('balloon', 'assets/balloon.png', 64, 64);
+
+	  // Mobs 
+	  game.load.image('king', 'assets/king.png', 64, 64);
+	  game.load.image('knight', 'assets/knight.png', 64, 64);
+	  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
+
+	  // Props
+	  game.load.image('wall', 'assets/wall.png', 64, 64);
+	  game.load.image('tower', 'assets/tower.png', 64, 64);
+	  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
+	  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
+
+	  // Misc
+	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
+	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
+	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
+
+	  // Sound
+	  game.load.audio('hit', 'assets/hit.wav');
+	  game.load.audio('score', 'assets/shoot.wav');
+	}
+
+/***/ },
+/* 4 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -309,7 +333,7 @@
 	}
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -323,7 +347,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fireJs = __webpack_require__(5);
+	var _fireJs = __webpack_require__(6);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -336,10 +360,10 @@
 	}
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
-	/*global Phaser, game, bullets */
+	/*global Phaser, game, level */
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -354,7 +378,7 @@
 	// constructors use NEW, we use SPAWN. Totally different! :)
 
 	function spawnFire(x, y) {
-	  var sprite = bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
+	  var sprite = level.bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
 	  sprite.animations.add('fly');
 	  sprite.animations.play('fly', 24, true);
@@ -363,7 +387,7 @@
 	}
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game*/
@@ -374,9 +398,9 @@
 	});
 	exports.playerControl = playerControl;
 
-	var _fireJs = __webpack_require__(5);
+	var _fireJs = __webpack_require__(6);
 
-	var FIRE_SPEED = Phaser.Timer.SECOND;
+	var FIRE_SPEED = Phaser.Timer.HALF * 1.7; // Phaser.Timer.SECOND;
 	var SPEED = 150;
 
 	var canFire = true;
@@ -409,7 +433,7 @@
 	}
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -517,7 +541,7 @@
 	}
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -623,7 +647,7 @@
 	}
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
@@ -633,24 +657,25 @@
 	  value: true
 	});
 	exports.loadLevel = loadLevel;
+	exports.makeEditable = makeEditable;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _mobJs = __webpack_require__(8);
+	var _mobJs = __webpack_require__(9);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _foregroundJs = __webpack_require__(7);
+	var _foregroundJs = __webpack_require__(8);
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
-	var _balloonJs = __webpack_require__(10);
+	var _balloonJs = __webpack_require__(11);
 
 	var Balloon = _interopRequireWildcard(_balloonJs);
 
 	// Groups with physics.
 
-	var _groupsJs = __webpack_require__(3);
+	var _groupsJs = __webpack_require__(4);
 
 	/**
 	 * Loads a level data file.
@@ -675,8 +700,23 @@
 	      group: mobGroup
 	    },
 	    fgGroup: fgGroup,
-	    balloons: balloonGroup
+	    balloons: balloonGroup,
+	    bullets: (0, _groupsJs.physicsGroup)()
 	  };
+	}
+
+	// Make a loaded level editable (for editor)
+
+	function makeEditable(level) {
+	  return Object.assign({}, level, {
+	    fgGroup: level.fgGroup.forEach(makeDragable, this)
+	  });
+	}
+
+	function makeDragable(sprite) {
+	  sprite.inputEnabled = true;
+	  sprite.input.enableDrag(true);
+	  return sprite;
 	}
 
 	// Join the mob with the tract data.
@@ -736,7 +776,7 @@
 	}
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -762,7 +802,7 @@
 	}
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -784,7 +824,7 @@
 	exports.infoFont = infoFont;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -824,7 +864,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -834,16 +874,13 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(11);
+	var _preloadJs = __webpack_require__(3);
+
+	var _fontsJs = __webpack_require__(12);
 
 	//
 	// Lifecycle
 	//
-	function preload() {
-	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
-	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
-	}
-
 	function create() {
 	  // place somet nice things
 	  game.add.image(800, 100, 'stuffedPrincess');
@@ -856,21 +893,25 @@
 	}
 
 	function update() {
-	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
+	  var _Phaser$Keyboard = Phaser.Keyboard;
+	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+	  var E = _Phaser$Keyboard.E;
 
 	  if (game.input.keyboard.isDown(SPACEBAR)) {
 	    game.state.start('game');
+	  } else if (game.input.keyboard.isDown(E)) {
+	    game.state.start('editor');
 	  }
 	}
 	exports['default'] = {
-	  preload: preload,
 	  create: create,
-	  update: update
+	  update: update,
+	  preload: _preloadJs.preload
 	};
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -880,25 +921,22 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(11);
+	var _preloadJs = __webpack_require__(3);
 
-	var _gameStateJs = __webpack_require__(2);
+	var _fontsJs = __webpack_require__(12);
+
+	var _gameJs = __webpack_require__(2);
 
 	//
 	// Lifecycle
 	//
-	function preload() {
-	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
-	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
-	}
-
 	function create() {
 	  addGameOver();
 	  //game.add.text(100, 100, 'You are Monster END!', headerFont);
 	  //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
 	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
 
-	  game.add.text(100, 150, 'Refresh page to play again', _fontsJs.headerFont);
+	  game.add.text(100, 150, 'Press [enter] to play again', _fontsJs.headerFont);
 	}
 
 	function update() {
@@ -937,9 +975,55 @@
 	// }
 
 	exports['default'] = {
-	  preload: preload,
 	  create: create,
-	  update: update
+	  update: update,
+	  preload: _preloadJs.preload
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _preloadJs = __webpack_require__(3);
+
+	var _fontsJs = __webpack_require__(12);
+
+	var _levelLoaderJs = __webpack_require__(10);
+
+	var _level1Js = __webpack_require__(13);
+
+	var _level1Js2 = _interopRequireDefault(_level1Js);
+
+	function create() {
+	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
+
+	  var level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+	  // make the level editable
+	  level = (0, _levelLoaderJs.makeEditable)(level);
+	}
+
+	function update() {
+	  var ENTER = Phaser.Keyboard.ENTER;
+
+	  if (game.input.keyboard.isDown(ENTER)) {
+	    console.log('you click long time!');
+	  }
+	}
+
+	exports['default'] = {
+	  create: create,
+	  update: update,
+	  preload: _preloadJs.preload
 	};
 	module.exports = exports['default'];
 

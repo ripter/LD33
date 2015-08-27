@@ -3,18 +3,21 @@
 
 import './polyfill.js';
 
-import gameState from './game-state.js';
-import startState from './start-state.js';
-import endState from './end-state.js';
+import gameState from './states/game.js';
+import start from './states/start.js';
+import end from './states/end.js';
+import editor from './states/editor.js';
 
-const game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content');
+const game = new Phaser.Game(1136, 640, Phaser.AUTO, 'content');
 window.game = game;
 
-game.state.add('start', startState);
+game.state.add('start', start);
 game.state.add('game', gameState);
-game.state.add('end', endState);
+game.state.add('end', end);
+game.state.add('editor', editor);
 
 // prod
-//game.state.start('start');
+game.state.start('start');
 // dev
-game.state.start('game');
+//game.state.start('game');
+//game.state.start('editor');
