@@ -76,10 +76,10 @@
 	game.state.add('editor', _statesEditorJs2['default']);
 
 	// prod
-	//game.state.start('start');
+	game.state.start('start');
 	// dev
 	//game.state.start('game');
-	game.state.start('editor');
+	//game.state.start('editor');
 
 /***/ },
 /* 1 */

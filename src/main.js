@@ -17,7 +17,7 @@ game.state.add('end', end);
 game.state.add('editor', editor);
 
 // prod
-//game.state.start('start');
+game.state.start('start');
 // dev
 //game.state.start('game');
-game.state.start('editor');
+//game.state.start('editor');
