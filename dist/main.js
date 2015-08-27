@@ -372,7 +372,6 @@
 	// constructors use NEW, we use SPAWN. Totally different! :)
 
 	function spawnFire(x, y) {
-	  debugger;
 	  var sprite = level.bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
 	  sprite.animations.add('fly');

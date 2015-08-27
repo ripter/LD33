@@ -8,7 +8,6 @@ const OFFSET_X = 63;
 // totally not a constructor
 // constructors use NEW, we use SPAWN. Totally different! :)
 export function spawnFire(x, y) {
-  debugger;
   let sprite = level.bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
   sprite.animations.add('fly');
