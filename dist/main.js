@@ -63,7 +63,7 @@
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
-	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content');
+	var game = new Phaser.Game(1136, 640, Phaser.AUTO, 'content');
 	window.game = game;
 
 	game.state.add('start', _startStateJs2['default']);
@@ -898,7 +898,7 @@
 	  //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
 	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
 
-	  game.add.text(100, 150, 'Refresh page to play again', _fontsJs.headerFont);
+	  game.add.text(100, 150, 'Press [enter] to play again', _fontsJs.headerFont);
 	}
 
 	function update() {
