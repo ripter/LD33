@@ -48,17 +48,20 @@ function create() {
 
   // load level!
   window.level = level = loadLevel(levelData);
+    
+  // Should be in level state:
   window.bullets = bullets = physicsGroup();
+  // player on top of everything
+  window.player = player = spawnDragon(500, 500);
 
+    
+  // UI
   // Score!
   game.textScore = game.add.text(800, 10, 'SCORE: 0', headerFont);
-  
   // How to Play
   game.add.text(50, 540, 'ARROW KEYS: <- move ->', infoFont);
   game.add.text(50, 560, 'SPACEBAR: [Fire]', infoFont);
   
-  // player on top of everything
-  window.player = player = spawnDragon(500, 500);
 
   Mob.startTimedGame(level.mobs);
   

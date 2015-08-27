@@ -5,7 +5,7 @@ BIN := $(LIB)/.bin
 
 all: node_modules js 
 
-run: 
+run: node_modules/ 
 	$(BIN)/http-server ./dist -p 3000
 	open http://localhost:3000/index.html
 
@@ -18,7 +18,6 @@ js: node_modules/
 clean:
 	npm cache clean
 	-rm -R node_modules/
-	-rm server.PID
 
 node_modules/: package.json
 	npm install

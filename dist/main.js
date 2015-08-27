@@ -49,15 +49,17 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _gameStateJs = __webpack_require__(1);
+	__webpack_require__(1);
+
+	var _gameStateJs = __webpack_require__(2);
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(12);
+	var _startStateJs = __webpack_require__(13);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(13);
+	var _endStateJs = __webpack_require__(14);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -69,12 +71,52 @@
 	game.state.add('end', _endStateJs2['default']);
 
 	// prod
-	game.state.start('start');
+	//game.state.start('start');
 	// dev
-	//game.state.start('game');
+	game.state.start('game');
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+	'use strict';
+
+	if (!Object.assign) {
+	  Object.defineProperty(Object, 'assign', {
+	    enumerable: false,
+	    configurable: true,
+	    writable: true,
+	    value: function value(target) {
+	      'use strict';
+	      if (target === undefined || target === null) {
+	        throw new TypeError('Cannot convert first argument to object');
+	      }
+
+	      var to = Object(target);
+	      for (var i = 1; i < arguments.length; i++) {
+	        var nextSource = arguments[i];
+	        if (nextSource === undefined || nextSource === null) {
+	          continue;
+	        }
+	        nextSource = Object(nextSource);
+
+	        var keysArray = Object.keys(Object(nextSource));
+	        for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+	          var nextKey = keysArray[nextIndex];
+	          var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+	          if (desc !== undefined && desc.enumerable) {
+	            to[nextKey] = nextSource[nextKey];
+	          }
+	        }
+	      }
+	      return to;
+	    }
+	  });
+	}
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -88,25 +130,25 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _groupsJs = __webpack_require__(2);
+	var _groupsJs = __webpack_require__(3);
 
-	var _dragonJs = __webpack_require__(3);
+	var _dragonJs = __webpack_require__(4);
 
-	var _playerJs = __webpack_require__(5);
+	var _playerJs = __webpack_require__(6);
 
-	var _foregroundJs = __webpack_require__(6);
+	var _foregroundJs = __webpack_require__(7);
 
 	var Props = _interopRequireWildcard(_foregroundJs);
 
-	var _mobJs = __webpack_require__(7);
+	var _mobJs = __webpack_require__(8);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _levelLoaderJs = __webpack_require__(8);
+	var _levelLoaderJs = __webpack_require__(9);
 
-	var _fontsJs = __webpack_require__(10);
+	var _fontsJs = __webpack_require__(11);
 
-	var _level1Js = __webpack_require__(11);
+	var _level1Js = __webpack_require__(12);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
@@ -148,17 +190,18 @@
 
 	  // load level!
 	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelData);
-	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
 
+	  // Should be in level state:
+	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
+	  // player on top of everything
+	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
+
+	  // UI
 	  // Score!
 	  game.textScore = game.add.text(800, 10, 'SCORE: 0', _fontsJs.headerFont);
-
 	  // How to Play
 	  game.add.text(50, 540, 'ARROW KEYS: <- move ->', _fontsJs.infoFont);
 	  game.add.text(50, 560, 'SPACEBAR: [Fire]', _fontsJs.infoFont);
-
-	  // player on top of everything
-	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
 	  Mob.startTimedGame(level.mobs);
 
@@ -246,7 +289,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -266,7 +309,7 @@
 	}
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -280,7 +323,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fireJs = __webpack_require__(4);
+	var _fireJs = __webpack_require__(5);
 
 	var _fireJs2 = _interopRequireDefault(_fireJs);
 
@@ -293,7 +336,7 @@
 	}
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game, bullets */
@@ -320,7 +363,7 @@
 	}
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game*/
@@ -331,7 +374,7 @@
 	});
 	exports.playerControl = playerControl;
 
-	var _fireJs = __webpack_require__(4);
+	var _fireJs = __webpack_require__(5);
 
 	var FIRE_SPEED = Phaser.Timer.SECOND;
 	var SPEED = 150;
@@ -366,7 +409,7 @@
 	}
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -474,7 +517,7 @@
 	}
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -580,7 +623,7 @@
 	}
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
@@ -593,23 +636,26 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _mobJs = __webpack_require__(7);
+	var _mobJs = __webpack_require__(8);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _foregroundJs = __webpack_require__(6);
+	var _foregroundJs = __webpack_require__(7);
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
-	var _balloonJs = __webpack_require__(9);
+	var _balloonJs = __webpack_require__(10);
 
 	var Balloon = _interopRequireWildcard(_balloonJs);
 
 	// Groups with physics.
 
-	var _groupsJs = __webpack_require__(2);
+	var _groupsJs = __webpack_require__(3);
 
-	// Load the level from a lvl object.
+	/**
+	 * Loads a level data file.
+	 * Returns a level gamestate object.
+	 */
 
 	function loadLevel(lvl) {
 	  // These are in order by z-index
@@ -639,9 +685,11 @@
 	  return lvlMobs.map(function (lvlMob) {
 	    var tractName = lvlMob.tract;
 
-	    lvlMob.tractName = tractName;
-	    lvlMob.tract = lvlWaypoints[tractName];
-	    return lvlMob;
+	    return Object.assign({}, lvlMob, {
+	      spriteKey: lvlMob.spriteKey,
+	      tractName: tractName,
+	      tract: lvlWaypoints[tractName]
+	    });
 	  });
 	}
 
@@ -688,7 +736,7 @@
 	}
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -714,7 +762,7 @@
 	}
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -736,7 +784,7 @@
 	exports.infoFont = infoFont;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -776,7 +824,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -786,7 +834,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(10);
+	var _fontsJs = __webpack_require__(11);
 
 	//
 	// Lifecycle
@@ -822,7 +870,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -832,9 +880,9 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(10);
+	var _fontsJs = __webpack_require__(11);
 
-	var _gameStateJs = __webpack_require__(1);
+	var _gameStateJs = __webpack_require__(2);
 
 	//
 	// Lifecycle

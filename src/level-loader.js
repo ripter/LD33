@@ -8,7 +8,10 @@ import * as Balloon from './balloon.js';
 // Groups with physics.
 import {physicsGroup} from './groups.js';
 
-// Load the level from a lvl object.
+/**
+ * Loads a level data file.
+ * Returns a level gamestate object.
+ */
 export function loadLevel(lvl) {
   // These are in order by z-index
   const background = game.add.image(0, 0, lvl.background);
@@ -36,10 +39,12 @@ export function loadLevel(lvl) {
 function loadMobList(lvlMobs, lvlWaypoints) {
   return lvlMobs.map((lvlMob) => {
     const tractName = lvlMob.tract;
-
-    lvlMob.tractName = tractName;
-    lvlMob.tract = lvlWaypoints[tractName];
-    return lvlMob;
+    
+    return Object.assign({}, lvlMob, {
+      spriteKey: lvlMob.spriteKey
+      , tractName: tractName
+      , tract: lvlWaypoints[tractName]
+    });
   });
 }
 

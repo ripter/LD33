@@ -18,7 +18,7 @@ function create() {
   //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
   game.add.text(100, 200, 'Your score: ' + game.currentScore, headerFont);
 
-  game.add.text(100, 150, 'Refresh page to play again', headerFont);
+  game.add.text(100, 150, 'Press [enter] to play again', headerFont);
 }
 
 function update() {
