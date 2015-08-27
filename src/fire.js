@@ -1,4 +1,4 @@
-/*global Phaser, game, bullets */
+/*global Phaser, game, level */
 'use strict';
 
 const SPEED = 300;
@@ -8,7 +8,8 @@ const OFFSET_X = 63;
 // totally not a constructor
 // constructors use NEW, we use SPAWN. Totally different! :)
 export function spawnFire(x, y) {
-  let sprite = bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
+  debugger;
+  let sprite = level.bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
   sprite.animations.add('fly');
   sprite.animations.play('fly', 24, true);

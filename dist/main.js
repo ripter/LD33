@@ -159,7 +159,6 @@
 	var level = undefined;
 
 	var player = undefined;
-	var bullets = undefined;
 	var balloons = undefined;
 	var sfx = undefined;
 
@@ -172,8 +171,6 @@
 	  // load level!
 	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelData);
 
-	  // Should be in level state:
-	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
 	  // player on top of everything
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
 
@@ -198,6 +195,7 @@
 	  var mobs = _level.mobs;
 	  var fgGroup = _level.fgGroup;
 	  var balloons = _level.balloons;
+	  var bullets = _level.bullets;
 	  var ESC = Phaser.Keyboard.ESC;
 
 	  (0, _playerJs.playerControl)(player);
@@ -359,7 +357,7 @@
 /* 6 */
 /***/ function(module, exports) {
 
-	/*global Phaser, game, bullets */
+	/*global Phaser, game, level */
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -374,7 +372,8 @@
 	// constructors use NEW, we use SPAWN. Totally different! :)
 
 	function spawnFire(x, y) {
-	  var sprite = bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
+	  debugger;
+	  var sprite = level.bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
 	  sprite.animations.add('fly');
 	  sprite.animations.play('fly', 24, true);
@@ -695,7 +694,8 @@
 	      group: mobGroup
 	    },
 	    fgGroup: fgGroup,
-	    balloons: balloonGroup
+	    balloons: balloonGroup,
+	    bullets: (0, _groupsJs.physicsGroup)()
 	  };
 	}
 

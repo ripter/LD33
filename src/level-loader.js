@@ -31,6 +31,7 @@ export function loadLevel(lvl) {
     }
     , fgGroup: fgGroup
     , balloons: balloonGroup
+    , bullets: physicsGroup()
   };
 }
 

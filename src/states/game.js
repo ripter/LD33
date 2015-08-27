@@ -16,7 +16,6 @@ import lvl1 from '../level1.js';
 let level;
 
 let player;
-let bullets;
 let balloons;
 let sfx;
 
@@ -29,11 +28,8 @@ function create() {
   // load level!
   window.level = level = loadLevel(levelData);
     
-  // Should be in level state:
-  window.bullets = bullets = physicsGroup();
   // player on top of everything
   window.player = player = spawnDragon(500, 500);
-
     
   // UI
   // Score!
@@ -53,7 +49,7 @@ function create() {
 }
 
 function update() {
-  const {mobs, fgGroup, balloons} = level;
+  const {mobs, fgGroup, balloons, bullets} = level;
   const {ESC} = Phaser.Keyboard;
 
   playerControl(player);
