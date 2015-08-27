@@ -1,17 +1,13 @@
 /*global Phaser, game */
 'use strict';
 
-import {headerFont} from './fonts.js';
-import {updateScore} from './game-state.js';
+import {preload} from './preload.js';
+import {headerFont} from '../fonts.js';
+import {updateScore} from './game.js';
 
 //
 // Lifecycle
 //
-function preload() {
-  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
-  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
-}
-
 function create() {
   addGameOver();
   //game.add.text(100, 100, 'You are Monster END!', headerFont);
@@ -62,7 +58,7 @@ function addGameOver() {
 
 
 export default {
-  preload: preload
-  , create: create
+  create: create
   , update: update 
+  , preload: preload
 };

@@ -1,16 +1,12 @@
 /*global Phaser, game */
 'use strict';
 
-import {headerFont} from './fonts.js';
+import {preload} from './preload.js';
+import {headerFont} from '../fonts.js';
 
 //
 // Lifecycle
 //
-function preload() {
-  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
-  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
-}
-
 function create() {
   // place somet nice things
   game.add.image(800, 100, 'stuffedPrincess');
@@ -32,7 +28,7 @@ function update() {
 
 }
 export default {
-  preload: preload
-  , create: create
+  create: create
   , update: update 
+  , preload: preload
 };

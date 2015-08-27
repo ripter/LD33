@@ -3,7 +3,7 @@
 
 import {spawnFire} from './fire.js';
 
-const FIRE_SPEED = Phaser.Timer.SECOND;
+const FIRE_SPEED = Phaser.Timer.HALF * 1.7; // Phaser.Timer.SECOND;
 const SPEED = 150;
 
 let canFire = true;

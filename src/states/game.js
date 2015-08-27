@@ -1,16 +1,17 @@
 /*global Phaser, game */
 'use strict';
 
-import {physicsGroup} from './groups.js';
-import {spawnDragon} from './dragon.js';
-import {playerControl} from './player.js';
-import * as Props from './foreground.js';
-import * as Mob from './mob.js';
-import {loadLevel} from './level-loader.js';
-import {headerFont, infoFont} from './fonts.js';
+import {preload} from './preload.js';
+import {physicsGroup} from '../groups.js';
+import {spawnDragon} from '../dragon.js';
+import {playerControl} from '../player.js';
+import * as Props from '../foreground.js';
+import * as Mob from '../mob.js';
+import {loadLevel} from '../level-loader.js';
+import {headerFont, infoFont} from '../fonts.js';
 
 window.Mob = Mob;
-import lvl1 from './level1.js';
+import lvl1 from '../level1.js';
 
 let level;
 
@@ -18,27 +19,6 @@ let player;
 let bullets;
 let balloons;
 let sfx;
-
-function preload() {
-  game.load.image('dragon', 'assets/dragon2.png', 128, 128);
-  game.load.image('king', 'assets/king.png', 64, 64);
-  game.load.image('knight', 'assets/knight.png', 64, 64);
-  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
-  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
-  game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
-  game.load.image('wall', 'assets/wall.png', 64, 64);
-  game.load.image('tower', 'assets/tower.png', 64, 64);
-
-  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
-  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
-  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
-
-  game.load.image('balloon', 'assets/balloon.png', 64, 64);
-  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
-  
-  game.load.audio('hit', 'assets/hit.wav');
-  game.load.audio('score', 'assets/shoot.wav');
-}
 
 function create() {
   const levelData = lvl1;
@@ -136,8 +116,8 @@ function collideBalloon(mob, balloon) {
 
 
 export default {
-  preload: preload
-  , create: create
+  create: create
   , update: update
+  , preload: preload
 };
 
