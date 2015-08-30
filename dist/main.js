@@ -657,7 +657,6 @@
 	  value: true
 	});
 	exports.loadLevel = loadLevel;
-	exports.makeEditable = makeEditable;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -703,20 +702,6 @@
 	    balloons: balloonGroup,
 	    bullets: (0, _groupsJs.physicsGroup)()
 	  };
-	}
-
-	// Make a loaded level editable (for editor)
-
-	function makeEditable(level) {
-	  return Object.assign({}, level, {
-	    fgGroup: level.fgGroup.forEach(makeDragable, this)
-	  });
-	}
-
-	function makeDragable(sprite) {
-	  sprite.inputEnabled = true;
-	  sprite.input.enableDrag(true);
-	  return sprite;
 	}
 
 	// Join the mob with the tract data.
@@ -1000,16 +985,30 @@
 
 	var _levelLoaderJs = __webpack_require__(10);
 
+	var _editorJs = __webpack_require__(17);
+
 	var _level1Js = __webpack_require__(13);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
-	function create() {
-	  game.add.text(100, 100, 'You are Monster END!', _fontsJs.headerFont);
+	var selectedSprite = null;
+	var boxGraphics = null;
 
+	function create() {
 	  var level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+
+	  boxGraphics = game.add.graphics(0, 0);
 	  // make the level editable
-	  level = (0, _levelLoaderJs.makeEditable)(level);
+	  level.fgGroup.forEach(_editorJs.makeDragable, this, true, {
+	    onInputDown: function onInputDown(sprite) {
+	      // .onInputDown()
+	      // set it as the new selected sprite
+	      window.selectedSprite = selectedSprite = sprite;
+	    },
+	    onInputUp: function onInputUp(sprite) {
+	      //selectedSprite = null
+	    }
+	  });
 	}
 
 	function update() {
@@ -1017,6 +1016,11 @@
 
 	  if (game.input.keyboard.isDown(ENTER)) {
 	    console.log('you click long time!');
+	  }
+
+	  if (selectedSprite) {
+	    (0, _editorJs.drawBox)(boxGraphics, selectedSprite);
+	    //renderSelectedBox();
 	  }
 	}
 
@@ -1026,6 +1030,65 @@
 	  preload: _preloadJs.preload
 	};
 	module.exports = exports['default'];
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	// Editor functions
+	// used by states/editor.js
+
+	// Make the sprite clickable/dragable
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.makeDragable = makeDragable;
+	exports.drawBox = drawBox;
+	exports.makeSelect = makeSelect;
+	exports.killSelect = killSelect;
+
+	function makeDragable(sprite, events) {
+	  sprite.inputEnabled = true;
+	  sprite.input.enableDrag(true);
+	  sprite.events.onInputDown.add(events.onInputDown);
+	  sprite.events.onInputUp.add(events.onInputUp);
+
+	  return sprite;
+	}
+
+	function drawBox(graphics, sprite) {
+	  var x = sprite.x;
+	  var y = sprite.y;
+	  var height = sprite.height;
+	  var width = sprite.width;
+	  var anchor = sprite.anchor;
+
+	  graphics.x = x - width * anchor.x;
+	  graphics.y = y;
+	  graphics.lineStyle(2, 0x0000FF, 1);
+	  graphics.drawRect(0, 0, width, -height);
+
+	  return graphics;
+	}
+
+	function makeSelect(game, sprite) {
+	  var graphics = game.add.graphics(x, y);
+
+	  graphics.lineStyle(2, 0x0000FF, 1);
+	  graphics.drawRect(0, 0, width, -height);
+
+	  // update the box as the sprite moves
+	  sprite.events.onDragUpdate.add(function (sprite) {
+	    graphics.x = sprite.x - width / 2; // offself because of anchor
+	    graphics.y = sprite.y;
+	  });
+
+	  sprite.selectedBox = graphics;
+	}
+
+	function killSelect(game, sprite) {}
 
 /***/ }
 /******/ ]);
