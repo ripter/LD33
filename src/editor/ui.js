@@ -1,4 +1,4 @@
-/*global $ */
+/*global Phaser, game, $ */
 
 import * as FG from '../foreground.js';
 
@@ -6,20 +6,57 @@ import * as FG from '../foreground.js';
 import templateSelect from './select.mustache';
 
 const UI_SELECTOR = '#ui';
+const ADD_SPEED = Phaser.Timer.HALF;
 
+let selectedSprite = null;
+let boxGraphics = null;
 
-export function createUI() {
+// Create a new UI
+export function createUI(level) {
   const elmRoot = $(UI_SELECTOR);
   const elmForeground = elmRoot.find();
   
-  renderSelect('.js-foreground', {
+  boxGraphics = game.add.graphics(0, 0);
+
+  createForeground(level);
+}
+
+//
+// Update the UI
+export function update() {
+  if (selectedSprite) {
+    drawBox(boxGraphics, selectedSprite);
+  }
+}
+
+
+function createForeground(level) {
+  const selector = '.js-foreground';
+  let canAdd = true;
+  let sprite;
+
+  level.fgGroup.forEach(makeDragable, this, true, {
+    onInputDown: setSelected
+  });
+
+  renderSelect(selector, {
     list: Object.keys(FG.TYPES).map(fromConstants(FG.TYPES))
     , label: 'Foreground'
   });
   
-  bindSelect('.js-foreground', (value, target) => {
-    debugger;
+  bindSelect(selector, (type, target) => {
+    if (!canAdd) { return; }
+    canAdd = false;
+
+    sprite = FG.spawn(level.fgGroup, {x:100, y:100, spriteKey: type}); 
+    sprite = makeDragable(sprite, {onInputDown: setSelected});
+    selectedSprite = sprite;
+    
+    game.time.events.add(ADD_SPEED, () => {
+      canAdd = true;
+    });
   });
+
 }
 
 function fromConstants(constants) {
@@ -51,3 +88,34 @@ function bindSelect(selector, handleChange) {
   });
 }
 
+
+function setSelected(sprite) {
+  return window.selectedSprite = selectedSprite = sprite;
+}
+
+function drawBox(graphics, sprite) {
+  const {x, y, height, width, anchor} = sprite;
+
+  graphics.x = x - (width * anchor.x);
+  graphics.y = y;
+  graphics.lineStyle(2, 0x0000FF, 1);
+  graphics.drawRect(0, 0, width, -height);
+  
+  return graphics;
+}
+
+// Make the sprite clickable/dragable
+export function makeDragable(sprite, events) {
+  sprite.inputEnabled = true;
+  sprite.input.enableDrag(true);
+  
+  if (events.onInputDown) {
+    sprite.events.onInputDown.add(events.onInputDown);
+  }
+  
+  if (events.onInputUp) {
+    sprite.events.onInputUp.add(events.onInputUp);
+  }
+
+  return sprite;
+}

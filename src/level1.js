@@ -83,26 +83,26 @@ const Level = {
 
 	, foreground: [
     // mainPath y: 138
-    {x: 120, y: 160, spriteKey: 'wall'}
-    , {x: 304, y: 160, spriteKey: 'wall'}
-    , {x: 370, y: 160, spriteKey: 'wall'}
+    {x: 120, y: 160, spriteKey: 'FG_TYPES_WALL'}
+    , {x: 304, y: 160, spriteKey: 'FG_TYPES_WALL'}
+    , {x: 370, y: 160, spriteKey: 'FG_TYPES_WALL'}
 
     // mainPath y: 229 
-    , {x: 438, y: 240, spriteKey: 'tree'}
-    , {x: 438, y: 240, spriteKey: 'tree'}
-    , {x: 904, y: 240, spriteKey: 'wall'}
+    , {x: 438, y: 240, spriteKey: 'FG_TYPES_TREE'}
+    , {x: 438, y: 240, spriteKey: 'FG_TYPES_TREE'}
+    , {x: 904, y: 240, spriteKey: 'FG_TYPES_WALL'}
 
     // mainPath y: 354
-    , {x: 438, y: 376, spriteKey: 'tree'}
-    , {x: 538, y: 376, spriteKey: 'tree'}
-    , {x: 120, y: 376, spriteKey: 'wall'}
-    , {x: 155, y: 300, spriteKey: 'tower'}
+    , {x: 438, y: 376, spriteKey: 'FG_TYPES_TREE'}
+    , {x: 538, y: 376, spriteKey: 'FG_TYPES_TREE'}
+    , {x: 120, y: 376, spriteKey: 'FG_TYPES_WALL'}
+    , {x: 155, y: 300, spriteKey: 'FG_TYPES_TOWER'}
 
     // mainPath y: 470
-    , {x: 904, y: 490, spriteKey: 'tower'}
-    , {x: 804, y: 490, spriteKey: 'shrub'}
-    , {x: 654, y: 490, spriteKey: 'shrub'}
-    , {x: 300, y: 490, spriteKey: 'shrub'}
+    , {x: 904, y: 490, spriteKey: 'FG_TYPES_TOWER'}
+    , {x: 804, y: 490, spriteKey: 'FG_TYPES_SHRUB'}
+    , {x: 654, y: 490, spriteKey: 'FG_TYPES_SHRUB'}
+    , {x: 300, y: 490, spriteKey: 'FG_TYPES_SHRUB'}
   ]
   , balloons: [
     {x:120,y:520, spriteKey: 'balloon'}

@@ -1,6 +1,8 @@
 /*global Phaser, game */
 'use strict';
 
+import * as FG from '../foreground.js';
+
 export function preload() {
   // Player
   game.load.image('dragon', 'assets/dragon2.png', 128, 128);
@@ -13,10 +15,10 @@ export function preload() {
   game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
   
   // Props
-  game.load.image('wall', 'assets/wall.png', 64, 64);
-  game.load.image('tower', 'assets/tower.png', 64, 64);
-  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
-  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
+  game.load.image(FG.TYPES.WALL, 'assets/wall.png', 64, 64);
+  game.load.image(FG.TYPES.TOWER, 'assets/tower.png', 64, 64);
+  game.load.spritesheet(FG.TYPES.TREE, 'assets/tree_spritesheet.png', 64, 64);
+  game.load.spritesheet(FG.TYPES.SHRUB, 'assets/shrub_spritesheet.png', 64, 64);
 
   // Misc
   game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);

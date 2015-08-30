@@ -138,13 +138,13 @@
 
 	var _preloadJs = __webpack_require__(3);
 
-	var _groupsJs = __webpack_require__(4);
+	var _groupsJs = __webpack_require__(5);
 
-	var _dragonJs = __webpack_require__(5);
+	var _dragonJs = __webpack_require__(6);
 
-	var _playerJs = __webpack_require__(7);
+	var _playerJs = __webpack_require__(8);
 
-	var _foregroundJs = __webpack_require__(8);
+	var _foregroundJs = __webpack_require__(4);
 
 	var Props = _interopRequireWildcard(_foregroundJs);
 
@@ -275,7 +275,7 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
 	'use strict';
@@ -284,6 +284,12 @@
 	  value: true
 	});
 	exports.preload = preload;
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	var _foregroundJs = __webpack_require__(4);
+
+	var FG = _interopRequireWildcard(_foregroundJs);
 
 	function preload() {
 	  // Player
@@ -297,10 +303,10 @@
 	  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
 
 	  // Props
-	  game.load.image('wall', 'assets/wall.png', 64, 64);
-	  game.load.image('tower', 'assets/tower.png', 64, 64);
-	  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
-	  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
+	  game.load.image(FG.TYPES.WALL, 'assets/wall.png', 64, 64);
+	  game.load.image(FG.TYPES.TOWER, 'assets/tower.png', 64, 64);
+	  game.load.spritesheet(FG.TYPES.TREE, 'assets/tree_spritesheet.png', 64, 64);
+	  game.load.spritesheet(FG.TYPES.SHRUB, 'assets/shrub_spritesheet.png', 64, 64);
 
 	  // Misc
 	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
@@ -314,126 +320,6 @@
 
 /***/ },
 /* 4 */
-/***/ function(module, exports) {
-
-	/*global Phaser, game */
-	'use strict';
-
-	// create new group with physics!!
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.physicsGroup = physicsGroup;
-
-	function physicsGroup() {
-	  var group = game.add.group();
-	  group.enableBody = true;
-	  group.physicsBodyType = Phaser.Physics.ARCADE;
-	  return group;
-	}
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser, game */
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.spawnDragon = spawnDragon;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _fireJs = __webpack_require__(6);
-
-	var _fireJs2 = _interopRequireDefault(_fireJs);
-
-	function spawnDragon(x, y) {
-	  var sprite = game.add.sprite(x, y, 'dragon');
-	  game.physics.enable(sprite, Phaser.Physics.ARCADE);
-
-	  sprite.health = 3;
-	  return sprite;
-	}
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	/*global Phaser, game, level */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.spawnFire = spawnFire;
-	var SPEED = 300;
-	var OFFSET_Y = 0;
-	var OFFSET_X = 63;
-
-	// totally not a constructor
-	// constructors use NEW, we use SPAWN. Totally different! :)
-
-	function spawnFire(x, y) {
-	  var sprite = level.bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
-
-	  sprite.animations.add('fly');
-	  sprite.animations.play('fly', 24, true);
-	  sprite.body.velocity.y = -SPEED;
-	  return sprite;
-	}
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser, game*/
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.playerControl = playerControl;
-
-	var _fireJs = __webpack_require__(6);
-
-	var FIRE_SPEED = Phaser.Timer.HALF * 1.7; // Phaser.Timer.SECOND;
-	var SPEED = 150;
-
-	var canFire = true;
-
-	function playerControl(sprite) {
-	  var _Phaser$Keyboard = Phaser.Keyboard;
-	  var LEFT = _Phaser$Keyboard.LEFT;
-	  var RIGHT = _Phaser$Keyboard.RIGHT;
-	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
-
-	  // Movement keys
-	  if (game.input.keyboard.isDown(LEFT)) {
-	    sprite.body.velocity.x = -SPEED;
-	  } else if (game.input.keyboard.isDown(RIGHT)) {
-	    sprite.body.velocity.x = SPEED;
-	  } else {
-	    sprite.body.velocity.x = 0;
-	  }
-
-	  // FIRE!!!
-	  if (canFire && game.input.keyboard.isDown(SPACEBAR)) {
-	    canFire = false;
-	    (0, _fireJs.spawnFire)(sprite.x, sprite.y);
-
-	    // Delay the firing
-	    game.time.events.add(FIRE_SPEED, function () {
-	      canFire = true;
-	    });
-	  }
-	}
-
-/***/ },
-/* 8 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -546,6 +432,126 @@
 
 	  sprite.health = health;
 	  return sprite;
+	}
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	// create new group with physics!!
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.physicsGroup = physicsGroup;
+
+	function physicsGroup() {
+	  var group = game.add.group();
+	  group.enableBody = true;
+	  group.physicsBodyType = Phaser.Physics.ARCADE;
+	  return group;
+	}
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.spawnDragon = spawnDragon;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _fireJs = __webpack_require__(7);
+
+	var _fireJs2 = _interopRequireDefault(_fireJs);
+
+	function spawnDragon(x, y) {
+	  var sprite = game.add.sprite(x, y, 'dragon');
+	  game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+	  sprite.health = 3;
+	  return sprite;
+	}
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game, level */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.spawnFire = spawnFire;
+	var SPEED = 300;
+	var OFFSET_Y = 0;
+	var OFFSET_X = 63;
+
+	// totally not a constructor
+	// constructors use NEW, we use SPAWN. Totally different! :)
+
+	function spawnFire(x, y) {
+	  var sprite = level.bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
+
+	  sprite.animations.add('fly');
+	  sprite.animations.play('fly', 24, true);
+	  sprite.body.velocity.y = -SPEED;
+	  return sprite;
+	}
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game*/
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.playerControl = playerControl;
+
+	var _fireJs = __webpack_require__(7);
+
+	var FIRE_SPEED = Phaser.Timer.HALF * 1.7; // Phaser.Timer.SECOND;
+	var SPEED = 150;
+
+	var canFire = true;
+
+	function playerControl(sprite) {
+	  var _Phaser$Keyboard = Phaser.Keyboard;
+	  var LEFT = _Phaser$Keyboard.LEFT;
+	  var RIGHT = _Phaser$Keyboard.RIGHT;
+	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+
+	  // Movement keys
+	  if (game.input.keyboard.isDown(LEFT)) {
+	    sprite.body.velocity.x = -SPEED;
+	  } else if (game.input.keyboard.isDown(RIGHT)) {
+	    sprite.body.velocity.x = SPEED;
+	  } else {
+	    sprite.body.velocity.x = 0;
+	  }
+
+	  // FIRE!!!
+	  if (canFire && game.input.keyboard.isDown(SPACEBAR)) {
+	    canFire = false;
+	    (0, _fireJs.spawnFire)(sprite.x, sprite.y);
+
+	    // Delay the firing
+	    game.time.events.add(FIRE_SPEED, function () {
+	      canFire = true;
+	    });
+	  }
 	}
 
 /***/ },
@@ -672,7 +678,7 @@
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _foregroundJs = __webpack_require__(8);
+	var _foregroundJs = __webpack_require__(4);
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
@@ -682,7 +688,7 @@
 
 	// Groups with physics.
 
-	var _groupsJs = __webpack_require__(4);
+	var _groupsJs = __webpack_require__(5);
 
 	/**
 	 * Loads a level data file.
@@ -840,16 +846,16 @@
 
 	  foreground: [
 	  // mainPath y: 138
-	  { x: 120, y: 160, spriteKey: 'wall' }, { x: 304, y: 160, spriteKey: 'wall' }, { x: 370, y: 160, spriteKey: 'wall' }
+	  { x: 120, y: 160, spriteKey: 'FG_TYPES_WALL' }, { x: 304, y: 160, spriteKey: 'FG_TYPES_WALL' }, { x: 370, y: 160, spriteKey: 'FG_TYPES_WALL' }
 
 	  // mainPath y: 229
-	  , { x: 438, y: 240, spriteKey: 'tree' }, { x: 438, y: 240, spriteKey: 'tree' }, { x: 904, y: 240, spriteKey: 'wall' }
+	  , { x: 438, y: 240, spriteKey: 'FG_TYPES_TREE' }, { x: 438, y: 240, spriteKey: 'FG_TYPES_TREE' }, { x: 904, y: 240, spriteKey: 'FG_TYPES_WALL' }
 
 	  // mainPath y: 354
-	  , { x: 438, y: 376, spriteKey: 'tree' }, { x: 538, y: 376, spriteKey: 'tree' }, { x: 120, y: 376, spriteKey: 'wall' }, { x: 155, y: 300, spriteKey: 'tower' }
+	  , { x: 438, y: 376, spriteKey: 'FG_TYPES_TREE' }, { x: 538, y: 376, spriteKey: 'FG_TYPES_TREE' }, { x: 120, y: 376, spriteKey: 'FG_TYPES_WALL' }, { x: 155, y: 300, spriteKey: 'FG_TYPES_TOWER' }
 
 	  // mainPath y: 470
-	  , { x: 904, y: 490, spriteKey: 'tower' }, { x: 804, y: 490, spriteKey: 'shrub' }, { x: 654, y: 490, spriteKey: 'shrub' }, { x: 300, y: 490, spriteKey: 'shrub' }],
+	  , { x: 904, y: 490, spriteKey: 'FG_TYPES_TOWER' }, { x: 804, y: 490, spriteKey: 'FG_TYPES_SHRUB' }, { x: 654, y: 490, spriteKey: 'FG_TYPES_SHRUB' }, { x: 300, y: 490, spriteKey: 'FG_TYPES_SHRUB' }],
 	  balloons: [{ x: 120, y: 520, spriteKey: 'balloon' }]
 	};
 
@@ -997,7 +1003,7 @@
 
 	var _editorJs = __webpack_require__(17);
 
-	var _foregroundJs = __webpack_require__(8);
+	var _foregroundJs = __webpack_require__(4);
 
 	var FG = _interopRequireWildcard(_foregroundJs);
 
@@ -1005,27 +1011,19 @@
 
 	var ui = _interopRequireWildcard(_editorUiJs);
 
+	var _editorActionsJs = __webpack_require__(23);
+
 	var _level1Js = __webpack_require__(13);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
-	var ADD_SPEED = Phaser.Timer.HALF;
-
 	var level = undefined;
 	var selectedSprite = null;
-	var boxGraphics = null;
-	var canAdd = true;
 
 	function create() {
-	  ui.createUI();
-
 	  level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
 
-	  boxGraphics = game.add.graphics(0, 0);
-	  // make the level editable
-	  level.fgGroup.forEach(_editorJs.makeDragable, this, true, {
-	    onInputDown: setSelected
-	  });
+	  ui.createUI(level);
 	}
 
 	function update() {
@@ -1040,27 +1038,7 @@
 	    console.log('you click long time!');
 	  }
 
-	  // Add prop
-	  if (canAdd && game.input.keyboard.isDown(A)) {
-	    canAdd = false;
-	    sprite = FG.spawn(level.fgGroup, { x: 100, y: 100, spriteKey: 'tower' });
-	    sprite = (0, _editorJs.makeDragable)(sprite, { onInputDown: setSelected });
-	    selectedSprite = sprite;
-
-	    // Delay the firing
-	    game.time.events.add(ADD_SPEED, function () {
-	      canAdd = true;
-	    });
-	  }
-
-	  if (selectedSprite) {
-	    (0, _editorJs.drawBox)(boxGraphics, selectedSprite);
-	    //renderSelectedBox();
-	  }
-	}
-
-	function setSelected(sprite) {
-	  return window.selectedSprite = selectedSprite = sprite;
+	  ui.update();
 	}
 
 	exports['default'] = {
@@ -1079,48 +1057,11 @@
 	// Editor functions
 	// used by states/editor.js
 
-	// Make the sprite clickable/dragable
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.makeDragable = makeDragable;
-	exports.drawBox = drawBox;
-
-	function makeDragable(sprite, events) {
-	  sprite.inputEnabled = true;
-	  sprite.input.enableDrag(true);
-
-	  if (events.onInputDown) {
-	    sprite.events.onInputDown.add(events.onInputDown);
-	  }
-
-	  if (events.onInputUp) {
-	    sprite.events.onInputUp.add(events.onInputUp);
-	  }
-
-	  return sprite;
-	}
-
-	function drawBox(graphics, sprite) {
-	  var x = sprite.x;
-	  var y = sprite.y;
-	  var height = sprite.height;
-	  var width = sprite.width;
-	  var anchor = sprite.anchor;
-
-	  graphics.x = x - width * anchor.x;
-	  graphics.y = y;
-	  graphics.lineStyle(2, 0x0000FF, 1);
-	  graphics.drawRect(0, 0, width, -height);
-
-	  return graphics;
-	}
-
 /***/ },
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*global $ */
+	/*global Phaser, game, $ */
 
 	'use strict';
 
@@ -1128,12 +1069,14 @@
 	  value: true
 	});
 	exports.createUI = createUI;
+	exports.update = update;
+	exports.makeDragable = makeDragable;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _foregroundJs = __webpack_require__(8);
+	var _foregroundJs = __webpack_require__(4);
 
 	var FG = _interopRequireWildcard(_foregroundJs);
 
@@ -1144,18 +1087,58 @@
 	var _selectMustache2 = _interopRequireDefault(_selectMustache);
 
 	var UI_SELECTOR = '#ui';
+	var ADD_SPEED = Phaser.Timer.HALF;
 
-	function createUI() {
+	var selectedSprite = null;
+	var boxGraphics = null;
+
+	// Create a new UI
+
+	function createUI(level) {
 	  var elmRoot = $(UI_SELECTOR);
 	  var elmForeground = elmRoot.find();
 
-	  renderSelect('.js-foreground', {
+	  boxGraphics = game.add.graphics(0, 0);
+
+	  createForeground(level);
+	}
+
+	//
+	// Update the UI
+
+	function update() {
+	  if (selectedSprite) {
+	    drawBox(boxGraphics, selectedSprite);
+	  }
+	}
+
+	function createForeground(level) {
+	  var selector = '.js-foreground';
+	  var canAdd = true;
+	  var sprite = undefined;
+
+	  level.fgGroup.forEach(makeDragable, this, true, {
+	    onInputDown: setSelected
+	  });
+
+	  renderSelect(selector, {
 	    list: Object.keys(FG.TYPES).map(fromConstants(FG.TYPES)),
 	    label: 'Foreground'
 	  });
 
-	  bindSelect('.js-foreground', function (value, target) {
-	    debugger;
+	  bindSelect(selector, function (type, target) {
+	    if (!canAdd) {
+	      return;
+	    }
+	    canAdd = false;
+
+	    sprite = FG.spawn(level.fgGroup, { x: 100, y: 100, spriteKey: type });
+	    sprite = makeDragable(sprite, { onInputDown: setSelected });
+	    selectedSprite = sprite;
+
+	    game.time.events.add(ADD_SPEED, function () {
+	      canAdd = true;
+	    });
 	  });
 	}
 
@@ -1185,6 +1168,42 @@
 
 	    handleChange(value, target);
 	  });
+	}
+
+	function setSelected(sprite) {
+	  return window.selectedSprite = selectedSprite = sprite;
+	}
+
+	function drawBox(graphics, sprite) {
+	  var x = sprite.x;
+	  var y = sprite.y;
+	  var height = sprite.height;
+	  var width = sprite.width;
+	  var anchor = sprite.anchor;
+
+	  graphics.x = x - width * anchor.x;
+	  graphics.y = y;
+	  graphics.lineStyle(2, 0x0000FF, 1);
+	  graphics.drawRect(0, 0, width, -height);
+
+	  return graphics;
+	}
+
+	// Make the sprite clickable/dragable
+
+	function makeDragable(sprite, events) {
+	  sprite.inputEnabled = true;
+	  sprite.input.enableDrag(true);
+
+	  if (events.onInputDown) {
+	    sprite.events.onInputDown.add(events.onInputDown);
+	  }
+
+	  if (events.onInputUp) {
+	    sprite.events.onInputUp.add(events.onInputUp);
+	  }
+
+	  return sprite;
 	}
 
 /***/ },
@@ -1996,6 +2015,29 @@
 
 	})( true ? exports : Hogan);
 
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game, $ */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.addBlocker = addBlocker;
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	var _foregroundJs = __webpack_require__(4);
+
+	var FG = _interopRequireWildcard(_foregroundJs);
+
+	function addBlocker(type, group) {
+	  var sprite = FG.spawn(group, { x: 100, y: 100, spriteKey: type });
+	  //sprite = makeDragable(sprite, {onInputDown: setSelected});
+	}
 
 /***/ }
 /******/ ]);
