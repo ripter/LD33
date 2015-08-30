@@ -979,6 +979,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
 	var _preloadJs = __webpack_require__(3);
 
 	var _fontsJs = __webpack_require__(12);
@@ -987,41 +989,56 @@
 
 	var _editorJs = __webpack_require__(17);
 
+	var _foregroundJs = __webpack_require__(8);
+
+	var FG = _interopRequireWildcard(_foregroundJs);
+
 	var _level1Js = __webpack_require__(13);
 
 	var _level1Js2 = _interopRequireDefault(_level1Js);
 
+	var level = undefined;
 	var selectedSprite = null;
 	var boxGraphics = null;
 
 	function create() {
-	  var level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+	  level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
 
 	  boxGraphics = game.add.graphics(0, 0);
 	  // make the level editable
 	  level.fgGroup.forEach(_editorJs.makeDragable, this, true, {
-	    onInputDown: function onInputDown(sprite) {
-	      // .onInputDown()
-	      // set it as the new selected sprite
-	      window.selectedSprite = selectedSprite = sprite;
-	    },
-	    onInputUp: function onInputUp(sprite) {
-	      //selectedSprite = null
-	    }
+	    onInputDown: setSelected
 	  });
 	}
 
 	function update() {
-	  var ENTER = Phaser.Keyboard.ENTER;
+	  var _Phaser$Keyboard = Phaser.Keyboard;
+	  var A = _Phaser$Keyboard.A;
+	  var ENTER = _Phaser$Keyboard.ENTER;
 
+	  var sprite = undefined;
+
+	  //if (game.input.keyboard.isDown(ENTER)) {
 	  if (game.input.keyboard.isDown(ENTER)) {
 	    console.log('you click long time!');
+	  }
+
+	  // Add prop
+	  if (game.input.keyboard.isDown(A)) {
+	    //level.fgGroup
+	    sprite = FG.spawn(level.fgGroup, { x: 100, y: 100, spriteKey: 'tower' });
+	    sprite = (0, _editorJs.makeDragable)(sprite, { onInputDown: setSelected });
+	    selectedSprite = sprite;
 	  }
 
 	  if (selectedSprite) {
 	    (0, _editorJs.drawBox)(boxGraphics, selectedSprite);
 	    //renderSelectedBox();
 	  }
+	}
+
+	function setSelected(sprite) {
+	  return window.selectedSprite = selectedSprite = sprite;
 	}
 
 	exports['default'] = {
@@ -1046,14 +1063,18 @@
 	});
 	exports.makeDragable = makeDragable;
 	exports.drawBox = drawBox;
-	exports.makeSelect = makeSelect;
-	exports.killSelect = killSelect;
 
 	function makeDragable(sprite, events) {
 	  sprite.inputEnabled = true;
 	  sprite.input.enableDrag(true);
-	  sprite.events.onInputDown.add(events.onInputDown);
-	  sprite.events.onInputUp.add(events.onInputUp);
+
+	  if (events.onInputDown) {
+	    sprite.events.onInputDown.add(events.onInputDown);
+	  }
+
+	  if (events.onInputUp) {
+	    sprite.events.onInputUp.add(events.onInputUp);
+	  }
 
 	  return sprite;
 	}
@@ -1072,23 +1093,6 @@
 
 	  return graphics;
 	}
-
-	function makeSelect(game, sprite) {
-	  var graphics = game.add.graphics(x, y);
-
-	  graphics.lineStyle(2, 0x0000FF, 1);
-	  graphics.drawRect(0, 0, width, -height);
-
-	  // update the box as the sprite moves
-	  sprite.events.onDragUpdate.add(function (sprite) {
-	    graphics.x = sprite.x - width / 2; // offself because of anchor
-	    graphics.y = sprite.y;
-	  });
-
-	  sprite.selectedBox = graphics;
-	}
-
-	function killSelect(game, sprite) {}
 
 /***/ }
 /******/ ]);
