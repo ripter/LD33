@@ -1,4 +1,4 @@
-/*global Phaser, game */
+/*global Phaser, game, $ */
 'use strict';
 
 import {preload} from './preload.js';
@@ -8,13 +8,20 @@ import {loadLevel} from '../level-loader.js';
 import {makeDragable, drawBox} from '../editor.js';
 import * as FG from '../foreground.js';
 
+import * as ui from '../editor/ui.js';
+
 import lvlData from '../level1.js';
+
+const ADD_SPEED = Phaser.Timer.HALF;
 
 let level;
 let selectedSprite = null;
 let boxGraphics = null;
+let canAdd = true;
 
 function create() {
+  ui.createUI();
+
   level = loadLevel(lvlData);
   
   boxGraphics = game.add.graphics(0, 0);
@@ -34,11 +41,16 @@ function update() {
   }
   
   // Add prop
-  if (game.input.keyboard.isDown(A)) {
-    //level.fgGroup
+  if (canAdd && game.input.keyboard.isDown(A)) {
+    canAdd = false;
     sprite = FG.spawn(level.fgGroup, {x:100, y:100, spriteKey: 'tower'});
     sprite = makeDragable(sprite, {onInputDown: setSelected});
     selectedSprite = sprite;
+
+    // Delay the firing
+    game.time.events.add(ADD_SPEED, () => {
+      canAdd = true;
+    });
   }
   
   if (selectedSprite) {

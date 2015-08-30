@@ -12,6 +12,7 @@ run: node_modules/
 js: node_modules/
 	$(BIN)/webpack src/main.js dist/main.js
 	cp ./src/index.html dist/index.html
+	cp ./src/editor.html dist/editor.html
 	cp ./node_modules/phaser/dist/phaser.min.js dist/phaser.js
 	cp ./assets/* dist/assets/
 

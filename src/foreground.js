@@ -1,6 +1,13 @@
 /*global Phaser, game */
 'use strict';
 
+export const TYPES = {
+  WALL: 'FG_TYPES_WALL'
+  , TOWER: 'FG_TYPES_TOWER'
+  , TREE: 'FG_TYPES_TREE'
+  , SHRUB: 'FG_TYPES_SHRUB' 
+};
+
 export function spawn(group, data) {
   const {x, y, spriteKey} = data;
   let sprite = group.create(x, y, spriteKey);  

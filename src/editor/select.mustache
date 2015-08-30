@@ -1,0 +1,16 @@
+
+<!-- Single button -->
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{label}} <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    {{#list}}
+      <li>
+          <a data-value="{{value}}">
+            {{key}}
+          </a>
+      </li>
+    {{/list}}
+  </ul>
+</div>

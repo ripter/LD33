@@ -6,7 +6,10 @@
   "dependencies": {
     "babel-core": "^5.8.22",
     "babel-loader": "^5.3.2",
+    "hogan.js": "^3.0.2",
     "http-server": "^0.8.0",
+    "loader-utils": "^0.2.11",
+    "mustache-loader": "^0.3.0",
     "phaser": "^2.4.2",
     "ramda": "^0.17.1",
     "webpack": "^1.11.0"
