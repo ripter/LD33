@@ -35,6 +35,25 @@ export function loadLevel(lvl) {
   };
 }
 
+export function exportLevel(lvlData) {
+  const fgGroup = lvlData.fgGroup;
+  let foreground = [];
+  
+  fgGroup.forEachAlive((sprite) => {
+    foreground.push({
+      x: sprite.x
+      , y: sprite.y
+      , spriteKey: sprite.data.spriteKey
+    });
+  });
+
+  return {
+    foreground: foreground
+  };
+}
+  
+
+
 // Join the mob with the tract data.
 // this way every mob knows their entire tract
 function loadMobList(lvlMobs, lvlWaypoints) {

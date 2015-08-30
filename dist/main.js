@@ -671,6 +671,7 @@
 	  value: true
 	});
 	exports.loadLevel = loadLevel;
+	exports.exportLevel = exportLevel;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -715,6 +716,23 @@
 	    fgGroup: fgGroup,
 	    balloons: balloonGroup,
 	    bullets: (0, _groupsJs.physicsGroup)()
+	  };
+	}
+
+	function exportLevel(lvlData) {
+	  var fgGroup = lvlData.fgGroup;
+	  var foreground = [];
+
+	  fgGroup.forEachAlive(function (sprite) {
+	    foreground.push({
+	      x: sprite.x,
+	      y: sprite.y,
+	      spriteKey: sprite.data.spriteKey
+	    });
+	  });
+
+	  return {
+	    foreground: foreground
 	  };
 	}
 
@@ -1070,7 +1088,6 @@
 	});
 	exports.createUI = createUI;
 	exports.update = update;
-	exports.makeDragable = makeDragable;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -1079,6 +1096,8 @@
 	var _foregroundJs = __webpack_require__(4);
 
 	var FG = _interopRequireWildcard(_foregroundJs);
+
+	var _levelLoaderJs = __webpack_require__(10);
 
 	// UI controls for the editor
 
@@ -1091,15 +1110,18 @@
 
 	var selectedSprite = null;
 	var boxGraphics = null;
+	var level = null;
 
 	// Create a new UI
 
-	function createUI(level) {
+	function createUI(levelData) {
 	  var elmRoot = $(UI_SELECTOR);
 	  var elmForeground = elmRoot.find();
 
+	  level = levelData;
 	  boxGraphics = game.add.graphics(0, 0);
 
+	  createQuickbar();
 	  createForeground(level);
 	}
 
@@ -1139,6 +1161,22 @@
 	    game.time.events.add(ADD_SPEED, function () {
 	      canAdd = true;
 	    });
+	  });
+	}
+
+	function createQuickbar() {
+	  var elmDelete = $(UI_SELECTOR).find('.js-selected-delete');
+	  var elmDownload = $(UI_SELECTOR).find('.js-download');
+
+	  elmDelete.bind('click', function (evt) {
+	    selectedSprite.destroy();
+	    selectedSprite = null;
+	  });
+
+	  elmDownload.bind('click', function (evt) {
+	    var lvlData = (0, _levelLoaderJs.exportLevel)(level);
+
+	    console.log(JSON.stringify(lvlData, null, '  '));
 	  });
 	}
 
@@ -1190,7 +1228,6 @@
 	}
 
 	// Make the sprite clickable/dragable
-
 	function makeDragable(sprite, events) {
 	  sprite.inputEnabled = true;
 	  sprite.input.enableDrag(true);

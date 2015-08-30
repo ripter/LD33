@@ -1,6 +1,7 @@
 /*global Phaser, game, $ */
 
 import * as FG from '../foreground.js';
+import {exportLevel} from '../level-loader.js';
 
 // UI controls for the editor
 import templateSelect from './select.mustache';
@@ -10,14 +11,17 @@ const ADD_SPEED = Phaser.Timer.HALF;
 
 let selectedSprite = null;
 let boxGraphics = null;
+let level = null;
 
 // Create a new UI
-export function createUI(level) {
+export function createUI(levelData) {
   const elmRoot = $(UI_SELECTOR);
   const elmForeground = elmRoot.find();
   
+  level = levelData;
   boxGraphics = game.add.graphics(0, 0);
 
+  createQuickbar();
   createForeground(level);
 }
 
@@ -58,6 +62,23 @@ function createForeground(level) {
   });
 
 }
+
+function createQuickbar() {
+  const elmDelete = $(UI_SELECTOR).find('.js-selected-delete');
+  const elmDownload = $(UI_SELECTOR).find('.js-download');
+  
+  elmDelete.bind('click', (evt) => {
+    selectedSprite.destroy();
+    selectedSprite = null;
+  });
+  
+  elmDownload.bind('click', (evt) => {
+    const lvlData = exportLevel(level);   
+    
+    console.log(JSON.stringify(lvlData, null, '  '));
+  });
+}
+
 
 function fromConstants(constants) {
   return (key) => {
@@ -105,7 +126,7 @@ function drawBox(graphics, sprite) {
 }
 
 // Make the sprite clickable/dragable
-export function makeDragable(sprite, events) {
+function makeDragable(sprite, events) {
   sprite.inputEnabled = true;
   sprite.input.enableDrag(true);
   
