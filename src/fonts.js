@@ -2,11 +2,16 @@
 'use strict';
 
 export const headerFont = {
-  font: '20pt Georgia'
+  font: '12pt Georgia'
   , fill: '#fff'
 };
 
 export const infoFont = {
-  fill: '#fff'
-  , font: '12pt Tahoma'
+  font: '12pt Tahoma'
+  , fill: '#fff'
+};
+
+export const sceneFont = {
+  font: '12pt "Lucida Console", Monaco, monospace'
+  , fill: '#ccc'
 };

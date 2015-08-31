@@ -729,16 +729,22 @@
 	  value: true
 	});
 	var headerFont = {
-	  font: '20pt Georgia',
+	  font: '12pt Georgia',
 	  fill: '#fff'
 	};
 
 	exports.headerFont = headerFont;
 	var infoFont = {
-	  fill: '#fff',
-	  font: '12pt Tahoma'
+	  font: '12pt Tahoma',
+	  fill: '#fff'
 	};
+
 	exports.infoFont = infoFont;
+	var sceneFont = {
+	  font: '12pt "Lucida Console", Monaco, monospace',
+	  fill: '#ccc'
+	};
+	exports.sceneFont = sceneFont;
 
 /***/ },
 /* 11 */
@@ -797,18 +803,20 @@
 	// Lifecycle
 	//
 	function preload() {
-	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
-	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
+	  game.load.image('carnie', 'assets/carnieDragon-105x158.png', 105, 158);
+	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess-89x101.png', 89, 101);
 	}
 
 	function create() {
 	  // place somet nice things
-	  game.add.image(800, 100, 'stuffedPrincess');
-	  game.add.image(100, 300, 'carnie');
+	  game.add.image(500, 100, 'stuffedPrincess');
+	  game.add.image(100, 217, 'carnie');
 
 	  // instructions
-	  game.add.text(100, 100, 'You are dragon.', _fontsJs.headerFont);
-	  game.add.text(100, 200, 'Win dragon lady friend a stuffed princess.', _fontsJs.headerFont);
+	  game.add.text(10, 10, 'Dragon Carnival:', _fontsJs.sceneFont);
+	  game.add.text(40, 45, 'Shoot the knights to win the stuffed princess doll.', _fontsJs.headerFont);
+	  game.add.text(40, 65, 'If a human reaches your balloon, game over.', _fontsJs.headerFont);
+
 	  game.add.text(400, 500, 'Press Space to try your luck!', _fontsJs.headerFont);
 	}
 
