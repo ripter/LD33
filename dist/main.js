@@ -111,9 +111,9 @@
 
 	var _fontsJs = __webpack_require__(10);
 
-	var _level1Js = __webpack_require__(11);
+	var _levelsLevel1Js = __webpack_require__(11);
 
-	var _level1Js2 = _interopRequireDefault(_level1Js);
+	var _levelsLevel1Js2 = _interopRequireDefault(_levelsLevel1Js);
 
 	window.Mob = Mob;
 
@@ -146,7 +146,7 @@
 	}
 
 	function create() {
-	  var levelData = _level1Js2['default'];
+	  var levelData = _levelsLevel1Js2['default'];
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
