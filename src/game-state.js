@@ -10,7 +10,7 @@ import {loadLevel} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
 
 window.Mob = Mob;
-import lvl1 from './level1.js';
+import lvl1 from './levels/level1.js';
 
 let level;
 
