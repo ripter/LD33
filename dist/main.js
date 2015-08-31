@@ -809,7 +809,9 @@
 
 	function create() {
 	  // place somet nice things
-	  game.add.image(500, 100, 'stuffedPrincess');
+	  game.add.image(550, 100, 'stuffedPrincess');
+	  game.add.image(450, 100, 'stuffedPrincess');
+	  game.add.image(350, 100, 'stuffedPrincess');
 	  game.add.image(100, 217, 'carnie');
 
 	  // instructions
@@ -817,13 +819,19 @@
 	  game.add.text(40, 45, 'Shoot the knights to win the stuffed princess doll.', _fontsJs.headerFont);
 	  game.add.text(40, 65, 'If a human reaches your balloon, game over.', _fontsJs.headerFont);
 
-	  game.add.text(400, 500, 'Press Space to try your luck!', _fontsJs.headerFont);
+	  game.add.text(400, 257, 'Tap to start!', _fontsJs.sceneFont);
 	}
 
 	function update() {
 	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
 
+	  // Press Space to Start
 	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    game.state.start('game');
+	  }
+
+	  // Tap to Start
+	  if (game.input.activePointer.isDown) {
 	    game.state.start('game');
 	  }
 	}
