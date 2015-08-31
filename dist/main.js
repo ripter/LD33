@@ -111,9 +111,9 @@
 
 	var _fontsJs = __webpack_require__(10);
 
-	var _levelsLevel1Js = __webpack_require__(11);
+	var _levelsIphoneJs = __webpack_require__(11);
 
-	var _levelsLevel1Js2 = _interopRequireDefault(_levelsLevel1Js);
+	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
 	window.Mob = Mob;
 
@@ -139,14 +139,18 @@
 	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
 	  game.load.image('balloon', 'assets/balloon.png', 64, 64);
+
+	  // backgrounds
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
+	  game.load.image('bg-iphone', 'assets/bg-iphone.png', 667, 375);
+	  game.load.image('curtains', 'assets/curtains.png', 667, 375);
 
 	  game.load.audio('hit', 'assets/hit.wav');
 	  game.load.audio('score', 'assets/shoot.wav');
 	}
 
 	function create() {
-	  var levelData = _levelsLevel1Js2['default'];
+	  var levelData = _levelsIphoneJs2['default'];
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
@@ -161,6 +165,9 @@
 	  // How to Play
 	  game.add.text(50, 540, 'ARROW KEYS: <- move ->', _fontsJs.infoFont);
 	  game.add.text(50, 560, 'SPACEBAR: [Fire]', _fontsJs.infoFont);
+
+	  // it's curtians for you!
+	  window.curtains = game.add.image(0, 0, 'curtains');
 
 	  // player on top of everything
 	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
@@ -750,40 +757,22 @@
 /* 11 */
 /***/ function(module, exports) {
 
-	/*global Phaser */
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	var Level = {
+	var level = {
+	  //background: 'bg-iphone'
+	  background: 'bg-iphone',
 	  waypoints: {
-	    mainPath: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
-	    guardPath: [{ x: 1024, y: 290 }, { x: 200, y: 290 }],
-	    horsePath: [{ x: 1024, y: 290 }, { x: 200, y: 290 }, { x: 120, y: 290 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }]
+	    mainPath: [{ x: 120, y: 0 }]
 	  },
-
-	  background: 'background',
-	  mobs: [
-	  // the order listed is the order they appear
-	  { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'king', tract: 'mainPath', speed: 90, points: 3 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 200, points: 2 }, { spriteKey: 'horse', tract: 'mainPath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'horse', tract: 'mainPath', speed: 250, points: 2 }, { spriteKey: 'king', tract: 'mainPath', speed: 120, points: 3 }],
-
-	  foreground: [
-	  // mainPath y: 138
-	  { x: 120, y: 160, spriteKey: 'wall' }, { x: 304, y: 160, spriteKey: 'wall' }, { x: 370, y: 160, spriteKey: 'wall' }
-
-	  // mainPath y: 229
-	  , { x: 438, y: 240, spriteKey: 'tree' }, { x: 438, y: 240, spriteKey: 'tree' }, { x: 904, y: 240, spriteKey: 'wall' }
-
-	  // mainPath y: 354
-	  , { x: 438, y: 376, spriteKey: 'tree' }, { x: 538, y: 376, spriteKey: 'tree' }, { x: 120, y: 376, spriteKey: 'wall' }, { x: 155, y: 300, spriteKey: 'tower' }
-
-	  // mainPath y: 470
-	  , { x: 904, y: 490, spriteKey: 'tower' }, { x: 804, y: 490, spriteKey: 'shrub' }, { x: 654, y: 490, spriteKey: 'shrub' }, { x: 300, y: 490, spriteKey: 'shrub' }],
+	  mobs: [{ spriteKey: 'knight', tract: 'mainPath' }],
+	  foreground: [{ x: 438, y: 240, spriteKey: 'tree' }],
 	  balloons: [{ x: 120, y: 520, spriteKey: 'balloon' }]
 	};
-
-	exports['default'] = Level;
+	exports['default'] = level;
 	module.exports = exports['default'];
 
 /***/ },

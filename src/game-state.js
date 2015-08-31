@@ -10,7 +10,7 @@ import {loadLevel} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
 
 window.Mob = Mob;
-import lvl1 from './levels/level1.js';
+import lvl2 from './levels/iphone.js';
 
 let level;
 
@@ -34,14 +34,18 @@ function preload() {
   game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
   game.load.image('balloon', 'assets/balloon.png', 64, 64);
+  
+  // backgrounds
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
+  game.load.image('bg-iphone', 'assets/bg-iphone.png', 667, 375);
+  game.load.image('curtains', 'assets/curtains.png', 667, 375);
   
   game.load.audio('hit', 'assets/hit.wav');
   game.load.audio('score', 'assets/shoot.wav');
 }
 
 function create() {
-  const levelData = lvl1;
+  const levelData = lvl2;
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.currentScore = 0;
@@ -57,6 +61,9 @@ function create() {
   game.add.text(50, 540, 'ARROW KEYS: <- move ->', infoFont);
   game.add.text(50, 560, 'SPACEBAR: [Fire]', infoFont);
   
+  // it's curtians for you!
+  window.curtains = game.add.image(0, 0, 'curtains');
+
   // player on top of everything
   window.player = player = spawnDragon(500, 500);
 

@@ -2,7 +2,7 @@
 'use strict';
 
 const Level = {
-	waypoints: {
+  waypoints: {
     mainPath: [
       {x:120, y:0}
       , {x:120, y:138}
@@ -31,8 +31,8 @@ const Level = {
     ]
   }
 
-	, background 	: 'background'
-	, mobs: [
+  , background 	: 'background'
+  , mobs: [
     // the order listed is the order they appear
     {spriteKey: 'knight', tract: 'guardPath'}
     , {spriteKey: 'knight', tract: 'guardPath'}
@@ -81,14 +81,13 @@ const Level = {
     , {spriteKey: 'king', tract: 'mainPath', speed: 120, points: 3}
   ]
 
-	, foreground: [
+  , foreground: [
     // mainPath y: 138
     {x: 120, y: 160, spriteKey: 'wall'}
     , {x: 304, y: 160, spriteKey: 'wall'}
     , {x: 370, y: 160, spriteKey: 'wall'}
 
     // mainPath y: 229 
-    , {x: 438, y: 240, spriteKey: 'tree'}
     , {x: 438, y: 240, spriteKey: 'tree'}
     , {x: 904, y: 240, spriteKey: 'wall'}
 
