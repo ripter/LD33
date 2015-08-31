@@ -61,7 +61,12 @@
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
-	var game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content');
+	var IPHONE6 = {
+	  X: 667,
+	  Y: 375
+	};
+
+	var game = new Phaser.Game(IPHONE6.X, IPHONE6.Y, Phaser.AUTO, 'content');
 	window.game = game;
 
 	game.state.add('start', _startStateJs2['default']);

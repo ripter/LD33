@@ -5,7 +5,12 @@ import gameState from './game-state.js';
 import startState from './start-state.js';
 import endState from './end-state.js';
 
-const game = new Phaser.Game(1024, 600, Phaser.AUTO, 'content');
+const IPHONE6 = {
+  X: 667
+  , Y: 375
+};
+
+const game = new Phaser.Game(IPHONE6.X, IPHONE6.Y, Phaser.AUTO, 'content');
 window.game = game;
 
 game.state.add('start', startState);
