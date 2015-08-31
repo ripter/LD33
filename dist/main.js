@@ -55,7 +55,7 @@
 
 	var _statesGameJs2 = _interopRequireDefault(_statesGameJs);
 
-	var _statesStartJs = __webpack_require__(14);
+	var _statesStartJs = __webpack_require__(13);
 
 	var _statesStartJs2 = _interopRequireDefault(_statesStartJs);
 
@@ -132,8 +132,6 @@
 	  value: true
 	});
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 	var _preloadJs = __webpack_require__(3);
@@ -156,20 +154,13 @@
 
 	var _fontsJs = __webpack_require__(12);
 
-	var _level1Js = __webpack_require__(13);
-
-	var _level1Js2 = _interopRequireDefault(_level1Js);
-
-	window.Mob = Mob;
-
 	var level = undefined;
-
 	var player = undefined;
 	var balloons = undefined;
 	var sfx = undefined;
 
 	function create() {
-	  var levelData = _level1Js2['default'];
+	  var levelData = window.levelFile;
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
@@ -842,6 +833,62 @@
 
 /***/ },
 /* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _preloadJs = __webpack_require__(3);
+
+	var _fontsJs = __webpack_require__(12);
+
+	var _levelsLevel1Js = __webpack_require__(14);
+
+	var _levelsLevel1Js2 = _interopRequireDefault(_levelsLevel1Js);
+
+	//
+	// Lifecycle
+	//
+	function create() {
+	  // place somet nice things
+	  game.add.image(800, 100, 'stuffedPrincess');
+	  game.add.image(100, 300, 'carnie');
+
+	  // instructions
+	  game.add.text(100, 100, 'You are dragon.', _fontsJs.headerFont);
+	  game.add.text(100, 200, 'Win dragon lady friend a stuffed princess.', _fontsJs.headerFont);
+	  game.add.text(400, 500, 'Press Space to try your luck!', _fontsJs.headerFont);
+	}
+
+	function update() {
+	  var _Phaser$Keyboard = Phaser.Keyboard;
+	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+	  var E = _Phaser$Keyboard.E;
+
+	  // make it global so the other states can use it.
+	  window.levelFile = _levelsLevel1Js2['default'];
+
+	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    game.state.start('game');
+	  } else if (game.input.keyboard.isDown(E)) {
+	    game.state.start('editor');
+	  }
+	}
+	exports['default'] = {
+	  create: create,
+	  update: update,
+	  preload: _preloadJs.preload
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 14 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -878,53 +925,6 @@
 	};
 
 	exports['default'] = Level;
-	module.exports = exports['default'];
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser, game */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _preloadJs = __webpack_require__(3);
-
-	var _fontsJs = __webpack_require__(12);
-
-	//
-	// Lifecycle
-	//
-	function create() {
-	  // place somet nice things
-	  game.add.image(800, 100, 'stuffedPrincess');
-	  game.add.image(100, 300, 'carnie');
-
-	  // instructions
-	  game.add.text(100, 100, 'You are dragon.', _fontsJs.headerFont);
-	  game.add.text(100, 200, 'Win dragon lady friend a stuffed princess.', _fontsJs.headerFont);
-	  game.add.text(400, 500, 'Press Space to try your luck!', _fontsJs.headerFont);
-	}
-
-	function update() {
-	  var _Phaser$Keyboard = Phaser.Keyboard;
-	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
-	  var E = _Phaser$Keyboard.E;
-
-	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    game.state.start('game');
-	  } else if (game.input.keyboard.isDown(E)) {
-	    game.state.start('editor');
-	  }
-	}
-	exports['default'] = {
-	  create: create,
-	  update: update,
-	  preload: _preloadJs.preload
-	};
 	module.exports = exports['default'];
 
 /***/ },
@@ -1009,8 +1009,6 @@
 	  value: true
 	});
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 	var _preloadJs = __webpack_require__(3);
@@ -1031,15 +1029,11 @@
 
 	var _editorActionsJs = __webpack_require__(23);
 
-	var _level1Js = __webpack_require__(13);
-
-	var _level1Js2 = _interopRequireDefault(_level1Js);
-
 	var level = undefined;
 	var selectedSprite = null;
 
 	function create() {
-	  level = (0, _levelLoaderJs.loadLevel)(_level1Js2['default']);
+	  level = (0, _levelLoaderJs.loadLevel)(window.levelFile);
 
 	  ui.createUI(level);
 	}
@@ -1167,16 +1161,28 @@
 	function createQuickbar() {
 	  var elmDelete = $(UI_SELECTOR).find('.js-selected-delete');
 	  var elmDownload = $(UI_SELECTOR).find('.js-download');
+	  var elmPlay = $(UI_SELECTOR).find('.js-play');
 
+	  // Delete
 	  elmDelete.bind('click', function (evt) {
 	    selectedSprite.destroy();
 	    selectedSprite = null;
 	  });
 
+	  // Export/Download
 	  elmDownload.bind('click', function (evt) {
 	    var lvlData = (0, _levelLoaderJs.exportLevel)(level);
 
 	    console.log(JSON.stringify(lvlData, null, '  '));
+	  });
+
+	  // Play
+	  elmPlay.bind('click', function (evt) {
+	    var lvlData = (0, _levelLoaderJs.exportLevel)(level);
+
+	    // Use Object.assign until we are building a full file.
+	    window.levelFile = Object.assign({}, window.levelFile, lvlData);
+	    game.state.start('game');
 	  });
 	}
 

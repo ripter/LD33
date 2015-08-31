@@ -66,16 +66,28 @@ function createForeground(level) {
 function createQuickbar() {
   const elmDelete = $(UI_SELECTOR).find('.js-selected-delete');
   const elmDownload = $(UI_SELECTOR).find('.js-download');
+  const elmPlay = $(UI_SELECTOR).find('.js-play');
   
+  // Delete
   elmDelete.bind('click', (evt) => {
     selectedSprite.destroy();
     selectedSprite = null;
   });
   
+  // Export/Download
   elmDownload.bind('click', (evt) => {
     const lvlData = exportLevel(level);   
     
     console.log(JSON.stringify(lvlData, null, '  '));
+  });
+  
+  // Play
+  elmPlay.bind('click', (evt) => {
+    const lvlData = exportLevel(level);   
+    
+    // Use Object.assign until we are building a full file.
+    window.levelFile = Object.assign({}, window.levelFile, lvlData);
+    game.state.start('game');
   });
 }
 

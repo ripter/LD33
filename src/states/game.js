@@ -10,17 +10,14 @@ import * as Mob from '../mob.js';
 import {loadLevel} from '../level-loader.js';
 import {headerFont, infoFont} from '../fonts.js';
 
-window.Mob = Mob;
-import lvl1 from '../level1.js';
 
 let level;
-
 let player;
 let balloons;
 let sfx;
 
 function create() {
-  const levelData = lvl1;
+  const levelData = window.levelFile;
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.currentScore = 0;

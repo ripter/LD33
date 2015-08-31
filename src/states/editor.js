@@ -11,13 +11,12 @@ import * as ui from '../editor/ui.js';
 
 import {addBlocker} from '../editor/actions.js';
 
-import lvlData from '../level1.js';
 
 let level;
 let selectedSprite = null;
 
 function create() {
-  level = loadLevel(lvlData);
+  level = loadLevel(window.levelFile);
   
   ui.createUI(level);
 }

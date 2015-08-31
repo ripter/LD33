@@ -4,6 +4,8 @@
 import {preload} from './preload.js';
 import {headerFont} from '../fonts.js';
 
+import lvl1 from '../levels/level1.js';
+
 //
 // Lifecycle
 //
@@ -21,6 +23,9 @@ function create() {
 
 function update() {
   const {SPACEBAR, E} = Phaser.Keyboard;
+  
+  // make it global so the other states can use it.
+  window.levelFile = lvl1;
   
   if (game.input.keyboard.isDown(SPACEBAR)) {
     game.state.start('game');
