@@ -120,13 +120,11 @@
 	var sfx = undefined;
 
 	function init(lvlFile) {
-	  console.log('init', levelFile);
 	  window.levelFile = levelFile = lvlFile;
 	}
 
 	function preload() {
-	  console.log('preload', arguments);
-	  game.load.image('dragon', 'assets/dragon2.png', 128, 128);
+	  game.load.image('dragon', 'assets/dragon-77x91.png', 77, 91);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
 	  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
@@ -151,7 +149,6 @@
 	}
 
 	function create() {
-	  console.log('create', arguments);
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
@@ -171,7 +168,7 @@
 	  window.curtains = game.add.image(0, 0, 'curtains');
 
 	  // player on top of everything
-	  window.player = player = (0, _dragonJs.spawnDragon)(500, 500);
+	  window.player = player = (0, _dragonJs.spawnDragon)(100, 294);
 
 	  Mob.startTimedGame(level.mobs);
 
