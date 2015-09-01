@@ -350,10 +350,15 @@
 	var SPEED = 150;
 
 	var ACTION = {
+	  NONE: 'PLAYER_ACTION_NONE',
 	  FIRE: 'PLAYER_ACTION_FIRE',
-	  LEFT: 'PLAYER_ACTION_LEFT',
-	  RIGHT: 'PLAYER_ACTION_RIGHT',
-	  NONE: 'PLAYER_ACTION_NONE'
+	  MOVE: {
+	    LEFT: 'PLAYER_ACTION_LEFT',
+	    RIGHT: 'PLAYER_ACTION_RIGHT',
+	    TO: {
+	      POINTER: 'PLAYER_ACTION_MOVE_TO_POINTER'
+	    }
+	  }
 	};
 
 	var atFireSpeed = (0, _utilJs.debounce)(FIRE_SPEED);
@@ -364,42 +369,66 @@
 	  var RIGHT = _Phaser$Keyboard.RIGHT;
 	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
 
-	  switch (playerAction()) {
-	    case ACTION.FIRE:
-	      atFireSpeed(game.time.events, function () {
-	        var x = sprite.x;
-	        var y = sprite.y;
+	  var pointer = game.input.activePointer;
+	  var actions = playerAction();
 
-	        (0, _fireJs.spawnFire)(x, y);
-	      });
-	      break;
-	  }
+	  // Handle each action
+	  actions.forEach(function (action) {
+	    switch (action) {
+	      case ACTION.FIRE:
+	        atFireSpeed(game.time.events, function () {
+	          var x = sprite.x;
+	          var y = sprite.y;
+
+	          (0, _fireJs.spawnFire)(x, y);
+	        });
+	        break;
+
+	      case ACTION.MOVE.TO.POINTER:
+	        game.physics.arcade.moveToXY(sprite, pointer.x, sprite.y, SPEED);
+	        break;
+	    }
+	  });
 
 	  // Movement keys
-	  if (game.input.keyboard.isDown(LEFT)) {
-	    sprite.body.velocity.x = -SPEED;
-	  } else if (game.input.keyboard.isDown(RIGHT)) {
-	    sprite.body.velocity.x = SPEED;
-	  } else {
-	    sprite.body.velocity.x = 0;
-	  }
+	  // if (game.input.keyboard.isDown(LEFT)) {
+	  //   sprite.body.velocity.x = -SPEED;
+	  // }
+	  // else if (game.input.keyboard.isDown(RIGHT)) {
+	  //   sprite.body.velocity.x = SPEED;
+	  // }
+	  // else {
+	  //   sprite.body.velocity.x = 0;
+	  // }
 	}
 
-	// Returns a const of the player's action.
-	// Only one action can happen per tick.
+	// Returns an array of player actions for this tick
+	// example: [ACTIONS.FIRE, ACTIONS.MOVE]
 	function playerAction() {
 	  var _Phaser$Keyboard2 = Phaser.Keyboard;
 	  var LEFT = _Phaser$Keyboard2.LEFT;
 	  var RIGHT = _Phaser$Keyboard2.RIGHT;
 	  var SPACEBAR = _Phaser$Keyboard2.SPACEBAR;
 
-	  // Fire  
-	  if (game.input.keyboard.isDown(SPACEBAR) || game.input.activePointer.isDown) {
+	  var actions = [];
 
-	    return ACTION.FIRE;
+	  // Touch controls
+	  if (game.input.activePointer.isDown) {
+	    actions.push(ACTION.MOVE.TO.POINTER);
+	    actions.push(ACTION.FIRE);
 	  }
 
-	  return ACTION.NONE;
+	  // Keyboard controls
+	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    actions.push(ACTION.FIRE);
+	  }
+	  if (game.input.keyboard.isDown(LEFT)) {
+	    actions.push(ACTION.MOVE.LEFT);
+	  } else if (game.input.keyboard.isDown(RIGHT)) {
+	    actions.push(ACTION.MOVE.RIGHT);
+	  }
+
+	  return actions;
 	}
 
 /***/ },
