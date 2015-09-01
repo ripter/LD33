@@ -7,10 +7,28 @@ import {debounce} from './util.js';
 const FIRE_SPEED = Phaser.Timer.SECOND;
 const SPEED = 150;
 
+const ACTION = {
+  FIRE: 'PLAYER_ACTION_FIRE'
+  , LEFT: 'PLAYER_ACTION_LEFT'
+  , RIGHT: 'PLAYER_ACTION_RIGHT'
+  , NONE: 'PLAYER_ACTION_NONE'
+};
+
 const atFireSpeed = debounce(FIRE_SPEED);
 
 export function playerControl(sprite) {
   const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
+
+  
+  switch (playerAction()) {
+    case ACTION.FIRE:
+      atFireSpeed(game.time.events, () => {
+        const {x, y} = sprite;
+
+        spawnFire(x, y);
+      });
+      break;
+  }
 
   // Movement keys
   if (game.input.keyboard.isDown(LEFT)) { 
@@ -22,55 +40,19 @@ export function playerControl(sprite) {
   else {
     sprite.body.velocity.x = 0;
   }
-
-  // Spacebar to FIRE
-  if (game.input.keyboard.isDown(SPACEBAR)) {
-    atFireSpeed(game.time.events, () => {
-      const {x, y} = sprite;
-
-      return spawnFire(x, y);
-    });
-  }
 }
 
-// Attempt to fire from sprite's position.
-// Will debounce calls >= delay
-function fireWithDelay(delay) {
-  let _canFire = true;
+// Returns a const of the player's action.
+// Only one action can happen per tick.
+function playerAction() {
+  const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
   
-  // Return a function that calls a method after delay
-  return (fireFunc, sprite) => {
-    const {x, y} = sprite;
-    // poor man's debounce
-    if (!_canFire) { return null; }
-    // if we made it here, we are allowed to fire 
-    _canFire = false;
-    
-    // Delay the firing
-    // QUESTION? Do we need to distroy/kill/remove this timer?
-    game.time.events.add(delay, () => {
-      _canFire = true;
-    });
-    
-    return fireFunc(x, y);
-  };
-}
+  // Fire   
+  if (game.input.keyboard.isDown(SPACEBAR)
+      || game.input.activePointer.isDown) {
 
-// returns true if the player can fire.
-function canPlayerFire() {
-  const {SPACEBAR} = Phaser.Keyboard;
-
-  // Make sure they are allowed to fire. (poor man's debounce)
-  if (!_canFire) {
-    return false;
+    return ACTION.FIRE;
   }
   
-  // Spacebar to fire.
-  if (game.input.keyboard.isDown(SPACEBAR)) {
-    return true;
-  }
-  
-  if (game.input.activePointer.isDown) {
-    return true;
-  }
+  return ACTION.NONE;
 }

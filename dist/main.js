@@ -349,6 +349,13 @@
 	var FIRE_SPEED = Phaser.Timer.SECOND;
 	var SPEED = 150;
 
+	var ACTION = {
+	  FIRE: 'PLAYER_ACTION_FIRE',
+	  LEFT: 'PLAYER_ACTION_LEFT',
+	  RIGHT: 'PLAYER_ACTION_RIGHT',
+	  NONE: 'PLAYER_ACTION_NONE'
+	};
+
 	var atFireSpeed = (0, _utilJs.debounce)(FIRE_SPEED);
 
 	function playerControl(sprite) {
@@ -356,6 +363,17 @@
 	  var LEFT = _Phaser$Keyboard.LEFT;
 	  var RIGHT = _Phaser$Keyboard.RIGHT;
 	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
+
+	  switch (playerAction()) {
+	    case ACTION.FIRE:
+	      atFireSpeed(game.time.events, function () {
+	        var x = sprite.x;
+	        var y = sprite.y;
+
+	        (0, _fireJs.spawnFire)(x, y);
+	      });
+	      break;
+	  }
 
 	  // Movement keys
 	  if (game.input.keyboard.isDown(LEFT)) {
@@ -365,62 +383,23 @@
 	  } else {
 	    sprite.body.velocity.x = 0;
 	  }
-
-	  // Spacebar to FIRE
-	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    atFireSpeed(game.time.events, function () {
-	      var x = sprite.x;
-	      var y = sprite.y;
-
-	      return (0, _fireJs.spawnFire)(x, y);
-	    });
-	  }
 	}
 
-	// Attempt to fire from sprite's position.
-	// Will debounce calls >= delay
-	function fireWithDelay(delay) {
-	  var _canFire = true;
+	// Returns a const of the player's action.
+	// Only one action can happen per tick.
+	function playerAction() {
+	  var _Phaser$Keyboard2 = Phaser.Keyboard;
+	  var LEFT = _Phaser$Keyboard2.LEFT;
+	  var RIGHT = _Phaser$Keyboard2.RIGHT;
+	  var SPACEBAR = _Phaser$Keyboard2.SPACEBAR;
 
-	  // Return a function that calls a method after delay
-	  return function (fireFunc, sprite) {
-	    var x = sprite.x;
-	    var y = sprite.y;
+	  // Fire  
+	  if (game.input.keyboard.isDown(SPACEBAR) || game.input.activePointer.isDown) {
 
-	    // poor man's debounce
-	    if (!_canFire) {
-	      return null;
-	    }
-	    // if we made it here, we are allowed to fire
-	    _canFire = false;
-
-	    // Delay the firing
-	    // QUESTION? Do we need to distroy/kill/remove this timer?
-	    game.time.events.add(delay, function () {
-	      _canFire = true;
-	    });
-
-	    return fireFunc(x, y);
-	  };
-	}
-
-	// returns true if the player can fire.
-	function canPlayerFire() {
-	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
-
-	  // Make sure they are allowed to fire. (poor man's debounce)
-	  if (!_canFire) {
-	    return false;
+	    return ACTION.FIRE;
 	  }
 
-	  // Spacebar to fire.
-	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    return true;
-	  }
-
-	  if (game.input.activePointer.isDown) {
-	    return true;
-	  }
+	  return ACTION.NONE;
 	}
 
 /***/ },
@@ -429,7 +408,7 @@
 
 	'use strict';
 
-	// poor man's debounce.
+	// poor man's debounce, using phaser's event timer
 	// Returns a function that can only be called after the deplay.
 	// If func can not be called, returns false.
 	// If func can be called, returns result of func
@@ -441,7 +420,7 @@
 	function debounce(delay) {
 	  var isReady = true;
 
-	  return function (timer, func) {
+	  return function (eventTimer, func) {
 	    // ignore calls until ready
 	    if (!isReady) {
 	      return false;
@@ -450,7 +429,7 @@
 	    isReady = false;
 
 	    // Start the delay
-	    timer.add(delay, function () {
+	    eventTimer.add(delay, function () {
 	      isReady = true;
 	    });
 
