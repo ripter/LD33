@@ -5,6 +5,7 @@ import {spawnFire} from './fire.js';
 import {debounce} from './util.js';
 
 const FIRE_SPEED = Phaser.Timer.SECOND;
+const MOVE_DELAY = Phaser.Timer.HALF;
 const SPEED = 150;
 
 const ACTION = {
@@ -20,29 +21,57 @@ const ACTION = {
 };
 
 const atFireSpeed = debounce(FIRE_SPEED);
+const atMoveSpeed = debounce(MOVE_DELAY);
+
+let playerTween = null;
 
 export function playerControl(sprite) {
   const {LEFT, RIGHT, SPACEBAR} = Phaser.Keyboard;
   const pointer = game.input.activePointer;
-  const actions = playerAction();
+  //const actions = playerAction();
 
-  
-  // Handle each action
-  actions.forEach((action) => {
-    switch (action) {
-      case ACTION.FIRE:
-        atFireSpeed(game.time.events, () => {
+  if (pointer.isDown) {
+    atMoveSpeed(game.time.events, () => {
+
+      //if (!playerTween) {
+        playerTween = game.add.tween(sprite);
+
+        // Once movement is done, fire.
+        playerTween.onComplete.add(() => {
           const {x, y} = sprite;
-
           spawnFire(x, y);
         });
-        break;
+      //}
       
-      case ACTION.MOVE.TO.POINTER:
-        game.physics.arcade.moveToXY(sprite, pointer.x, sprite.y, SPEED);
-        break;
-    }
-  });
+      // Create and run the tween
+      playerTween
+        .to({
+          x: pointer.x
+        }, Phaser.Timer.HALF);
+        // .from({
+        //   x: sprite.x
+        // });
+      
+      playerTween.start();
+    });
+  }
+  
+  // Handle each action
+  // actions.forEach((action) => {
+  //   switch (action) {
+  //     case ACTION.FIRE:
+  //       atFireSpeed(game.time.events, () => {
+  //         const {x, y} = sprite;
+
+  //         spawnFire(x, y);
+  //       });
+  //       break;
+      
+  //     case ACTION.MOVE.TO.POINTER:
+  //       game.physics.arcade.moveToXY(sprite, pointer.x, sprite.y, SPEED);
+  //       break;
+  //   }
+  // });
 
   // Movement keys
   // if (game.input.keyboard.isDown(LEFT)) { 

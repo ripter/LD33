@@ -7,5 +7,7 @@ export function spawnDragon(x, y) {
   game.physics.enable(sprite, Phaser.Physics.ARCADE);
   
   sprite.health = 3;
+  // Move with tweens, not physics
+  sprite.body.moves = false;
   return sprite;
 }

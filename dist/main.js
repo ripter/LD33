@@ -300,6 +300,8 @@
 	  game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
 	  sprite.health = 3;
+	  // Move with tweens, not physics
+	  sprite.body.moves = false;
 	  return sprite;
 	}
 
@@ -347,6 +349,7 @@
 	var _utilJs = __webpack_require__(6);
 
 	var FIRE_SPEED = Phaser.Timer.SECOND;
+	var MOVE_DELAY = Phaser.Timer.HALF;
 	var SPEED = 150;
 
 	var ACTION = {
@@ -362,6 +365,9 @@
 	};
 
 	var atFireSpeed = (0, _utilJs.debounce)(FIRE_SPEED);
+	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
+
+	var playerTween = null;
 
 	function playerControl(sprite) {
 	  var _Phaser$Keyboard = Phaser.Keyboard;
@@ -370,25 +376,51 @@
 	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
 
 	  var pointer = game.input.activePointer;
-	  var actions = playerAction();
+	  //const actions = playerAction();
+
+	  if (pointer.isDown) {
+	    atMoveSpeed(game.time.events, function () {
+
+	      //if (!playerTween) {
+	      playerTween = game.add.tween(sprite);
+
+	      // Once movement is done, fire.
+	      playerTween.onComplete.add(function () {
+	        var x = sprite.x;
+	        var y = sprite.y;
+
+	        (0, _fireJs.spawnFire)(x, y);
+	      });
+	      //}
+
+	      // Create and run the tween
+	      playerTween.to({
+	        x: pointer.x
+	      }, Phaser.Timer.HALF);
+	      // .from({
+	      //   x: sprite.x
+	      // });
+
+	      playerTween.start();
+	    });
+	  }
 
 	  // Handle each action
-	  actions.forEach(function (action) {
-	    switch (action) {
-	      case ACTION.FIRE:
-	        atFireSpeed(game.time.events, function () {
-	          var x = sprite.x;
-	          var y = sprite.y;
+	  // actions.forEach((action) => {
+	  //   switch (action) {
+	  //     case ACTION.FIRE:
+	  //       atFireSpeed(game.time.events, () => {
+	  //         const {x, y} = sprite;
 
-	          (0, _fireJs.spawnFire)(x, y);
-	        });
-	        break;
+	  //         spawnFire(x, y);
+	  //       });
+	  //       break;
 
-	      case ACTION.MOVE.TO.POINTER:
-	        game.physics.arcade.moveToXY(sprite, pointer.x, sprite.y, SPEED);
-	        break;
-	    }
-	  });
+	  //     case ACTION.MOVE.TO.POINTER:
+	  //       game.physics.arcade.moveToXY(sprite, pointer.x, sprite.y, SPEED);
+	  //       break;
+	  //   }
+	  // });
 
 	  // Movement keys
 	  // if (game.input.keyboard.isDown(LEFT)) {
