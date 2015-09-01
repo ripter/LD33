@@ -53,11 +53,11 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(11);
+	var _startStateJs = __webpack_require__(12);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(14);
+	var _endStateJs = __webpack_require__(15);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -97,17 +97,17 @@
 
 	var _playerJs = __webpack_require__(5);
 
-	var _foregroundJs = __webpack_require__(6);
+	var _foregroundJs = __webpack_require__(7);
 
 	var Props = _interopRequireWildcard(_foregroundJs);
 
-	var _mobJs = __webpack_require__(7);
+	var _mobJs = __webpack_require__(8);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _levelLoaderJs = __webpack_require__(8);
+	var _levelLoaderJs = __webpack_require__(9);
 
-	var _fontsJs = __webpack_require__(10);
+	var _fontsJs = __webpack_require__(11);
 
 	window.Mob = Mob;
 
@@ -344,10 +344,12 @@
 
 	var _fireJs = __webpack_require__(4);
 
+	var _utilJs = __webpack_require__(6);
+
 	var FIRE_SPEED = Phaser.Timer.SECOND;
 	var SPEED = 150;
 
-	var canFire = true;
+	var atFireSpeed = (0, _utilJs.debounce)(FIRE_SPEED);
 
 	function playerControl(sprite) {
 	  var _Phaser$Keyboard = Phaser.Keyboard;
@@ -364,20 +366,101 @@
 	    sprite.body.velocity.x = 0;
 	  }
 
-	  // FIRE!!!
-	  if (canFire && game.input.keyboard.isDown(SPACEBAR)) {
-	    canFire = false;
-	    (0, _fireJs.spawnFire)(sprite.x, sprite.y);
+	  // Spacebar to FIRE
+	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    atFireSpeed(game.time.events, function () {
+	      var x = sprite.x;
+	      var y = sprite.y;
+
+	      return (0, _fireJs.spawnFire)(x, y);
+	    });
+	  }
+	}
+
+	// Attempt to fire from sprite's position.
+	// Will debounce calls >= delay
+	function fireWithDelay(delay) {
+	  var _canFire = true;
+
+	  // Return a function that calls a method after delay
+	  return function (fireFunc, sprite) {
+	    var x = sprite.x;
+	    var y = sprite.y;
+
+	    // poor man's debounce
+	    if (!_canFire) {
+	      return null;
+	    }
+	    // if we made it here, we are allowed to fire
+	    _canFire = false;
 
 	    // Delay the firing
-	    game.time.events.add(FIRE_SPEED, function () {
-	      canFire = true;
+	    // QUESTION? Do we need to distroy/kill/remove this timer?
+	    game.time.events.add(delay, function () {
+	      _canFire = true;
 	    });
+
+	    return fireFunc(x, y);
+	  };
+	}
+
+	// returns true if the player can fire.
+	function canPlayerFire() {
+	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
+
+	  // Make sure they are allowed to fire. (poor man's debounce)
+	  if (!_canFire) {
+	    return false;
+	  }
+
+	  // Spacebar to fire.
+	  if (game.input.keyboard.isDown(SPACEBAR)) {
+	    return true;
+	  }
+
+	  if (game.input.activePointer.isDown) {
+	    return true;
 	  }
 	}
 
 /***/ },
 /* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	// poor man's debounce.
+	// Returns a function that can only be called after the deplay.
+	// If func can not be called, returns false.
+	// If func can be called, returns result of func
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.debounce = debounce;
+
+	function debounce(delay) {
+	  var isReady = true;
+
+	  return function (timer, func) {
+	    // ignore calls until ready
+	    if (!isReady) {
+	      return false;
+	    }
+	    // We are going to call func, so we are not ready.
+	    isReady = false;
+
+	    // Start the delay
+	    timer.add(delay, function () {
+	      isReady = true;
+	    });
+
+	    // call the function
+	    return func();
+	  };
+	}
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -485,7 +568,7 @@
 	}
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -591,7 +674,7 @@
 	}
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
@@ -604,15 +687,15 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _mobJs = __webpack_require__(7);
+	var _mobJs = __webpack_require__(8);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _foregroundJs = __webpack_require__(6);
+	var _foregroundJs = __webpack_require__(7);
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
-	var _balloonJs = __webpack_require__(9);
+	var _balloonJs = __webpack_require__(10);
 
 	var Balloon = _interopRequireWildcard(_balloonJs);
 
@@ -699,7 +782,7 @@
 	}
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -725,7 +808,7 @@
 	}
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -753,7 +836,7 @@
 	exports.sceneFont = sceneFont;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -765,13 +848,13 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fontsJs = __webpack_require__(10);
+	var _fontsJs = __webpack_require__(11);
 
-	var _levelsLevel1Js = __webpack_require__(12);
+	var _levelsLevel1Js = __webpack_require__(13);
 
 	var _levelsLevel1Js2 = _interopRequireDefault(_levelsLevel1Js);
 
-	var _levelsIphoneJs = __webpack_require__(13);
+	var _levelsIphoneJs = __webpack_require__(14);
 
 	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
@@ -819,7 +902,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -859,7 +942,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -882,7 +965,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -892,7 +975,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(10);
+	var _fontsJs = __webpack_require__(11);
 
 	var _gameStateJs = __webpack_require__(1);
 
