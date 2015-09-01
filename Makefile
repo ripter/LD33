@@ -9,10 +9,11 @@ run:
 	$(BIN)/http-server ./dist -p 3000
 	open http://localhost:3000/index.html
 
-js: node_modules/
+js: node_modules/ dist/assets/
 	$(BIN)/webpack src/main.js dist/main.js
 	cp ./src/index.html dist/index.html
 	cp ./node_modules/phaser/dist/phaser.min.js dist/phaser.js
+	cp ./node_modules/jquery/dist/jquery.min.js dist/jquery.js
 	cp ./assets/* dist/assets/
 
 clean:
@@ -22,3 +23,6 @@ clean:
 
 node_modules/: package.json
 	npm install
+
+dist/assets/:
+	mkdir -p dist/assets
