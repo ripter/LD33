@@ -53,11 +53,11 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(12);
+	var _startStateJs = __webpack_require__(11);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(13);
+	var _endStateJs = __webpack_require__(14);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -89,8 +89,6 @@
 	  value: true
 	});
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 	var _groupsJs = __webpack_require__(2);
@@ -111,20 +109,23 @@
 
 	var _fontsJs = __webpack_require__(10);
 
-	var _levelsIphoneJs = __webpack_require__(11);
-
-	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
-
 	window.Mob = Mob;
 
 	var level = undefined;
+	var levelFile = undefined;
 
 	var player = undefined;
 	var bullets = undefined;
 	var balloons = undefined;
 	var sfx = undefined;
 
+	function init(lvlFile) {
+	  console.log('init', levelFile);
+	  window.levelFile = levelFile = lvlFile;
+	}
+
 	function preload() {
+	  console.log('preload', arguments);
 	  game.load.image('dragon', 'assets/dragon2.png', 128, 128);
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
@@ -150,13 +151,13 @@
 	}
 
 	function create() {
-	  var levelData = _levelsIphoneJs2['default'];
+	  console.log('create', arguments);
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
 
+	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelFile);
 	  // load level!
-	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelData);
 	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
 
 	  // Score!
@@ -253,7 +254,8 @@
 	exports['default'] = {
 	  preload: preload,
 	  create: create,
-	  update: update
+	  update: update,
+	  init: init
 	};
 	module.exports = exports['default'];
 
@@ -755,28 +757,6 @@
 
 /***/ },
 /* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	var level = {
-	  //background: 'bg-iphone'
-	  background: 'bg-iphone',
-	  waypoints: {
-	    mainPath: [{ x: 120, y: 0 }]
-	  },
-	  mobs: [{ spriteKey: 'knight', tract: 'mainPath' }],
-	  foreground: [{ x: 438, y: 240, spriteKey: 'tree' }],
-	  balloons: [{ x: 120, y: 520, spriteKey: 'balloon' }]
-	};
-	exports['default'] = level;
-	module.exports = exports['default'];
-
-/***/ },
-/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -786,7 +766,17 @@
 	  value: true
 	});
 
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 	var _fontsJs = __webpack_require__(10);
+
+	var _levelsLevel1Js = __webpack_require__(12);
+
+	var _levelsLevel1Js2 = _interopRequireDefault(_levelsLevel1Js);
+
+	var _levelsIphoneJs = __webpack_require__(13);
+
+	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
 	//
 	// Lifecycle
@@ -816,12 +806,12 @@
 
 	  // Press Space to Start
 	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    game.state.start('game');
+	    game.state.start('game', true, false, _levelsLevel1Js2['default']);
 	  }
 
 	  // Tap to Start
 	  if (game.input.activePointer.isDown) {
-	    game.state.start('game');
+	    game.state.start('game', true, false, _levelsIphoneJs2['default']);
 	  }
 	}
 	exports['default'] = {
@@ -832,7 +822,70 @@
 	module.exports = exports['default'];
 
 /***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	/*global Phaser */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var Level = {
+	  waypoints: {
+	    mainPath: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
+	    guardPath: [{ x: 1024, y: 290 }, { x: 200, y: 290 }],
+	    horsePath: [{ x: 1024, y: 290 }, { x: 200, y: 290 }, { x: 120, y: 290 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }]
+	  },
+
+	  background: 'background',
+	  mobs: [
+	  // the order listed is the order they appear
+	  { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'king', tract: 'mainPath', speed: 90, points: 3 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 200, points: 2 }, { spriteKey: 'horse', tract: 'mainPath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'horse', tract: 'mainPath', speed: 250, points: 2 }, { spriteKey: 'king', tract: 'mainPath', speed: 120, points: 3 }],
+
+	  foreground: [
+	  // mainPath y: 138
+	  { x: 120, y: 160, spriteKey: 'wall' }, { x: 304, y: 160, spriteKey: 'wall' }, { x: 370, y: 160, spriteKey: 'wall' }
+
+	  // mainPath y: 229
+	  , { x: 438, y: 240, spriteKey: 'tree' }, { x: 904, y: 240, spriteKey: 'wall' }
+
+	  // mainPath y: 354
+	  , { x: 438, y: 376, spriteKey: 'tree' }, { x: 538, y: 376, spriteKey: 'tree' }, { x: 120, y: 376, spriteKey: 'wall' }, { x: 155, y: 300, spriteKey: 'tower' }
+
+	  // mainPath y: 470
+	  , { x: 904, y: 490, spriteKey: 'tower' }, { x: 804, y: 490, spriteKey: 'shrub' }, { x: 654, y: 490, spriteKey: 'shrub' }, { x: 300, y: 490, spriteKey: 'shrub' }],
+	  balloons: [{ x: 120, y: 520, spriteKey: 'balloon' }]
+	};
+
+	exports['default'] = Level;
+	module.exports = exports['default'];
+
+/***/ },
 /* 13 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var level = {
+	  //background: 'bg-iphone'
+	  background: 'bg-iphone',
+	  waypoints: {
+	    mainPath: [{ x: 0, y: 50 }, { x: 273, y: 55 }, { x: 0, y: 142 }, { x: 185, y: 164 }, { x: 61, y: 230 }, { x: 275, y: 275 }, { x: 60, y: 383 }],
+	    altPath: [{ x: 604, y: 0 }, { x: 577, y: 56 }, { x: 357, y: 57 }, { x: 306, y: 101 }, { x: 284, y: 145 }, { x: 285, y: 193 }, { x: 305, y: 229 }, { x: 346, y: 264 }, { x: 582, y: 256 }, { x: 621, y: 342 }]
+	  },
+	  mobs: [{ spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'altPath' }],
+	  foreground: [{ x: 438, y: 240, spriteKey: 'tree' }],
+	  balloons: [{ x: 500, y: 342, spriteKey: 'balloon' }]
+	};
+	exports['default'] = level;
+	module.exports = exports['default'];
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */

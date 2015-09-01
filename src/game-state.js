@@ -10,16 +10,22 @@ import {loadLevel} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
 
 window.Mob = Mob;
-import lvl2 from './levels/iphone.js';
 
 let level;
+let levelFile;
 
 let player;
 let bullets;
 let balloons;
 let sfx;
 
+function init(lvlFile) {
+  console.log('init', levelFile);
+  window.levelFile = levelFile = lvlFile;
+}
+
 function preload() {
+  console.log('preload', arguments);
   game.load.image('dragon', 'assets/dragon2.png', 128, 128);
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('knight', 'assets/knight.png', 64, 64);
@@ -45,13 +51,13 @@ function preload() {
 }
 
 function create() {
-  const levelData = lvl2;
+  console.log('create', arguments);
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.currentScore = 0;
 
+  window.level = level = loadLevel(levelFile);
   // load level!
-  window.level = level = loadLevel(levelData);
   window.bullets = bullets = physicsGroup();
 
   // Score!
@@ -143,5 +149,6 @@ export default {
   preload: preload
   , create: create
   , update: update
+  , init: init
 };
 
