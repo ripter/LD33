@@ -1,5 +1,6 @@
 'use strict';
 
+// Calls function only after delay time has passed.
 // poor man's debounce, using phaser's event timer
 // Returns a function that can only be called after the deplay.
 // If func can not be called, returns false.

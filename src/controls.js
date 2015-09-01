@@ -5,19 +5,15 @@ import {spawnFire} from './fire.js';
 import {debounce} from './util.js';
 
 const THROTTLE = 200;
-const MOVE_DELAY = Phaser.Timer.HALF;
+const MOVE_DELAY = 300;
 const atMoveSpeed = debounce(MOVE_DELAY);
-
-let playerTween;
 const hasDelayEnded = delay(THROTTLE);
 
 
 export function update(game, sprite) {
   const pointer = game.input.activePointer;
+  let playerTween;
   
-  // throttle user input
-  //if (!hasDelayEnded(game.time.now)) { return; }
-
   if (pointer.isDown) {
     // We need to limit the speed since this function is called on update
     atMoveSpeed(game.time.events, () => {
@@ -31,7 +27,7 @@ export function update(game, sprite) {
       });
 
       // move to the pointer
-      playerTween.to(toPointer(sprite, pointer)).start();
+      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
     });
   }
 }

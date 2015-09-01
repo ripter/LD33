@@ -320,7 +320,7 @@
 	exports.spawnFire = spawnFire;
 	var SPEED = 300;
 	var OFFSET_Y = 0;
-	var OFFSET_X = 28;
+	var OFFSET_X = 29;
 
 	// totally not a constructor
 	// constructors use NEW, we use SPAWN. Totally different! :)
@@ -565,17 +565,13 @@
 	var _utilJs = __webpack_require__(8);
 
 	var THROTTLE = 200;
-	var MOVE_DELAY = Phaser.Timer.HALF;
+	var MOVE_DELAY = 300;
 	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
-
-	var playerTween = undefined;
 	var hasDelayEnded = delay(THROTTLE);
 
 	function update(game, sprite) {
 	  var pointer = game.input.activePointer;
-
-	  // throttle user input
-	  //if (!hasDelayEnded(game.time.now)) { return; }
+	  var playerTween = undefined;
 
 	  if (pointer.isDown) {
 	    // We need to limit the speed since this function is called on update
@@ -591,7 +587,7 @@
 	      });
 
 	      // move to the pointer
-	      playerTween.to(toPointer(sprite, pointer)).start();
+	      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
 	    });
 	  }
 	}
@@ -613,12 +609,6 @@
 	  var nextUpdate = 0;
 
 	  return function (now) {
-	    console.group('delay');
-	    console.log('speed', speed);
-	    console.log('now', now);
-	    console.log('nextUpdate', nextUpdate);
-	    console.groupEnd();
-
 	    if (now > nextUpdate) {
 	      nextUpdate = now + speed;
 	      return true;
@@ -634,6 +624,7 @@
 
 	'use strict';
 
+	// Calls function only after delay time has passed.
 	// poor man's debounce, using phaser's event timer
 	// Returns a function that can only be called after the deplay.
 	// If func can not be called, returns false.
