@@ -3,7 +3,7 @@
 
 const SPEED = 300;
 const OFFSET_Y = 0;
-const OFFSET_X = 63;
+const OFFSET_X = 28;
 
 // totally not a constructor
 // constructors use NEW, we use SPAWN. Totally different! :)

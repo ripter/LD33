@@ -95,15 +95,17 @@
 
 	var _dragonJs = __webpack_require__(3);
 
-	var _playerJs = __webpack_require__(5);
-
-	var _foregroundJs = __webpack_require__(7);
+	var _foregroundJs = __webpack_require__(5);
 
 	var Props = _interopRequireWildcard(_foregroundJs);
 
-	var _mobJs = __webpack_require__(8);
+	var _mobJs = __webpack_require__(6);
 
 	var Mob = _interopRequireWildcard(_mobJs);
+
+	var _controlsJs = __webpack_require__(7);
+
+	var Controls = _interopRequireWildcard(_controlsJs);
 
 	var _levelLoaderJs = __webpack_require__(9);
 
@@ -186,7 +188,7 @@
 	  var balloons = _level.balloons;
 	  var ESC = Phaser.Keyboard.ESC;
 
-	  (0, _playerJs.playerControl)(player);
+	  Controls.update(game, player);
 	  Mob.update(mobs);
 
 	  game.physics.arcade.overlap(bullets, mobs.group, collideBulletMob);
@@ -318,7 +320,7 @@
 	exports.spawnFire = spawnFire;
 	var SPEED = 300;
 	var OFFSET_Y = 0;
-	var OFFSET_X = 63;
+	var OFFSET_X = 28;
 
 	// totally not a constructor
 	// constructors use NEW, we use SPAWN. Totally different! :)
@@ -334,173 +336,6 @@
 
 /***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser, game*/
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.playerControl = playerControl;
-
-	var _fireJs = __webpack_require__(4);
-
-	var _utilJs = __webpack_require__(6);
-
-	var FIRE_SPEED = Phaser.Timer.SECOND;
-	var MOVE_DELAY = Phaser.Timer.HALF;
-	var SPEED = 150;
-
-	var ACTION = {
-	  NONE: 'PLAYER_ACTION_NONE',
-	  FIRE: 'PLAYER_ACTION_FIRE',
-	  MOVE: {
-	    LEFT: 'PLAYER_ACTION_LEFT',
-	    RIGHT: 'PLAYER_ACTION_RIGHT',
-	    TO: {
-	      POINTER: 'PLAYER_ACTION_MOVE_TO_POINTER'
-	    }
-	  }
-	};
-
-	var atFireSpeed = (0, _utilJs.debounce)(FIRE_SPEED);
-	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
-
-	var playerTween = null;
-
-	function playerControl(sprite) {
-	  var _Phaser$Keyboard = Phaser.Keyboard;
-	  var LEFT = _Phaser$Keyboard.LEFT;
-	  var RIGHT = _Phaser$Keyboard.RIGHT;
-	  var SPACEBAR = _Phaser$Keyboard.SPACEBAR;
-
-	  var pointer = game.input.activePointer;
-	  //const actions = playerAction();
-
-	  if (pointer.isDown) {
-	    atMoveSpeed(game.time.events, function () {
-
-	      //if (!playerTween) {
-	      playerTween = game.add.tween(sprite);
-
-	      // Once movement is done, fire.
-	      playerTween.onComplete.add(function () {
-	        var x = sprite.x;
-	        var y = sprite.y;
-
-	        (0, _fireJs.spawnFire)(x, y);
-	      });
-	      //}
-
-	      // Create and run the tween
-	      playerTween.to({
-	        x: pointer.x
-	      }, Phaser.Timer.HALF);
-	      // .from({
-	      //   x: sprite.x
-	      // });
-
-	      playerTween.start();
-	    });
-	  }
-
-	  // Handle each action
-	  // actions.forEach((action) => {
-	  //   switch (action) {
-	  //     case ACTION.FIRE:
-	  //       atFireSpeed(game.time.events, () => {
-	  //         const {x, y} = sprite;
-
-	  //         spawnFire(x, y);
-	  //       });
-	  //       break;
-
-	  //     case ACTION.MOVE.TO.POINTER:
-	  //       game.physics.arcade.moveToXY(sprite, pointer.x, sprite.y, SPEED);
-	  //       break;
-	  //   }
-	  // });
-
-	  // Movement keys
-	  // if (game.input.keyboard.isDown(LEFT)) {
-	  //   sprite.body.velocity.x = -SPEED;
-	  // }
-	  // else if (game.input.keyboard.isDown(RIGHT)) {
-	  //   sprite.body.velocity.x = SPEED;
-	  // }
-	  // else {
-	  //   sprite.body.velocity.x = 0;
-	  // }
-	}
-
-	// Returns an array of player actions for this tick
-	// example: [ACTIONS.FIRE, ACTIONS.MOVE]
-	function playerAction() {
-	  var _Phaser$Keyboard2 = Phaser.Keyboard;
-	  var LEFT = _Phaser$Keyboard2.LEFT;
-	  var RIGHT = _Phaser$Keyboard2.RIGHT;
-	  var SPACEBAR = _Phaser$Keyboard2.SPACEBAR;
-
-	  var actions = [];
-
-	  // Touch controls
-	  if (game.input.activePointer.isDown) {
-	    actions.push(ACTION.MOVE.TO.POINTER);
-	    actions.push(ACTION.FIRE);
-	  }
-
-	  // Keyboard controls
-	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    actions.push(ACTION.FIRE);
-	  }
-	  if (game.input.keyboard.isDown(LEFT)) {
-	    actions.push(ACTION.MOVE.LEFT);
-	  } else if (game.input.keyboard.isDown(RIGHT)) {
-	    actions.push(ACTION.MOVE.RIGHT);
-	  }
-
-	  return actions;
-	}
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	// poor man's debounce, using phaser's event timer
-	// Returns a function that can only be called after the deplay.
-	// If func can not be called, returns false.
-	// If func can be called, returns result of func
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.debounce = debounce;
-
-	function debounce(delay) {
-	  var isReady = true;
-
-	  return function (eventTimer, func) {
-	    // ignore calls until ready
-	    if (!isReady) {
-	      return false;
-	    }
-	    // We are going to call func, so we are not ready.
-	    isReady = false;
-
-	    // Start the delay
-	    eventTimer.add(delay, function () {
-	      isReady = true;
-	    });
-
-	    // call the function
-	    return func();
-	  };
-	}
-
-/***/ },
-/* 7 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -608,7 +443,7 @@
 	}
 
 /***/ },
-/* 8 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -714,6 +549,122 @@
 	}
 
 /***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.update = update;
+
+	var _fireJs = __webpack_require__(4);
+
+	var _utilJs = __webpack_require__(8);
+
+	var THROTTLE = 200;
+	var MOVE_DELAY = Phaser.Timer.HALF;
+	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
+
+	var playerTween = undefined;
+	var hasDelayEnded = delay(THROTTLE);
+
+	function update(game, sprite) {
+	  var pointer = game.input.activePointer;
+
+	  // throttle user input
+	  //if (!hasDelayEnded(game.time.now)) { return; }
+
+	  if (pointer.isDown) {
+	    // We need to limit the speed since this function is called on update
+	    atMoveSpeed(game.time.events, function () {
+	      playerTween = game.add.tween(sprite);
+
+	      // Fire when the tween completes
+	      playerTween.onComplete.add(function () {
+	        var x = sprite.x;
+	        var y = sprite.y;
+
+	        (0, _fireJs.spawnFire)(x, y);
+	      });
+
+	      // move to the pointer
+	      playerTween.to(toPointer(sprite, pointer)).start();
+	    });
+	  }
+	}
+
+	// Returns an object to use with tween.to
+	function toPointer(sprite, pointer) {
+	  var width = sprite.width;
+	  var x = pointer.x;
+
+	  // Adjust for sprite size
+	  x -= width / 2;
+
+	  return {
+	    x: x
+	  };
+	}
+
+	function delay(speed) {
+	  var nextUpdate = 0;
+
+	  return function (now) {
+	    console.group('delay');
+	    console.log('speed', speed);
+	    console.log('now', now);
+	    console.log('nextUpdate', nextUpdate);
+	    console.groupEnd();
+
+	    if (now > nextUpdate) {
+	      nextUpdate = now + speed;
+	      return true;
+	    }
+
+	    return false;
+	  };
+	}
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	// poor man's debounce, using phaser's event timer
+	// Returns a function that can only be called after the deplay.
+	// If func can not be called, returns false.
+	// If func can be called, returns result of func
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.debounce = debounce;
+
+	function debounce(delay) {
+	  var isReady = true;
+
+	  return function (eventTimer, func) {
+	    // ignore calls until ready
+	    if (!isReady) {
+	      return false;
+	    }
+	    // We are going to call func, so we are not ready.
+	    isReady = false;
+
+	    // Start the delay
+	    eventTimer.add(delay, function () {
+	      isReady = true;
+	    });
+
+	    // call the function
+	    return func();
+	  };
+	}
+
+/***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -727,11 +678,11 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-	var _mobJs = __webpack_require__(8);
+	var _mobJs = __webpack_require__(6);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _foregroundJs = __webpack_require__(7);
+	var _foregroundJs = __webpack_require__(5);
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 

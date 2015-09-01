@@ -3,9 +3,9 @@
 
 import {physicsGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
-import {playerControl} from './player.js';
 import * as Props from './foreground.js';
 import * as Mob from './mob.js';
+import * as Controls from './controls.js';
 import {loadLevel} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
 
@@ -83,7 +83,7 @@ function update() {
   const {mobs, fgGroup, balloons} = level;
   const {ESC} = Phaser.Keyboard;
 
-  playerControl(player);
+  Controls.update(game, player);
   Mob.update(mobs);
 
   game.physics.arcade.overlap(bullets, mobs.group, collideBulletMob);
