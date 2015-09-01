@@ -4,10 +4,8 @@
 import {spawnFire} from './fire.js';
 import {debounce} from './util.js';
 
-const THROTTLE = 200;
 const MOVE_DELAY = 300;
 const atMoveSpeed = debounce(MOVE_DELAY);
-const hasDelayEnded = delay(THROTTLE);
 
 
 export function update(game, sprite) {
@@ -43,18 +41,4 @@ function toPointer(sprite, pointer) {
   return {
     x: x
   };
-}
-
-
-function delay(speed) {
-  let nextUpdate = 0;
-
-  return (now) => {
-    if (now > nextUpdate) {
-      nextUpdate = now + speed;
-      return true;
-    }
-    
-    return false;
-  }; 
 }

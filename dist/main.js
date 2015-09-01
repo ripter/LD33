@@ -130,8 +130,6 @@
 	  game.load.image('king', 'assets/king.png', 64, 64);
 	  game.load.image('knight', 'assets/knight.png', 64, 64);
 	  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
-	  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
-	  game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
 	  game.load.image('tower', 'assets/tower.png', 64, 64);
 
@@ -189,7 +187,7 @@
 	  var ESC = Phaser.Keyboard.ESC;
 
 	  Controls.update(game, player);
-	  Mob.update(mobs);
+	  //Mob.update(mobs);
 
 	  game.physics.arcade.overlap(bullets, mobs.group, collideBulletMob);
 	  //game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
@@ -457,7 +455,7 @@
 	exports.update = update;
 	exports.mobsLeft = mobsLeft;
 	var DELAY = Phaser.Timer.SECOND;
-	var SPEED = 100; //Phaser.Timer.MINUTE * 4;
+	var SPEED = Phaser.Timer.SECOND * 15;
 	var HIT_RANGE = 5;
 
 	// Spawn a new sprite in the group.
@@ -473,14 +471,49 @@
 	  sprite.alive = false;
 	  sprite.visible = false;
 	  sprite.anchor = { x: .5, y: 1 };
+	  sprite.body.moves = false; // use tweens
 	  sprite.data = data;
+	  sprite.pathTween = createPathTween(sprite, sprite.data.tract);
 
 	  return sprite;
+	}
+
+	function createPathTween(sprite, pathList) {
+	  var game = sprite.game;
+	  var speed = sprite.data.speed || SPEED;
+	  var path = game.add.tween(sprite);
+	  // We want:
+	  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]}
+	  var x = pathList.map(function (point) {
+	    return point.x;
+	  });
+	  var y = pathList.map(function (point) {
+	    return point.y;
+	  });
+
+	  // speed is per point. So points that are further away will cause
+	  // the sprite to move faster.
+	  // On the plus, we can control speed via points.
+	  // Options:
+	  //  set speed as a function of distance between points.
+	  //  allow sprite to adjust the speed
+	  //  allow points to set/adjust the speed
+	  path.to({ x: x, y: y }, speed);
+	  // const waypoints = pathList.map(function(point) {
+	  //   return game.add.tween(sprite).to(point, speed);
+	  // });
+
+	  // // chain all the waypoints into the path.
+	  // path.from({x: 100, y: 100}, speed);
+	  // path.chain(waypoints);
+
+	  return path;
 	}
 
 	// start the timed game
 
 	function startTimedGame(mobData) {
+	  var _arguments = arguments;
 	  var list = mobData.list;
 	  var group = mobData.group;
 
@@ -489,15 +522,19 @@
 
 	  // 'spawn' one human at a time with a time delay
 	  game.time.events.repeat(DELAY, length, function () {
+	    console.log('repeat', _arguments);
 	    var mob = group.getAt(index);
 
-	    mob.alive = true;
-	    mob.visible = true;
-	    mob.tractIndex = -1;
+	    mob.reset(0, 0);
+	    mob.pathTween.start().loop(true);
 
-	    moveToNextWaypoint(mob);
+	    // mob.alive = true;
+	    // mob.visible = true;
+	    // mob.tractIndex = -1;
 
-	    // work our why thought the list.
+	    // moveToNextWaypoint(mob);
+
+	    // Keep our own index
 	    index += 1;
 	  });
 	}
@@ -564,10 +601,8 @@
 
 	var _utilJs = __webpack_require__(8);
 
-	var THROTTLE = 200;
 	var MOVE_DELAY = 300;
 	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
-	var hasDelayEnded = delay(THROTTLE);
 
 	function update(game, sprite) {
 	  var pointer = game.input.activePointer;
@@ -602,19 +637,6 @@
 
 	  return {
 	    x: x
-	  };
-	}
-
-	function delay(speed) {
-	  var nextUpdate = 0;
-
-	  return function (now) {
-	    if (now > nextUpdate) {
-	      nextUpdate = now + speed;
-	      return true;
-	    }
-
-	    return false;
 	  };
 	}
 
@@ -694,7 +716,6 @@
 	  var mobGroup = spawnMobGroup(mobList);
 	  var fgGroup = spawnForegroundGroup(lvl.foreground);
 	  var balloonGroup = spawnBalloonGroup(lvl.balloons);
-	  //const waypointGroup = spawnWaypointsGroup(lvl.waypoints);
 
 	  return {
 	    background: background,
@@ -746,18 +767,6 @@
 
 	  balloonList.forEach(function (data) {
 	    var sprite = Balloon.spawn(group, data);
-	  });
-
-	  return group;
-	}
-
-	function spawnWaypointsGroup(waypoints) {
-	  var group = game.add.group();
-
-	  Object.keys(waypoints).forEach(function (tractName) {
-	    waypoints[tractName].forEach(function (point) {
-	      group.create(point.x, point.y, 'waypoint');
-	    });
 	  });
 
 	  return group;
@@ -937,7 +946,11 @@
 	  background: 'bg-iphone',
 	  waypoints: {
 	    mainPath: [{ x: 0, y: 50 }, { x: 273, y: 55 }, { x: 0, y: 142 }, { x: 185, y: 164 }, { x: 61, y: 230 }, { x: 275, y: 275 }, { x: 60, y: 383 }],
-	    altPath: [{ x: 604, y: 0 }, { x: 577, y: 56 }, { x: 357, y: 57 }, { x: 306, y: 101 }, { x: 284, y: 145 }, { x: 285, y: 193 }, { x: 305, y: 229 }, { x: 346, y: 264 }, { x: 582, y: 256 }, { x: 621, y: 342 }]
+	    altPath: [{ x: 604, y: 0 }, { x: 577, y: 56 }, { x: 357, y: 57 }, { x: 306, y: 101 }
+	    //, {x:284, y:145}
+	    , { x: 285, y: 193 }
+	    //, {x:305, y:229}
+	    , { x: 346, y: 264 }, { x: 582, y: 256 }, { x: 621, y: 342 }]
 	  },
 	  mobs: [{ spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'altPath' }],
 	  foreground: [{ x: 438, y: 240, spriteKey: 'tree' }],

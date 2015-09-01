@@ -28,8 +28,6 @@ function preload() {
   game.load.image('king', 'assets/king.png', 64, 64);
   game.load.image('knight', 'assets/knight.png', 64, 64);
   game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
-  //game.load.image('waypoint', 'assets/waypoint_20x20.png', 24, 24);
-  game.load.image('waypoint', 'assets/waypoint_10x10.png', 10, 10);
   game.load.image('wall', 'assets/wall.png', 64, 64);
   game.load.image('tower', 'assets/tower.png', 64, 64);
 
@@ -84,7 +82,7 @@ function update() {
   const {ESC} = Phaser.Keyboard;
 
   Controls.update(game, player);
-  Mob.update(mobs);
+  //Mob.update(mobs);
 
   game.physics.arcade.overlap(bullets, mobs.group, collideBulletMob);
   //game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);

@@ -16,7 +16,6 @@ export function loadLevel(lvl) {
   const mobGroup = spawnMobGroup(mobList);
   const fgGroup = spawnForegroundGroup(lvl.foreground);
   const balloonGroup = spawnBalloonGroup(lvl.balloons);
-  //const waypointGroup = spawnWaypointsGroup(lvl.waypoints);
 
   return {
     background: background
@@ -70,17 +69,5 @@ function spawnBalloonGroup(balloonList) {
     const sprite = Balloon.spawn(group, data);
   });
 
-  return group;
-}
-
-function spawnWaypointsGroup(waypoints) {
-  let group = game.add.group();
-  
-  Object.keys(waypoints).forEach((tractName) => {
-    waypoints[tractName].forEach((point) => {
-      group.create(point.x, point.y, 'waypoint');
-    });
-  });
-  
   return group;
 }

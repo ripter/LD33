@@ -2,7 +2,7 @@
 'use strict';
 
 const DELAY = Phaser.Timer.SECOND;
-const SPEED = 100; //Phaser.Timer.MINUTE * 4;
+const SPEED = Phaser.Timer.SECOND * 15;
 const HIT_RANGE = 5;
 
 // Spawn a new sprite in the group.
@@ -15,9 +15,40 @@ export function spawn(group, data) {
   sprite.alive = false;
   sprite.visible = false;
   sprite.anchor = {x: .5, y: 1};
+  sprite.body.moves = false; // use tweens
   sprite.data = data;
+  sprite.pathTween = createPathTween(sprite, sprite.data.tract);
   
   return sprite;
+}
+
+
+function createPathTween(sprite, pathList) {
+  const game = sprite.game;
+  const speed = sprite.data.speed || SPEED;
+  const path = game.add.tween(sprite);
+  // We want:
+  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]} 
+  const x = pathList.map(function(point) { return point.x; });
+  const y = pathList.map(function(point) { return point.y; });
+  
+  // speed is per point. So points that are further away will cause
+  // the sprite to move faster. 
+  // On the plus, we can control speed via points.
+  // Options:
+  //  set speed as a function of distance between points.
+  //  allow sprite to adjust the speed
+  //  allow points to set/adjust the speed
+  path.to({x: x, y: y}, speed);
+  // const waypoints = pathList.map(function(point) {
+  //   return game.add.tween(sprite).to(point, speed);
+  // });
+   
+  // // chain all the waypoints into the path.
+  // path.from({x: 100, y: 100}, speed);
+  // path.chain(waypoints);
+  
+  return path;
 }
 
 
@@ -29,15 +60,19 @@ export function startTimedGame(mobData) {
 
   // 'spawn' one human at a time with a time delay
   game.time.events.repeat(DELAY, length, () => {
+    console.log('repeat', arguments);
     const mob = group.getAt(index);
     
-    mob.alive = true;
-    mob.visible = true;
-    mob.tractIndex = -1;
+    mob.reset(0, 0);
+    mob.pathTween.start().loop(true);
+
+    // mob.alive = true;
+    // mob.visible = true;
+    // mob.tractIndex = -1;
     
-    moveToNextWaypoint(mob);
+    // moveToNextWaypoint(mob);
     
-    // work our why thought the list.
+    // Keep our own index
     index += 1;
   });
 }
