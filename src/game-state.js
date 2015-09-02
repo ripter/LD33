@@ -61,7 +61,7 @@ function create() {
   window.map = map;
   
 
-  window.level = level = loadLevel(levelFile);
+  //window.level = level = loadLevel(levelFile);
   // load level!
   window.bullets = bullets = physicsGroup();
 
@@ -78,7 +78,7 @@ function create() {
   // player on top of everything
   window.player = player = spawnDragon(100, 294);
 
-  Mob.startTimedGame(level.mobGroup);
+  //Mob.startTimedGame(level.mobGroup);
   
 
 
@@ -91,6 +91,7 @@ function create() {
 }
 
 function update() {
+  return;
   const {mobGroup, fgGroup, balloons} = level;
   const {ESC} = Phaser.Keyboard;
 

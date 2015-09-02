@@ -60,13 +60,18 @@ function spawnBalloonGroup(balloonList) {
 
 export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
+  const props = map.properties;
   let layer, waypointLayer, objectLayer;
   
+  // Background image
+  map.properties.background = game.add.image(0, 0, props.background); 
+
   // WARNING: Hardcoded values!
   map.addTilesetImage('paths', 'pathSpriteSheet');
   layer = map.createLayer('pathLayer');
   objectLayer = map.objects;
   
+
   //TODO:
   // create the mobGroup, using waypoints from the objectLayer.
   

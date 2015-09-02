@@ -87,7 +87,7 @@
  "orientation":"orthogonal",
  "properties":
     {
-
+     "background":"bg-iphone"
     },
  "renderorder":"right-down",
  "tileheight":32,

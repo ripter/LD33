@@ -162,7 +162,7 @@
 	  var map = (0, _levelLoaderJs.loadTiledMap)(game, 'iphone-map');
 	  window.map = map;
 
-	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelFile);
+	  //window.level = level = loadLevel(levelFile);
 	  // load level!
 	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
 
@@ -179,7 +179,7 @@
 	  // player on top of everything
 	  window.player = player = (0, _dragonJs.spawnDragon)(100, 294);
 
-	  Mob.startTimedGame(level.mobGroup);
+	  //Mob.startTimedGame(level.mobGroup);
 
 	  // sounds
 	  window.sfx = sfx = {
@@ -189,10 +189,10 @@
 	}
 
 	function update() {
-	  var _level = level;
-	  var mobGroup = _level.mobGroup;
-	  var fgGroup = _level.fgGroup;
-	  var balloons = _level.balloons;
+	  return;
+	  var mobGroup = level.mobGroup;
+	  var fgGroup = level.fgGroup;
+	  var balloons = level.balloons;
 	  var ESC = Phaser.Keyboard.ESC;
 
 	  Controls.update(game, player);
@@ -232,8 +232,7 @@
 	    return;
 	  }
 
-	  var _level2 = level;
-	  var mobGroup = _level2.mobGroup;
+	  var mobGroup = level.mobGroup;
 
 	  var points = mob.data.points || 1;
 
@@ -698,9 +697,13 @@
 
 	function loadTiledMap(game, mapKey) {
 	  var map = game.add.tilemap(mapKey);
+	  var props = map.properties;
 	  var layer = undefined,
 	      waypointLayer = undefined,
 	      objectLayer = undefined;
+
+	  // Background image
+	  map.properties.background = game.add.image(0, 0, props.background);
 
 	  // WARNING: Hardcoded values!
 	  map.addTilesetImage('paths', 'pathSpriteSheet');
