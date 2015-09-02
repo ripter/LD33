@@ -53,11 +53,11 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(12);
+	var _startStateJs = __webpack_require__(13);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(15);
+	var _endStateJs = __webpack_require__(16);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -109,7 +109,9 @@
 
 	var _levelLoaderJs = __webpack_require__(9);
 
-	var _fontsJs = __webpack_require__(11);
+	var _fontsJs = __webpack_require__(12);
+
+	var _constantsJs = __webpack_require__(11);
 
 	window.Mob = Mob;
 
@@ -128,9 +130,9 @@
 
 	function preload() {
 	  game.load.image('dragon', 'assets/dragon-77x91.png', 77, 91);
-	  game.load.image('king', 'assets/king.png', 64, 64);
-	  game.load.image('knight', 'assets/knight.png', 64, 64);
-	  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
+	  game.load.image(_constantsJs.MOB.KING, 'assets/king.png', 64, 64);
+	  game.load.image(_constantsJs.MOB.KNIGHT, 'assets/knight.png', 64, 64);
+	  game.load.image(_constantsJs.MOB.HORSE, 'assets/knightOnHorse.png', 64, 64);
 	  game.load.image('wall', 'assets/wall.png', 64, 64);
 	  game.load.image('tower', 'assets/tower.png', 64, 64);
 
@@ -641,6 +643,8 @@
 
 	var Balloon = _interopRequireWildcard(_balloonJs);
 
+	var _constantsJs = __webpack_require__(11);
+
 	// Groups with physics.
 
 	var _groupsJs = __webpack_require__(2);
@@ -699,25 +703,36 @@
 	  var map = game.add.tilemap(mapKey);
 	  var props = map.properties;
 	  var layer = undefined,
-	      waypointLayer = undefined,
-	      objectLayer = undefined;
+	      objectLayer = undefined,
+	      mobGroup = undefined;
 
 	  // Background image
 	  map.properties.background = game.add.image(0, 0, props.background);
 
 	  // WARNING: Hardcoded values!
 	  map.addTilesetImage('paths', 'pathSpriteSheet');
-	  layer = map.createLayer('pathLayer');
+	  layer = map.createLayer(_constantsJs.MAP.LAYER.PATH);
 	  objectLayer = map.objects;
+
+	  // Mob group!
+	  mobGroup = (0, _groupsJs.physicsGroup)();
+
+	  Object.keys(_constantsJs.MOB).forEach(function (key) {
+	    map.createFromObjects('mobs', _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
+	  });
 
 	  //TODO:
 	  // create the mobGroup, using waypoints from the objectLayer.
+	  //mobs = map.createFromObjects('mobs', ,
 
 	  // Need mob list
 	  // Spawn mobs
 	  // Convert waypoints/paths to mobGroup (Mob Sprites tween paths)
 
-	  return map;
+	  return {
+	    map: map,
+	    mobGroup: mobGroup
+	  };
 	}
 
 /***/ },
@@ -750,6 +765,30 @@
 /* 11 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var MOB = {
+	  KNIGHT: 'MOB_KNIGHT',
+	  KING: 'MOB_KING',
+	  HORSE: 'MOB_HORSE'
+	};
+
+	exports.MOB = MOB;
+	var MAP = {
+	  WAYPOINTS: 'MAP_WAYPOINTS',
+	  LAYER: {
+	    PATH: 'MAP_LAYER_PATH'
+	  }
+	};
+	exports.MAP = MAP;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
 	/*global Phaser, game */
 	'use strict';
 
@@ -775,7 +814,7 @@
 	exports.sceneFont = sceneFont;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -787,13 +826,13 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fontsJs = __webpack_require__(11);
+	var _fontsJs = __webpack_require__(12);
 
-	var _levelsLevel1Js = __webpack_require__(13);
+	var _levelsLevel1Js = __webpack_require__(14);
 
 	var _levelsLevel1Js2 = _interopRequireDefault(_levelsLevel1Js);
 
-	var _levelsIphoneJs = __webpack_require__(14);
+	var _levelsIphoneJs = __webpack_require__(15);
 
 	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
@@ -841,7 +880,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	/*global Phaser */
@@ -881,7 +920,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -908,7 +947,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -920,11 +959,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fontsJs = __webpack_require__(11);
+	var _fontsJs = __webpack_require__(12);
 
 	var _gameStateJs = __webpack_require__(1);
 
-	var _levelsIphoneJs = __webpack_require__(14);
+	var _levelsIphoneJs = __webpack_require__(15);
 
 	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 

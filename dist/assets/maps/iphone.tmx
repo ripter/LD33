@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="11" tilewidth="32" tileheight="32" nextobjectid="12">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="11" tilewidth="32" tileheight="32" nextobjectid="23">
  <properties>
   <property name="background" value="bg-iphone"/>
  </properties>
@@ -12,7 +12,18 @@
   <tile id="2" terrain="0,0,0,0"/>
   <tile id="4" terrain="0,0,0,0"/>
  </tileset>
- <layer name="pathLayer" width="20" height="11">
+ <tileset firstgid="7" name="Mobs" tilewidth="64" tileheight="64" tilecount="3">
+  <tile id="0">
+   <image width="64" height="64" source="../knightOnHorse.png"/>
+  </tile>
+  <tile id="1">
+   <image width="64" height="64" source="../knight.png"/>
+  </tile>
+  <tile id="2">
+   <image width="64" height="64" source="../king.png"/>
+  </tile>
+ </tileset>
+ <layer name="MAP_LAYER_PATH" width="20" height="11">
   <data encoding="csv">
 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -31,8 +42,25 @@
   <properties>
    <property name="type" value="PATH"/>
   </properties>
-  <object id="10" name="line" type="WAYPOINTS" x="16" y="8">
+  <object id="10" name="line" type="MAP_WAYPOINTS" x="16" y="8">
    <polyline points="0,0 0,72 576,72 576,136 32,136 32,200 576,200 576,264 32,264 32,312"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="mobs">
+  <object id="20" name="MOB_KING" type="MOB_KING" gid="9" x="264" y="72" width="64" height="64">
+   <properties>
+    <property name="pathName" value="mainPath"/>
+   </properties>
+  </object>
+  <object id="21" name="MOB_KNIGHT" type="MOB_KNIGHT" gid="8" x="96" y="208" width="64" height="64">
+   <properties>
+    <property name="pathName" value="mainPath"/>
+   </properties>
+  </object>
+  <object id="22" name="MOB_HORSE" type="MOB_HORSE" gid="7" x="520" y="288" width="64" height="64">
+   <properties>
+    <property name="pathName" value="mainPath"/>
+   </properties>
   </object>
  </objectgroup>
 </map>

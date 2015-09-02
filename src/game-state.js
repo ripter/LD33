@@ -8,6 +8,7 @@ import * as Mob from './mob.js';
 import * as Controls from './controls.js';
 import {loadLevel, loadTiledMap} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
+import {MOB} from './constants.js';
 
 window.Mob = Mob;
 
@@ -26,9 +27,9 @@ function init(lvlFile) {
 
 function preload() {
   game.load.image('dragon', 'assets/dragon-77x91.png', 77, 91);
-  game.load.image('king', 'assets/king.png', 64, 64);
-  game.load.image('knight', 'assets/knight.png', 64, 64);
-  game.load.image('horse', 'assets/knightOnHorse.png', 64, 64);
+  game.load.image(MOB.KING, 'assets/king.png', 64, 64);
+  game.load.image(MOB.KNIGHT, 'assets/knight.png', 64, 64);
+  game.load.image(MOB.HORSE, 'assets/knightOnHorse.png', 64, 64);
   game.load.image('wall', 'assets/wall.png', 64, 64);
   game.load.image('tower', 'assets/tower.png', 64, 64);
 

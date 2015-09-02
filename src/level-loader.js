@@ -4,6 +4,7 @@
 import * as Mob from './mob.js';
 import * as Foreground from './foreground.js';
 import * as Balloon from './balloon.js';
+import {MAP, MOB} from './constants.js';
 
 // Groups with physics.
 import {physicsGroup} from './groups.js';
@@ -61,23 +62,33 @@ function spawnBalloonGroup(balloonList) {
 export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
   const props = map.properties;
-  let layer, waypointLayer, objectLayer;
+  let layer, objectLayer, mobGroup;
   
   // Background image
   map.properties.background = game.add.image(0, 0, props.background); 
 
   // WARNING: Hardcoded values!
   map.addTilesetImage('paths', 'pathSpriteSheet');
-  layer = map.createLayer('pathLayer');
+  layer = map.createLayer(MAP.LAYER.PATH);
   objectLayer = map.objects;
   
+  // Mob group!
+  mobGroup = physicsGroup();
+  // Get the mobs from the map and create them.
+  Object.keys(MOB).forEach((key) => {
+    map.createFromObjects('mobs', MOB[key], MOB[key], null, true, false, mobGroup);
+  });
 
   //TODO:
   // create the mobGroup, using waypoints from the objectLayer.
+  //mobs = map.createFromObjects('mobs', , 
   
   // Need mob list
   // Spawn mobs
   // Convert waypoints/paths to mobGroup (Mob Sprites tween paths)
   
-  return map;
+  return {
+    map
+    , mobGroup
+  };
 }
