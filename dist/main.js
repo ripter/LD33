@@ -450,7 +450,6 @@
 	});
 	exports.spawn = spawn;
 	exports.startTimedGame = startTimedGame;
-	exports.mobsLeft = mobsLeft;
 	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = Phaser.Timer.SECOND * 15;
 	var HIT_RANGE = 5;
@@ -459,8 +458,6 @@
 
 	function spawn(group, data, waypoints) {
 	  var spriteKey = data.spriteKey;
-
-	  //const {x, y} = data.tract[0];
 
 	  var sprite = group.create(0, 0, spriteKey);
 
@@ -515,12 +512,6 @@
 	    // Keep our own index
 	    index += 1;
 	  });
-	}
-
-	function mobsLeft(mobData) {
-	  var group = mobData.group;
-
-	  return group.countLiving();
 	}
 
 /***/ },
@@ -650,7 +641,6 @@
 	function loadLevel(lvl) {
 	  // These are in order by z-index
 	  var background = game.add.image(0, 0, lvl.background);
-	  //const mobList = loadMobList(lvl.mobs, lvl.waypoints);
 	  var mobGroup = spawnMobGroup(lvl.mobs, lvl.waypoints);
 	  var fgGroup = spawnForegroundGroup(lvl.foreground);
 	  var balloonGroup = spawnBalloonGroup(lvl.balloons);
@@ -659,26 +649,10 @@
 	    background: background,
 	    state: 'pregame',
 	    score: 0,
-	    // , mobs: {
-	    //   list: mobList
-	    //   , group : mobGroup
-	    // }
 	    mobGroup: mobGroup,
 	    fgGroup: fgGroup,
 	    balloons: balloonGroup
 	  };
-	}
-
-	// Join the mob with the tract data.
-	// this way every mob knows their entire tract
-	function loadMobList(lvlMobs, lvlWaypoints) {
-	  return lvlMobs.map(function (lvlMob) {
-	    var tractName = lvlMob.tract;
-
-	    lvlMob.tractName = tractName;
-	    lvlMob.tract = lvlWaypoints[tractName];
-	    return lvlMob;
-	  });
 	}
 
 	function spawnMobGroup(mobList, waypoints) {
@@ -910,9 +884,15 @@
 	  value: true
 	});
 
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 	var _fontsJs = __webpack_require__(11);
 
 	var _gameStateJs = __webpack_require__(1);
+
+	var _levelsIphoneJs = __webpack_require__(14);
+
+	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
 	//
 	// Lifecycle
@@ -935,7 +915,7 @@
 	  var ENTER = Phaser.Keyboard.ENTER;
 
 	  if (game.input.keyboard.isDown(ENTER)) {
-	    game.state.start('game', true);
+	    game.state.start('game', true, false, _levelsIphoneJs2['default']);
 	  }
 	}
 

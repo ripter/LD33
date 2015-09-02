@@ -8,8 +8,6 @@ const HIT_RANGE = 5;
 // Spawn a new sprite in the group.
 export function spawn(group, data, waypoints) {
   const {spriteKey} = data;
-  //const {x, y} = data.tract[0];
-
   let sprite = group.create(0, 0, spriteKey);  
 
   sprite.alive = false;
@@ -58,10 +56,4 @@ export function startTimedGame(mobGroup) {
     // Keep our own index
     index += 1;
   });
-}
-
-export function mobsLeft(mobData) {
-  const {group} = mobData;
-
-  return group.countLiving();
 }

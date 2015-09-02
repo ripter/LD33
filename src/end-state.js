@@ -4,6 +4,9 @@
 import {headerFont} from './fonts.js';
 import {updateScore} from './game-state.js';
 
+import lvl2 from './levels/iphone.js';
+
+
 //
 // Lifecycle
 //
@@ -25,7 +28,7 @@ function update() {
   const {ENTER} = Phaser.Keyboard;
   
   if (game.input.keyboard.isDown(ENTER)) {
-    game.state.start('game', true);
+    game.state.start('game', true, false, lvl2);
   }
 
 }

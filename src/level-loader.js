@@ -12,7 +12,6 @@ import {physicsGroup} from './groups.js';
 export function loadLevel(lvl) {
   // These are in order by z-index
   const background = game.add.image(0, 0, lvl.background);
-  //const mobList = loadMobList(lvl.mobs, lvl.waypoints);
   const mobGroup = spawnMobGroup(lvl.mobs, lvl.waypoints);
   const fgGroup = spawnForegroundGroup(lvl.foreground);
   const balloonGroup = spawnBalloonGroup(lvl.balloons);
@@ -21,26 +20,10 @@ export function loadLevel(lvl) {
     background: background
     , state: 'pregame'
     , score: 0
-    // , mobs: {
-    //   list: mobList
-    //   , group : mobGroup
-    // }
     , mobGroup: mobGroup
     , fgGroup: fgGroup
     , balloons: balloonGroup
   };
-}
-
-// Join the mob with the tract data.
-// this way every mob knows their entire tract
-function loadMobList(lvlMobs, lvlWaypoints) {
-  return lvlMobs.map((lvlMob) => {
-    const tractName = lvlMob.tract;
-
-    lvlMob.tractName = tractName;
-    lvlMob.tract = lvlWaypoints[tractName];
-    return lvlMob;
-  });
 }
 
 function spawnMobGroup(mobList, waypoints) {
