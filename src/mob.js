@@ -15,20 +15,22 @@ export function spawn(group, data, waypoints) {
   sprite.anchor = {x: .5, y: 1};
   sprite.body.moves = false; // use tweens
   sprite.data = data;
-  sprite.pathTween = createPathTween(sprite, waypoints);
+  //sprite.pathTween = createPathTween(sprite, waypoints);
   
   return sprite;
 }
 
 // Create tween between all points in the path.
-function createPathTween(sprite, pathList) {
+export function createPathTween(sprite, map) {
   const game = sprite.game;
-  const speed = sprite.data.speed || SPEED;
-  const path = game.add.tween(sprite);
+  const speed = sprite.speed || SPEED;
+  const pathName = sprite.pathName;
+  const pathTween = game.add.tween(sprite);
+  const waypoints = map.objects[pathName][0].polyline;
   // We want:
   //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]} 
-  const x = pathList.map(function(point) { return point.x; });
-  const y = pathList.map(function(point) { return point.y; });
+  const x = waypoints.map(function(point) { return point[0]; });
+  const y = waypoints.map(function(point) { return point[1]; });
   
   // speed is per point. So points that are further away will cause
   // the sprite to move faster. 
@@ -37,8 +39,9 @@ function createPathTween(sprite, pathList) {
   //  set speed as a function of distance between points.
   //  allow sprite to adjust the speed
   //  allow points to set/adjust the speed
-  path.to({x: x, y: y}, speed);
-  return path;
+  pathTween.to({x: x, y: y}, speed);
+  sprite.pathTween = pathTween;
+  return sprite;
 }
 
 // start the timed game

@@ -176,12 +176,14 @@
 	  game.add.text(50, 560, 'SPACEBAR: [Fire]', _fontsJs.infoFont);
 
 	  // it's curtians for you!
-	  window.curtains = game.add.image(0, 0, 'curtains');
+	  //window.curtains = game.add.image(0, 0, 'curtains');
 
 	  // player on top of everything
 	  window.player = player = (0, _dragonJs.spawnDragon)(100, 294);
 
-	  //Mob.startTimedGame(level.mobGroup);
+	  //
+	  // Start the action!
+	  Mob.startTimedGame(map.mobGroup);
 
 	  // sounds
 	  window.sfx = sfx = {
@@ -459,6 +461,7 @@
 	  value: true
 	});
 	exports.spawn = spawn;
+	exports.createPathTween = createPathTween;
 	exports.startTimedGame = startTimedGame;
 	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = Phaser.Timer.SECOND * 15;
@@ -476,23 +479,26 @@
 	  sprite.anchor = { x: .5, y: 1 };
 	  sprite.body.moves = false; // use tweens
 	  sprite.data = data;
-	  sprite.pathTween = createPathTween(sprite, waypoints);
+	  //sprite.pathTween = createPathTween(sprite, waypoints);
 
 	  return sprite;
 	}
 
 	// Create tween between all points in the path.
-	function createPathTween(sprite, pathList) {
+
+	function createPathTween(sprite, map) {
 	  var game = sprite.game;
-	  var speed = sprite.data.speed || SPEED;
-	  var path = game.add.tween(sprite);
+	  var speed = sprite.speed || SPEED;
+	  var pathName = sprite.pathName;
+	  var pathTween = game.add.tween(sprite);
+	  var waypoints = map.objects[pathName][0].polyline;
 	  // We want:
 	  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]}
-	  var x = pathList.map(function (point) {
-	    return point.x;
+	  var x = waypoints.map(function (point) {
+	    return point[0];
 	  });
-	  var y = pathList.map(function (point) {
-	    return point.y;
+	  var y = waypoints.map(function (point) {
+	    return point[1];
 	  });
 
 	  // speed is per point. So points that are further away will cause
@@ -502,8 +508,9 @@
 	  //  set speed as a function of distance between points.
 	  //  allow sprite to adjust the speed
 	  //  allow points to set/adjust the speed
-	  path.to({ x: x, y: y }, speed);
-	  return path;
+	  pathTween.to({ x: x, y: y }, speed);
+	  sprite.pathTween = pathTween;
+	  return sprite;
 	}
 
 	// start the timed game
@@ -716,18 +723,13 @@
 
 	  // Mob group!
 	  mobGroup = (0, _groupsJs.physicsGroup)();
-
+	  // Get the mobs from the map and create them.
 	  Object.keys(_constantsJs.MOB).forEach(function (key) {
 	    map.createFromObjects('mobs', _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
 	  });
-
-	  //TODO:
-	  // create the mobGroup, using waypoints from the objectLayer.
-	  //mobs = map.createFromObjects('mobs', ,
-
-	  // Need mob list
-	  // Spawn mobs
-	  // Convert waypoints/paths to mobGroup (Mob Sprites tween paths)
+	  // set standard props
+	  mobGroup.setAll('anchor', { x: .25, y: .85 });
+	  mobGroup.forEach(Mob.createPathTween, null, false, map);
 
 	  return {
 	    map: map,

@@ -78,15 +78,10 @@ export function loadTiledMap(game, mapKey) {
   Object.keys(MOB).forEach((key) => {
     map.createFromObjects('mobs', MOB[key], MOB[key], null, true, false, mobGroup);
   });
+  // set standard props
+  mobGroup.setAll('anchor', {x: .25, y: .85});
+  mobGroup.forEach(Mob.createPathTween, null, false, map);
 
-  //TODO:
-  // create the mobGroup, using waypoints from the objectLayer.
-  //mobs = map.createFromObjects('mobs', , 
-  
-  // Need mob list
-  // Spawn mobs
-  // Convert waypoints/paths to mobGroup (Mob Sprites tween paths)
-  
   return {
     map
     , mobGroup

@@ -74,14 +74,16 @@ function create() {
   game.add.text(50, 560, 'SPACEBAR: [Fire]', infoFont);
   
   // it's curtians for you!
-  window.curtains = game.add.image(0, 0, 'curtains');
+  //window.curtains = game.add.image(0, 0, 'curtains');
 
   // player on top of everything
   window.player = player = spawnDragon(100, 294);
 
-  //Mob.startTimedGame(level.mobGroup);
   
 
+  //
+  // Start the action!
+  Mob.startTimedGame(map.mobGroup);
 
   
   // sounds

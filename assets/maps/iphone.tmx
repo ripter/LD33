@@ -43,21 +43,21 @@
    <property name="type" value="PATH"/>
   </properties>
   <object id="10" name="line" type="MAP_WAYPOINTS" x="16" y="8">
-   <polyline points="0,0 0,72 576,72 576,136 32,136 32,200 576,200 576,264 32,264 32,312"/>
+   <polyline points="0,0 0,72 288,72 576,72 576,136 32,136 32,200 576,200 576,264 32,264 32,312"/>
   </object>
  </objectgroup>
  <objectgroup name="mobs">
-  <object id="20" name="MOB_KING" type="MOB_KING" gid="9" x="264" y="72" width="64" height="64">
+  <object id="20" name="MOB_KING" type="MOB_KING" gid="9" x="48" y="-24" width="64" height="64">
    <properties>
     <property name="pathName" value="mainPath"/>
    </properties>
   </object>
-  <object id="21" name="MOB_KNIGHT" type="MOB_KNIGHT" gid="8" x="96" y="208" width="64" height="64">
+  <object id="21" name="MOB_KNIGHT" type="MOB_KNIGHT" gid="8" x="120" y="-24" width="64" height="64">
    <properties>
     <property name="pathName" value="mainPath"/>
    </properties>
   </object>
-  <object id="22" name="MOB_HORSE" type="MOB_HORSE" gid="7" x="520" y="288" width="64" height="64">
+  <object id="22" name="MOB_HORSE" type="MOB_HORSE" gid="7" x="200" y="-24" width="64" height="64">
    <properties>
     <property name="pathName" value="mainPath"/>
    </properties>
