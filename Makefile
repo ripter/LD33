@@ -1,4 +1,4 @@
-.PHONY: all run js clean
+.PHONY: all run js clean pathSpriteSheet
 
 LIB := ./node_modules
 BIN := $(LIB)/.bin
@@ -14,7 +14,7 @@ js: node_modules/ dist/assets/
 	cp ./src/index.html dist/index.html
 	cp ./node_modules/phaser/dist/phaser.min.js dist/phaser.js
 	cp ./node_modules/jquery/dist/jquery.min.js dist/jquery.js
-	cp ./assets/* dist/assets/
+	cp -R ./assets/* dist/assets/
 
 clean:
 	npm cache clean
@@ -26,3 +26,6 @@ node_modules/: package.json
 
 dist/assets/:
 	mkdir -p dist/assets
+
+pathSpriteSheet:
+	convert +append assets/paths/path-*.png assets/paths/pathSpriteSheet.png

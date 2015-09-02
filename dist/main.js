@@ -115,6 +115,7 @@
 
 	var level = undefined;
 	var levelFile = undefined;
+	var map = undefined;
 
 	var player = undefined;
 	var bullets = undefined;
@@ -146,12 +147,20 @@
 
 	  game.load.audio('hit', 'assets/hit.wav');
 	  game.load.audio('score', 'assets/shoot.wav');
+
+	  // MAP
+	  game.load.tilemap('iphone-map', 'assets/maps/iphone.json', null, Phaser.Tilemap.TILED_JSON);
+	  game.load.image('pathSpriteSheet', 'assets/paths/pathSpriteSheet.png');
 	}
 
 	function create() {
 	  game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	  game.currentScore = 0;
+
+	  // test loading tile map
+	  var map = (0, _levelLoaderJs.loadTiledMap)(game, 'iphone-map');
+	  window.map = map;
 
 	  window.level = level = (0, _levelLoaderJs.loadLevel)(levelFile);
 	  // load level!
@@ -617,6 +626,7 @@
 	  value: true
 	});
 	exports.loadLevel = loadLevel;
+	exports.loadTiledMap = loadTiledMap;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -684,6 +694,27 @@
 	  });
 
 	  return group;
+	}
+
+	function loadTiledMap(game, mapKey) {
+	  var map = game.add.tilemap(mapKey);
+	  var layer = undefined,
+	      waypointLayer = undefined,
+	      objectLayer = undefined;
+
+	  // WARNING: Hardcoded values!
+	  map.addTilesetImage('paths', 'pathSpriteSheet');
+	  layer = map.createLayer('pathLayer');
+	  objectLayer = map.objects;
+
+	  //TODO:
+	  // create the mobGroup, using waypoints from the objectLayer.
+
+	  // Need mob list
+	  // Spawn mobs
+	  // Convert waypoints/paths to mobGroup (Mob Sprites tween paths)
+
+	  return map;
 	}
 
 /***/ },

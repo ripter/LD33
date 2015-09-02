@@ -56,3 +56,23 @@ function spawnBalloonGroup(balloonList) {
 
   return group;
 }
+
+
+export function loadTiledMap(game, mapKey) {
+  const map = game.add.tilemap(mapKey);
+  let layer, waypointLayer, objectLayer;
+  
+  // WARNING: Hardcoded values!
+  map.addTilesetImage('paths', 'pathSpriteSheet');
+  layer = map.createLayer('pathLayer');
+  objectLayer = map.objects;
+  
+  //TODO:
+  // create the mobGroup, using waypoints from the objectLayer.
+  
+  // Need mob list
+  // Spawn mobs
+  // Convert waypoints/paths to mobGroup (Mob Sprites tween paths)
+  
+  return map;
+}

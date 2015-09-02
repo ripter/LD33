@@ -6,13 +6,14 @@ import {spawnDragon} from './dragon.js';
 import * as Props from './foreground.js';
 import * as Mob from './mob.js';
 import * as Controls from './controls.js';
-import {loadLevel} from './level-loader.js';
+import {loadLevel, loadTiledMap} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
 
 window.Mob = Mob;
 
 let level;
 let levelFile;
+let map;
 
 let player;
 let bullets;
@@ -44,12 +45,21 @@ function preload() {
   
   game.load.audio('hit', 'assets/hit.wav');
   game.load.audio('score', 'assets/shoot.wav');
+  
+  // MAP
+  game.load.tilemap('iphone-map', 'assets/maps/iphone.json', null, Phaser.Tilemap.TILED_JSON);
+  game.load.image('pathSpriteSheet', 'assets/paths/pathSpriteSheet.png');
 }
 
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
   game.currentScore = 0;
+
+  // test loading tile map
+  let map = loadTiledMap(game, 'iphone-map');
+  window.map = map;
+  
 
   window.level = level = loadLevel(levelFile);
   // load level!
@@ -69,6 +79,9 @@ function create() {
   window.player = player = spawnDragon(100, 294);
 
   Mob.startTimedGame(level.mobGroup);
+  
+
+
   
   // sounds
   window.sfx = sfx = {
