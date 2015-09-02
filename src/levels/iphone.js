@@ -27,8 +27,8 @@ const level = {
     ]
   }
   , mobs: [
-    {spriteKey: 'knight', tract: 'mainPath'}
-    , {spriteKey: 'knight', tract: 'altPath'}
+    {spriteKey: 'knight', pathName: 'mainPath'}
+    , {spriteKey: 'knight', pathName: 'altPath'}
   ]
   , foreground: [
     {x: 438, y: 240, spriteKey: 'tree'}

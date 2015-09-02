@@ -170,7 +170,7 @@
 	  // player on top of everything
 	  window.player = player = (0, _dragonJs.spawnDragon)(100, 294);
 
-	  Mob.startTimedGame(level.mobs);
+	  Mob.startTimedGame(level.mobGroup);
 
 	  // sounds
 	  window.sfx = sfx = {
@@ -181,18 +181,16 @@
 
 	function update() {
 	  var _level = level;
-	  var mobs = _level.mobs;
+	  var mobGroup = _level.mobGroup;
 	  var fgGroup = _level.fgGroup;
 	  var balloons = _level.balloons;
 	  var ESC = Phaser.Keyboard.ESC;
 
 	  Controls.update(game, player);
-	  //Mob.update(mobs);
 
-	  game.physics.arcade.overlap(bullets, mobs.group, collideBulletMob);
-	  //game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
+	  game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
 	  game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
-	  game.physics.arcade.collide(mobs.group, balloons, collideBalloon);
+	  game.physics.arcade.collide(mobGroup, balloons, collideBalloon);
 
 	  // debug
 	  if (game.input.keyboard.isDown(ESC)) {
@@ -226,7 +224,7 @@
 	  }
 
 	  var _level2 = level;
-	  var mobs = _level2.mobs;
+	  var mobGroup = _level2.mobGroup;
 
 	  var points = mob.data.points || 1;
 
@@ -236,7 +234,7 @@
 	  sfx.score.play();
 
 	  // Game Over check
-	  if (Mob.mobsLeft(mobs) === 0) {
+	  if (mobGroup.countLiving() === 0) {
 	    level.state = 'win';
 	    game.state.start('end');
 	  }
@@ -452,7 +450,6 @@
 	});
 	exports.spawn = spawn;
 	exports.startTimedGame = startTimedGame;
-	exports.update = update;
 	exports.mobsLeft = mobsLeft;
 	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = Phaser.Timer.SECOND * 15;
@@ -460,24 +457,24 @@
 
 	// Spawn a new sprite in the group.
 
-	function spawn(group, data) {
+	function spawn(group, data, waypoints) {
 	  var spriteKey = data.spriteKey;
-	  var _data$tract$0 = data.tract[0];
-	  var x = _data$tract$0.x;
-	  var y = _data$tract$0.y;
 
-	  var sprite = group.create(x, y, spriteKey);
+	  //const {x, y} = data.tract[0];
+
+	  var sprite = group.create(0, 0, spriteKey);
 
 	  sprite.alive = false;
 	  sprite.visible = false;
 	  sprite.anchor = { x: .5, y: 1 };
 	  sprite.body.moves = false; // use tweens
 	  sprite.data = data;
-	  sprite.pathTween = createPathTween(sprite, sprite.data.tract);
+	  sprite.pathTween = createPathTween(sprite, waypoints);
 
 	  return sprite;
 	}
 
+	// Create tween between all points in the path.
 	function createPathTween(sprite, pathList) {
 	  var game = sprite.game;
 	  var speed = sprite.data.speed || SPEED;
@@ -499,83 +496,24 @@
 	  //  allow sprite to adjust the speed
 	  //  allow points to set/adjust the speed
 	  path.to({ x: x, y: y }, speed);
-	  // const waypoints = pathList.map(function(point) {
-	  //   return game.add.tween(sprite).to(point, speed);
-	  // });
-
-	  // // chain all the waypoints into the path.
-	  // path.from({x: 100, y: 100}, speed);
-	  // path.chain(waypoints);
-
 	  return path;
 	}
 
 	// start the timed game
 
-	function startTimedGame(mobData) {
-	  var _arguments = arguments;
-	  var list = mobData.list;
-	  var group = mobData.group;
-
-	  var length = group.length;
+	function startTimedGame(mobGroup) {
+	  var length = mobGroup.length;
 	  var index = 0;
 
-	  // 'spawn' one human at a time with a time delay
+	  // activate/reset one human at a time with a time delay
 	  game.time.events.repeat(DELAY, length, function () {
-	    console.log('repeat', _arguments);
-	    var mob = group.getAt(index);
+	    var mob = mobGroup.getAt(index);
 
 	    mob.reset(0, 0);
 	    mob.pathTween.start().loop(true);
 
-	    // mob.alive = true;
-	    // mob.visible = true;
-	    // mob.tractIndex = -1;
-
-	    // moveToNextWaypoint(mob);
-
 	    // Keep our own index
 	    index += 1;
-	  });
-	}
-
-	// Start the mob moving to the next waypoint
-	function moveToNextWaypoint(sprite) {
-	  var tract = sprite.data.tract;
-	  var speed = sprite.data.speed || SPEED;
-	  var nextIndex = sprite.tractIndex + 1;
-
-	  if (nextIndex === tract.length) {
-	    // loop back.
-	    nextIndex = 0;
-	  }
-
-	  var _tract$nextIndex = tract[nextIndex];
-	  var x = _tract$nextIndex.x;
-	  var y = _tract$nextIndex.y;
-
-	  sprite.tractIndex = nextIndex;
-	  game.physics.arcade.moveToXY(sprite, x, y, speed);
-	}
-
-	// collision checks
-	// @param {group} mobData
-
-	function update(mobData) {
-	  var group = mobData.group;
-
-	  group.forEachAlive(function (sprite) {
-	    var tract = sprite.data.tract;
-	    var index = sprite.tractIndex;
-	    var _tract$index = tract[index];
-	    var x = _tract$index.x;
-	    var y = _tract$index.y;
-
-	    var dist = game.physics.arcade.distanceToXY(sprite, x, y);
-
-	    if (dist <= HIT_RANGE) {
-	      moveToNextWaypoint(sprite);
-	    }
 	  });
 	}
 
@@ -712,8 +650,8 @@
 	function loadLevel(lvl) {
 	  // These are in order by z-index
 	  var background = game.add.image(0, 0, lvl.background);
-	  var mobList = loadMobList(lvl.mobs, lvl.waypoints);
-	  var mobGroup = spawnMobGroup(mobList);
+	  //const mobList = loadMobList(lvl.mobs, lvl.waypoints);
+	  var mobGroup = spawnMobGroup(lvl.mobs, lvl.waypoints);
 	  var fgGroup = spawnForegroundGroup(lvl.foreground);
 	  var balloonGroup = spawnBalloonGroup(lvl.balloons);
 
@@ -721,10 +659,11 @@
 	    background: background,
 	    state: 'pregame',
 	    score: 0,
-	    mobs: {
-	      list: mobList,
-	      group: mobGroup
-	    },
+	    // , mobs: {
+	    //   list: mobList
+	    //   , group : mobGroup
+	    // }
+	    mobGroup: mobGroup,
 	    fgGroup: fgGroup,
 	    balloons: balloonGroup
 	  };
@@ -742,11 +681,12 @@
 	  });
 	}
 
-	function spawnMobGroup(mobList) {
+	function spawnMobGroup(mobList, waypoints) {
 	  var group = (0, _groupsJs.physicsGroup)();
 
-	  mobList.forEach(function (data) {
-	    var sprite = Mob.spawn(group, data);
+	  mobList.forEach(function (mobData) {
+	    var pathName = mobData.pathName;
+	    var sprite = Mob.spawn(group, mobData, waypoints[pathName]);
 	  });
 
 	  return group;
@@ -952,7 +892,7 @@
 	    //, {x:305, y:229}
 	    , { x: 346, y: 264 }, { x: 582, y: 256 }, { x: 621, y: 342 }]
 	  },
-	  mobs: [{ spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'altPath' }],
+	  mobs: [{ spriteKey: 'knight', pathName: 'mainPath' }, { spriteKey: 'knight', pathName: 'altPath' }],
 	  foreground: [{ x: 438, y: 240, spriteKey: 'tree' }],
 	  balloons: [{ x: 500, y: 342, spriteKey: 'balloon' }]
 	};

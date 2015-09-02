@@ -68,7 +68,7 @@ function create() {
   // player on top of everything
   window.player = player = spawnDragon(100, 294);
 
-  Mob.startTimedGame(level.mobs);
+  Mob.startTimedGame(level.mobGroup);
   
   // sounds
   window.sfx = sfx = {
@@ -78,18 +78,15 @@ function create() {
 }
 
 function update() {
-  const {mobs, fgGroup, balloons} = level;
+  const {mobGroup, fgGroup, balloons} = level;
   const {ESC} = Phaser.Keyboard;
 
   Controls.update(game, player);
-  //Mob.update(mobs);
 
-  game.physics.arcade.overlap(bullets, mobs.group, collideBulletMob);
-  //game.physics.arcade.collide(bullets, mobs.group, collideBulletMob);
+  game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
   game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
-  game.physics.arcade.collide(mobs.group, balloons, collideBalloon); 
+  game.physics.arcade.collide(mobGroup, balloons, collideBalloon); 
   
-
   // debug
   if (game.input.keyboard.isDown(ESC)) {
     sfx.hit.play();  
@@ -118,7 +115,7 @@ function collideBulletMob(bullet, mob) {
   // Bullets only collide once
   if (!bullet.alive) { return; }
 
-  const {mobs} = level;
+  const {mobGroup} = level;
   const points = mob.data.points || 1;
 
   bullet.kill();
@@ -127,7 +124,7 @@ function collideBulletMob(bullet, mob) {
   sfx.score.play();
 
   // Game Over check
-  if (Mob.mobsLeft(mobs) === 0) {
+  if (mobGroup.countLiving() === 0) {
     level.state = 'win';
     game.state.start('end');
   }

@@ -12,8 +12,8 @@ import {physicsGroup} from './groups.js';
 export function loadLevel(lvl) {
   // These are in order by z-index
   const background = game.add.image(0, 0, lvl.background);
-  const mobList = loadMobList(lvl.mobs, lvl.waypoints);
-  const mobGroup = spawnMobGroup(mobList);
+  //const mobList = loadMobList(lvl.mobs, lvl.waypoints);
+  const mobGroup = spawnMobGroup(lvl.mobs, lvl.waypoints);
   const fgGroup = spawnForegroundGroup(lvl.foreground);
   const balloonGroup = spawnBalloonGroup(lvl.balloons);
 
@@ -21,10 +21,11 @@ export function loadLevel(lvl) {
     background: background
     , state: 'pregame'
     , score: 0
-    , mobs: {
-      list: mobList
-      , group : mobGroup
-    }
+    // , mobs: {
+    //   list: mobList
+    //   , group : mobGroup
+    // }
+    , mobGroup: mobGroup
     , fgGroup: fgGroup
     , balloons: balloonGroup
   };
@@ -42,11 +43,12 @@ function loadMobList(lvlMobs, lvlWaypoints) {
   });
 }
 
-function spawnMobGroup(mobList) {
+function spawnMobGroup(mobList, waypoints) {
   let group = physicsGroup();
 
-  mobList.forEach((data) => {
-    const sprite = Mob.spawn(group, data);
+  mobList.forEach((mobData) => {
+    const pathName = mobData.pathName;
+    const sprite = Mob.spawn(group, mobData, waypoints[pathName]);
   });
 
   return group;
