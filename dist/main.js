@@ -529,14 +529,18 @@
 	  var speed = sprite.speed || SPEED;
 	  var pathName = sprite.pathName;
 	  var pathTween = game.add.tween(sprite);
-	  var waypoints = map.objects[pathName][0].polyline;
+	  var _map$objects$pathName$0 = map.objects[pathName][0];
+	  var x = _map$objects$pathName$0.x;
+	  var y = _map$objects$pathName$0.y;
+	  var polyline = _map$objects$pathName$0.polyline;
+
 	  // We want:
 	  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]}
-	  var x = waypoints.map(function (point) {
-	    return point[0];
+	  var sx = polyline.map(function (point) {
+	    return point[0] + x;
 	  });
-	  var y = waypoints.map(function (point) {
-	    return point[1];
+	  var sy = polyline.map(function (point) {
+	    return point[1] + y;
 	  });
 
 	  // speed is per point. So points that are further away will cause
@@ -546,7 +550,7 @@
 	  //  set speed as a function of distance between points.
 	  //  allow sprite to adjust the speed
 	  //  allow points to set/adjust the speed
-	  pathTween.to({ x: x, y: y }, speed);
+	  pathTween.to({ x: sx, y: sy }, speed);
 	  sprite.pathTween = pathTween;
 	  return sprite;
 	}
@@ -750,7 +754,8 @@
 	function loadTiledMap(game, mapKey) {
 	  var map = game.add.tilemap(mapKey);
 	  var props = map.properties;
-	  var mobGroup = undefined,
+	  var layer = undefined,
+	      mobGroup = undefined,
 	      balloonGroup = undefined,
 	      propGroup = undefined;
 
@@ -759,7 +764,8 @@
 
 	  // WARNING: Hardcoded values!
 	  map.addTilesetImage('paths', 'pathSpriteSheet');
-	  map.createLayer(_constantsJs.MAP.LAYER.PATH);
+	  layer = map.createLayer(_constantsJs.MAP.LAYER.PATH);
+	  //layer.resizeWorld();
 
 	  //
 	  // Mob group!
@@ -768,8 +774,9 @@
 	  Object.keys(_constantsJs.MOB).forEach(function (key) {
 	    map.createFromObjects(_constantsJs.MAP.LAYER.MOBS, _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
 	  });
-	  // set standard props
-	  mobGroup.setAll('anchor', { x: .25, y: .85 });
+	  // set standard properties
+	  //mobGroup.setAll('anchor', {x: .25, y: .85});
+	  mobGroup.setAll('anchor', { x: .5, y: 1 });
 	  mobGroup.setAll('body.moves', false);
 	  mobGroup.forEach(Mob.createPathTween, null, false, map);
 
@@ -780,6 +787,9 @@
 	  Object.keys(_constantsJs.PROP).forEach(function (key) {
 	    map.createFromObjects(_constantsJs.MAP.LAYER.PROPS, _constantsJs.PROP[key], _constantsJs.PROP[key], null, true, false, propGroup);
 	  });
+	  // set standard properties
+	  propGroup.setAll('anchor', { x: .25, y: .85 });
+	  propGroup.setAll('body.moves', false);
 	  propGroup.forEach(Prop.addAnimation);
 
 	  //

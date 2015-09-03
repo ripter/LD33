@@ -26,11 +26,11 @@ export function createPathTween(sprite, map) {
   const speed = sprite.speed || SPEED;
   const pathName = sprite.pathName;
   const pathTween = game.add.tween(sprite);
-  const waypoints = map.objects[pathName][0].polyline;
+  const {x, y, polyline} = map.objects[pathName][0];
   // We want:
   //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]} 
-  const x = waypoints.map(function(point) { return point[0]; });
-  const y = waypoints.map(function(point) { return point[1]; });
+  const sx = polyline.map((point) => { return point[0] + x; });
+  const sy = polyline.map((point) => { return point[1] + y; });
   
   // speed is per point. So points that are further away will cause
   // the sprite to move faster. 
@@ -39,7 +39,7 @@ export function createPathTween(sprite, map) {
   //  set speed as a function of distance between points.
   //  allow sprite to adjust the speed
   //  allow points to set/adjust the speed
-  pathTween.to({x: x, y: y}, speed);
+  pathTween.to({x: sx, y: sy}, speed);
   sprite.pathTween = pathTween;
   return sprite;
 }

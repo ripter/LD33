@@ -62,14 +62,15 @@ function spawnBalloonGroup(balloonList) {
 export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
   const props = map.properties;
-  let mobGroup, balloonGroup, propGroup;
+  let layer, mobGroup, balloonGroup, propGroup;
   
   // Background image
   map.properties.background = game.add.image(0, 0, props.background); 
 
   // WARNING: Hardcoded values!
   map.addTilesetImage('paths', 'pathSpriteSheet');
-  map.createLayer(MAP.LAYER.PATH);
+  layer = map.createLayer(MAP.LAYER.PATH);
+  //layer.resizeWorld();
   
   //
   // Mob group!
@@ -78,8 +79,9 @@ export function loadTiledMap(game, mapKey) {
   Object.keys(MOB).forEach((key) => {
     map.createFromObjects(MAP.LAYER.MOBS, MOB[key], MOB[key], null, true, false, mobGroup);
   });
-  // set standard props
-  mobGroup.setAll('anchor', {x: .25, y: .85});
+  // set standard properties
+  //mobGroup.setAll('anchor', {x: .25, y: .85});
+  mobGroup.setAll('anchor', {x: .5, y: 1});
   mobGroup.setAll('body.moves', false);
   mobGroup.forEach(Mob.createPathTween, null, false, map);
   
@@ -90,6 +92,9 @@ export function loadTiledMap(game, mapKey) {
   Object.keys(PROP).forEach((key) => {
     map.createFromObjects(MAP.LAYER.PROPS, PROP[key], PROP[key], null, true, false, propGroup);
   });
+  // set standard properties
+  propGroup.setAll('anchor', {x: .25, y: .85});
+  propGroup.setAll('body.moves', false);
   propGroup.forEach(Prop.addAnimation);
   
   //
