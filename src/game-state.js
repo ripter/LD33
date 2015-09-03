@@ -3,7 +3,7 @@
 
 import {physicsGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
-import * as Props from './foreground.js';
+import * as Props from './prop.js';
 import * as Mob from './mob.js';
 import * as Controls from './controls.js';
 import {loadLevel, loadTiledMap} from './level-loader.js';
@@ -69,7 +69,7 @@ function create() {
   game.add.text(50, 560, 'SPACEBAR: [Fire]', infoFont);
   
   // it's curtians for you!
-  window.curtains = game.add.image(0, 0, 'curtains');
+  //window.curtains = game.add.image(0, 0, 'curtains');
 
   // player on top of everything
   window.player = player = spawnDragon(100, 294);
@@ -90,13 +90,13 @@ function create() {
 
 function update() {
   //const {mobGroup, fgGroup, balloons} = level;
-  const {mobGroup, balloonGroup} = map;
+  const {mobGroup, balloonGroup, propGroup} = map;
   const {ESC} = Phaser.Keyboard;
 
   Controls.update(game, player);
 
   game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
-  // game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
+  game.physics.arcade.collide(bullets, propGroup, collideBulletProp);
   game.physics.arcade.collide(mobGroup, balloonGroup, collideMobBalloon); 
   
   // debug
@@ -120,6 +120,7 @@ function collideBulletProp(bullet, prop) {
   bullet.kill();
   sfx.hit.play();
   
+  //prop.destroy();
   Props.onHit(prop);
 }
 

@@ -13,7 +13,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":11,
+         "height":0,
          "name":"mainPath",
          "objects":[
                 {
@@ -95,13 +95,13 @@
             },
          "type":"objectgroup",
          "visible":true,
-         "width":20,
+         "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":11,
+         "height":0,
          "name":"mobs",
          "objects":[
                 {
@@ -155,13 +155,13 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":20,
+         "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":11,
+         "height":0,
          "name":"balloons",
          "objects":[
                 {
@@ -183,13 +183,13 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":20,
+         "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":11,
+         "height":0,
          "name":"props",
          "objects":[
                 {
@@ -241,22 +241,6 @@
                  "y":336
                 }, 
                 {
-                 "gid":19,
-                 "height":64,
-                 "id":28,
-                 "name":"PROP_SHRUB",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"PROP_SHRUB",
-                 "visible":true,
-                 "width":64,
-                 "x":176,
-                 "y":280
-                }, 
-                {
                  "gid":17,
                  "height":64,
                  "id":31,
@@ -275,7 +259,7 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":20,
+         "width":0,
          "x":0,
          "y":0
         }],

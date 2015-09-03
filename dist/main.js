@@ -53,11 +53,11 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(13);
+	var _startStateJs = __webpack_require__(14);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(14);
+	var _endStateJs = __webpack_require__(15);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -95,23 +95,23 @@
 
 	var _dragonJs = __webpack_require__(3);
 
-	var _foregroundJs = __webpack_require__(5);
+	var _propJs = __webpack_require__(5);
 
-	var Props = _interopRequireWildcard(_foregroundJs);
+	var Props = _interopRequireWildcard(_propJs);
 
-	var _mobJs = __webpack_require__(6);
+	var _mobJs = __webpack_require__(7);
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _controlsJs = __webpack_require__(7);
+	var _controlsJs = __webpack_require__(8);
 
 	var Controls = _interopRequireWildcard(_controlsJs);
 
-	var _levelLoaderJs = __webpack_require__(9);
+	var _levelLoaderJs = __webpack_require__(10);
 
-	var _fontsJs = __webpack_require__(12);
+	var _fontsJs = __webpack_require__(13);
 
-	var _constantsJs = __webpack_require__(11);
+	var _constantsJs = __webpack_require__(6);
 
 	var map = undefined,
 	    mapName = undefined;
@@ -171,7 +171,7 @@
 	  game.add.text(50, 560, 'SPACEBAR: [Fire]', _fontsJs.infoFont);
 
 	  // it's curtians for you!
-	  window.curtains = game.add.image(0, 0, 'curtains');
+	  //window.curtains = game.add.image(0, 0, 'curtains');
 
 	  // player on top of everything
 	  window.player = player = (0, _dragonJs.spawnDragon)(100, 294);
@@ -192,12 +192,13 @@
 	  var _map = map;
 	  var mobGroup = _map.mobGroup;
 	  var balloonGroup = _map.balloonGroup;
+	  var propGroup = _map.propGroup;
 	  var ESC = Phaser.Keyboard.ESC;
 
 	  Controls.update(game, player);
 
 	  game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
-	  // game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
+	  game.physics.arcade.collide(bullets, propGroup, collideBulletProp);
 	  game.physics.arcade.collide(mobGroup, balloonGroup, collideMobBalloon);
 
 	  // debug
@@ -222,6 +223,7 @@
 	  bullet.kill();
 	  sfx.hit.play();
 
+	  //prop.destroy();
 	  Props.onHit(prop);
 	}
 
@@ -345,6 +347,453 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.addAnimation = addAnimation;
+	exports.onHit = onHit;
+
+	var _constantsJs = __webpack_require__(6);
+
+	function addAnimation(sprite) {
+	  var type = sprite.name; //Tiled calls it name instead of type
+
+	  switch (type) {
+	    case _constantsJs.PROP.SHRUB:
+	      toShrub(sprite);
+	      break;
+	    case _constantsJs.PROP.TREE:
+	      toTree(sprite);
+	      break;
+	  }
+
+	  return sprite;
+	}
+
+	;
+
+	function onHit(sprite) {
+	  var type = sprite.name; //Tiled calls it name instead of type
+
+	  switch (type) {
+	    case _constantsJs.PROP.SHRUB:
+	      hitShrub(sprite);
+	      break;
+
+	    case _constantsJs.PROP.TREE:
+	      hitTree(sprite);
+	      break;
+	  }
+
+	  return sprite;
+	}
+
+	//
+	// Add animation
+	function toShrub(sprite) {
+	  sprite.health = 2;
+	  // set the animations
+	  sprite.animations.add('norm', [0]);
+	  sprite.animations.add('burn', [1]);
+	  sprite.animations.add('dead', [2]);
+	  sprite.animations.play('norm', 24, true);
+
+	  return sprite;
+	}
+
+	function toTree(sprite) {
+	  sprite.health = 3;
+	  // set the animations
+	  sprite.animations.add('norm', [0]);
+	  sprite.animations.add('burn', [1]);
+	  sprite.animations.add('dead', [2]);
+	  sprite.animations.play('norm', 24, true);
+
+	  return sprite;
+	}
+
+	//
+	// Hit methods
+	function hitShrub(sprite) {
+	  var health = sprite.health - 1;
+
+	  if (health === 1) {
+	    sprite.animations.play('dead');
+	  }
+
+	  if (health === 0) {
+	    sprite.kill();
+	  }
+
+	  sprite.health = health;
+	  return sprite;
+	}
+
+	function hitTree(sprite) {
+	  var health = sprite.health - 1;
+
+	  if (health === 2) {
+	    sprite.animations.play('burn');
+	  }
+
+	  if (health === 1) {
+	    sprite.animations.play('dead');
+	  }
+
+	  if (health === 0) {
+	    sprite.kill();
+	  }
+
+	  sprite.health = health;
+	  return sprite;
+	}
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var MOB = {
+	  KNIGHT: 'MOB_KNIGHT',
+	  KING: 'MOB_KING',
+	  HORSE: 'MOB_HORSE'
+	};
+
+	exports.MOB = MOB;
+	var MAP = {
+	  WAYPOINTS: 'MAP_WAYPOINTS',
+	  LAYER: {
+	    PATH: 'MAP_LAYER_PATH',
+	    MOBS: 'mobs',
+	    BALLOONS: 'balloons',
+	    PROPS: 'props'
+	  }
+	};
+
+	exports.MAP = MAP;
+	var BALLOON = 'BALLOON';
+
+	exports.BALLOON = BALLOON;
+	var PROP = {
+	  SHRUB: 'PROP_SHRUB',
+	  TREE: 'PROP_TREE',
+	  WALL: 'PROP_WALL',
+	  TOWER: 'PROP_TOWER'
+	};
+	exports.PROP = PROP;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.spawn = spawn;
+	exports.createPathTween = createPathTween;
+	exports.startTimedGame = startTimedGame;
+	var DELAY = Phaser.Timer.SECOND;
+	var SPEED = Phaser.Timer.SECOND * 15;
+	var HIT_RANGE = 5;
+
+	// Spawn a new sprite in the group.
+
+	function spawn(group, data, waypoints) {
+	  var spriteKey = data.spriteKey;
+
+	  var sprite = group.create(0, 0, spriteKey);
+
+	  sprite.alive = false;
+	  sprite.visible = false;
+	  sprite.anchor = { x: .5, y: 1 };
+	  sprite.body.moves = false; // use tweens
+	  sprite.data = data;
+	  //sprite.pathTween = createPathTween(sprite, waypoints);
+
+	  return sprite;
+	}
+
+	// Create tween between all points in the path.
+
+	function createPathTween(sprite, map) {
+	  var game = sprite.game;
+	  var speed = sprite.speed || SPEED;
+	  var pathName = sprite.pathName;
+	  var pathTween = game.add.tween(sprite);
+	  var waypoints = map.objects[pathName][0].polyline;
+	  // We want:
+	  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]}
+	  var x = waypoints.map(function (point) {
+	    return point[0];
+	  });
+	  var y = waypoints.map(function (point) {
+	    return point[1];
+	  });
+
+	  // speed is per point. So points that are further away will cause
+	  // the sprite to move faster.
+	  // On the plus, we can control speed via points.
+	  // Options:
+	  //  set speed as a function of distance between points.
+	  //  allow sprite to adjust the speed
+	  //  allow points to set/adjust the speed
+	  pathTween.to({ x: x, y: y }, speed);
+	  sprite.pathTween = pathTween;
+	  return sprite;
+	}
+
+	// start the timed game
+
+	function startTimedGame(mobGroup) {
+	  var length = mobGroup.length;
+	  var index = 0;
+
+	  // activate/reset one human at a time with a time delay
+	  game.time.events.repeat(DELAY, length, function () {
+	    var mob = mobGroup.getAt(index);
+
+	    mob.reset(0, 0);
+	    mob.pathTween.start().loop(true);
+
+	    // Keep our own index
+	    index += 1;
+	  });
+	}
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.update = update;
+
+	var _fireJs = __webpack_require__(4);
+
+	var _utilJs = __webpack_require__(9);
+
+	var MOVE_DELAY = 300;
+	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
+
+	function update(game, sprite) {
+	  var pointer = game.input.activePointer;
+	  var playerTween = undefined;
+
+	  if (pointer.isDown) {
+	    // We need to limit the speed since this function is called on update
+	    atMoveSpeed(game.time.events, function () {
+	      playerTween = game.add.tween(sprite);
+
+	      // Fire when the tween completes
+	      playerTween.onComplete.add(function () {
+	        var x = sprite.x;
+	        var y = sprite.y;
+
+	        (0, _fireJs.spawnFire)(x, y);
+	      });
+
+	      // move to the pointer
+	      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
+	    });
+	  }
+	}
+
+	// Returns an object to use with tween.to
+	function toPointer(sprite, pointer) {
+	  var width = sprite.width;
+	  var x = pointer.x;
+
+	  // Adjust for sprite size
+	  x -= width / 2;
+
+	  return {
+	    x: x
+	  };
+	}
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	// Calls function only after delay time has passed.
+	// poor man's debounce, using phaser's event timer
+	// Returns a function that can only be called after the deplay.
+	// If func can not be called, returns false.
+	// If func can be called, returns result of func
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.debounce = debounce;
+
+	function debounce(delay) {
+	  var isReady = true;
+
+	  return function (eventTimer, func) {
+	    // ignore calls until ready
+	    if (!isReady) {
+	      return false;
+	    }
+	    // We are going to call func, so we are not ready.
+	    isReady = false;
+
+	    // Start the delay
+	    eventTimer.add(delay, function () {
+	      isReady = true;
+	    });
+
+	    // call the function
+	    return func();
+	  };
+	}
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser, game, bullets */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.loadLevel = loadLevel;
+	exports.loadTiledMap = loadTiledMap;
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	var _mobJs = __webpack_require__(7);
+
+	var Mob = _interopRequireWildcard(_mobJs);
+
+	var _foregroundJs = __webpack_require__(11);
+
+	var Foreground = _interopRequireWildcard(_foregroundJs);
+
+	var _balloonJs = __webpack_require__(12);
+
+	var Balloon = _interopRequireWildcard(_balloonJs);
+
+	var _constantsJs = __webpack_require__(6);
+
+	// Groups with physics.
+
+	var _groupsJs = __webpack_require__(2);
+
+	// Load the level from a lvl object.
+
+	function loadLevel(lvl) {
+	  // These are in order by z-index
+	  var background = game.add.image(0, 0, lvl.background);
+	  var mobGroup = spawnMobGroup(lvl.mobs, lvl.waypoints);
+	  var fgGroup = spawnForegroundGroup(lvl.foreground);
+	  var balloonGroup = spawnBalloonGroup(lvl.balloons);
+
+	  return {
+	    background: background,
+	    score: 0,
+	    mobGroup: mobGroup,
+	    fgGroup: fgGroup,
+	    balloons: balloonGroup
+	  };
+	}
+
+	function spawnMobGroup(mobList, waypoints) {
+	  var group = (0, _groupsJs.physicsGroup)();
+
+	  mobList.forEach(function (mobData) {
+	    var pathName = mobData.pathName;
+	    var sprite = Mob.spawn(group, mobData, waypoints[pathName]);
+	  });
+
+	  return group;
+	}
+
+	function spawnForegroundGroup(foregroundList) {
+	  var group = (0, _groupsJs.physicsGroup)();
+
+	  foregroundList.forEach(function (data) {
+	    var sprite = Foreground.spawn(group, data);
+	  });
+
+	  return group;
+	}
+
+	function spawnBalloonGroup(balloonList) {
+	  var group = (0, _groupsJs.physicsGroup)();
+
+	  balloonList.forEach(function (data) {
+	    var sprite = Balloon.spawn(group, data);
+	  });
+
+	  return group;
+	}
+
+	function loadTiledMap(game, mapKey) {
+	  var map = game.add.tilemap(mapKey);
+	  var props = map.properties;
+	  var mobGroup = undefined,
+	      balloonGroup = undefined,
+	      propGroup = undefined;
+
+	  // Background image
+	  map.properties.background = game.add.image(0, 0, props.background);
+
+	  // WARNING: Hardcoded values!
+	  map.addTilesetImage('paths', 'pathSpriteSheet');
+	  map.createLayer(_constantsJs.MAP.LAYER.PATH);
+
+	  //
+	  // Mob group!
+	  mobGroup = (0, _groupsJs.physicsGroup)();
+	  // Get the mobs from the map and create them.
+	  Object.keys(_constantsJs.MOB).forEach(function (key) {
+	    map.createFromObjects(_constantsJs.MAP.LAYER.MOBS, _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
+	  });
+	  // set standard props
+	  mobGroup.setAll('anchor', { x: .25, y: .85 });
+	  mobGroup.setAll('body.moves', false);
+	  mobGroup.forEach(Mob.createPathTween, null, false, map);
+
+	  //
+	  // Props group
+	  propGroup = (0, _groupsJs.physicsGroup)();
+	  // Get all the prop types from the PROP and create each type.
+	  Object.keys(_constantsJs.PROP).forEach(function (key) {
+	    map.createFromObjects(_constantsJs.MAP.LAYER.PROPS, _constantsJs.PROP[key], _constantsJs.PROP[key], null, true, false, propGroup);
+	  });
+
+	  //
+	  // Balloon!
+	  balloonGroup = (0, _groupsJs.physicsGroup)();
+	  map.createFromObjects(_constantsJs.MAP.LAYER.BALLOONS, _constantsJs.BALLOON, _constantsJs.BALLOON, null, true, false, balloonGroup);
+
+	  return {
+	    map: map,
+	    mobGroup: mobGroup,
+	    balloonGroup: balloonGroup,
+	    propGroup: propGroup
+	  };
+	}
+
+/***/ },
+/* 11 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -452,308 +901,7 @@
 	}
 
 /***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	/*global Phaser, game */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.spawn = spawn;
-	exports.createPathTween = createPathTween;
-	exports.startTimedGame = startTimedGame;
-	var DELAY = Phaser.Timer.SECOND;
-	var SPEED = Phaser.Timer.SECOND * 15;
-	var HIT_RANGE = 5;
-
-	// Spawn a new sprite in the group.
-
-	function spawn(group, data, waypoints) {
-	  var spriteKey = data.spriteKey;
-
-	  var sprite = group.create(0, 0, spriteKey);
-
-	  sprite.alive = false;
-	  sprite.visible = false;
-	  sprite.anchor = { x: .5, y: 1 };
-	  sprite.body.moves = false; // use tweens
-	  sprite.data = data;
-	  //sprite.pathTween = createPathTween(sprite, waypoints);
-
-	  return sprite;
-	}
-
-	// Create tween between all points in the path.
-
-	function createPathTween(sprite, map) {
-	  var game = sprite.game;
-	  var speed = sprite.speed || SPEED;
-	  var pathName = sprite.pathName;
-	  var pathTween = game.add.tween(sprite);
-	  var waypoints = map.objects[pathName][0].polyline;
-	  // We want:
-	  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]}
-	  var x = waypoints.map(function (point) {
-	    return point[0];
-	  });
-	  var y = waypoints.map(function (point) {
-	    return point[1];
-	  });
-
-	  // speed is per point. So points that are further away will cause
-	  // the sprite to move faster.
-	  // On the plus, we can control speed via points.
-	  // Options:
-	  //  set speed as a function of distance between points.
-	  //  allow sprite to adjust the speed
-	  //  allow points to set/adjust the speed
-	  pathTween.to({ x: x, y: y }, speed);
-	  sprite.pathTween = pathTween;
-	  return sprite;
-	}
-
-	// start the timed game
-
-	function startTimedGame(mobGroup) {
-	  var length = mobGroup.length;
-	  var index = 0;
-
-	  // activate/reset one human at a time with a time delay
-	  game.time.events.repeat(DELAY, length, function () {
-	    var mob = mobGroup.getAt(index);
-
-	    mob.reset(0, 0);
-	    mob.pathTween.start().loop(true);
-
-	    // Keep our own index
-	    index += 1;
-	  });
-	}
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.update = update;
-
-	var _fireJs = __webpack_require__(4);
-
-	var _utilJs = __webpack_require__(8);
-
-	var MOVE_DELAY = 300;
-	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
-
-	function update(game, sprite) {
-	  var pointer = game.input.activePointer;
-	  var playerTween = undefined;
-
-	  if (pointer.isDown) {
-	    // We need to limit the speed since this function is called on update
-	    atMoveSpeed(game.time.events, function () {
-	      playerTween = game.add.tween(sprite);
-
-	      // Fire when the tween completes
-	      playerTween.onComplete.add(function () {
-	        var x = sprite.x;
-	        var y = sprite.y;
-
-	        (0, _fireJs.spawnFire)(x, y);
-	      });
-
-	      // move to the pointer
-	      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
-	    });
-	  }
-	}
-
-	// Returns an object to use with tween.to
-	function toPointer(sprite, pointer) {
-	  var width = sprite.width;
-	  var x = pointer.x;
-
-	  // Adjust for sprite size
-	  x -= width / 2;
-
-	  return {
-	    x: x
-	  };
-	}
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	// Calls function only after delay time has passed.
-	// poor man's debounce, using phaser's event timer
-	// Returns a function that can only be called after the deplay.
-	// If func can not be called, returns false.
-	// If func can be called, returns result of func
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.debounce = debounce;
-
-	function debounce(delay) {
-	  var isReady = true;
-
-	  return function (eventTimer, func) {
-	    // ignore calls until ready
-	    if (!isReady) {
-	      return false;
-	    }
-	    // We are going to call func, so we are not ready.
-	    isReady = false;
-
-	    // Start the delay
-	    eventTimer.add(delay, function () {
-	      isReady = true;
-	    });
-
-	    // call the function
-	    return func();
-	  };
-	}
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser, game, bullets */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.loadLevel = loadLevel;
-	exports.loadTiledMap = loadTiledMap;
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	var _mobJs = __webpack_require__(6);
-
-	var Mob = _interopRequireWildcard(_mobJs);
-
-	var _foregroundJs = __webpack_require__(5);
-
-	var Foreground = _interopRequireWildcard(_foregroundJs);
-
-	var _balloonJs = __webpack_require__(10);
-
-	var Balloon = _interopRequireWildcard(_balloonJs);
-
-	var _constantsJs = __webpack_require__(11);
-
-	// Groups with physics.
-
-	var _groupsJs = __webpack_require__(2);
-
-	// Load the level from a lvl object.
-
-	function loadLevel(lvl) {
-	  // These are in order by z-index
-	  var background = game.add.image(0, 0, lvl.background);
-	  var mobGroup = spawnMobGroup(lvl.mobs, lvl.waypoints);
-	  var fgGroup = spawnForegroundGroup(lvl.foreground);
-	  var balloonGroup = spawnBalloonGroup(lvl.balloons);
-
-	  return {
-	    background: background,
-	    score: 0,
-	    mobGroup: mobGroup,
-	    fgGroup: fgGroup,
-	    balloons: balloonGroup
-	  };
-	}
-
-	function spawnMobGroup(mobList, waypoints) {
-	  var group = (0, _groupsJs.physicsGroup)();
-
-	  mobList.forEach(function (mobData) {
-	    var pathName = mobData.pathName;
-	    var sprite = Mob.spawn(group, mobData, waypoints[pathName]);
-	  });
-
-	  return group;
-	}
-
-	function spawnForegroundGroup(foregroundList) {
-	  var group = (0, _groupsJs.physicsGroup)();
-
-	  foregroundList.forEach(function (data) {
-	    var sprite = Foreground.spawn(group, data);
-	  });
-
-	  return group;
-	}
-
-	function spawnBalloonGroup(balloonList) {
-	  var group = (0, _groupsJs.physicsGroup)();
-
-	  balloonList.forEach(function (data) {
-	    var sprite = Balloon.spawn(group, data);
-	  });
-
-	  return group;
-	}
-
-	function loadTiledMap(game, mapKey) {
-	  var map = game.add.tilemap(mapKey);
-	  var props = map.properties;
-	  var mobGroup = undefined,
-	      balloonGroup = undefined,
-	      propGroup = undefined;
-
-	  // Background image
-	  map.properties.background = game.add.image(0, 0, props.background);
-
-	  // WARNING: Hardcoded values!
-	  map.addTilesetImage('paths', 'pathSpriteSheet');
-	  map.createLayer(_constantsJs.MAP.LAYER.PATH);
-
-	  //
-	  // Mob group!
-	  mobGroup = (0, _groupsJs.physicsGroup)();
-	  // Get the mobs from the map and create them.
-	  Object.keys(_constantsJs.MOB).forEach(function (key) {
-	    map.createFromObjects(_constantsJs.MAP.LAYER.MOBS, _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
-	  });
-	  // set standard props
-	  mobGroup.setAll('anchor', { x: .25, y: .85 });
-	  mobGroup.setAll('body.moves', false);
-	  mobGroup.forEach(Mob.createPathTween, null, false, map);
-
-	  //
-	  // Props group
-	  propGroup = (0, _groupsJs.physicsGroup)();
-	  // Get all the prop types from the PROP and create each type.
-	  Object.keys(_constantsJs.PROP).forEach(function (key) {
-	    map.createFromObjects(_constantsJs.MAP.LAYER.PROPS, _constantsJs.PROP[key], _constantsJs.PROP[key], null, true, false, propGroup);
-	  });
-
-	  //
-	  // Balloon!
-	  balloonGroup = (0, _groupsJs.physicsGroup)();
-	  map.createFromObjects(_constantsJs.MAP.LAYER.BALLOONS, _constantsJs.BALLOON, _constantsJs.BALLOON, null, true, false, balloonGroup);
-
-	  return {
-	    map: map,
-	    mobGroup: mobGroup,
-	    balloonGroup: balloonGroup
-	  };
-	}
-
-/***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -779,45 +927,7 @@
 	}
 
 /***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	var MOB = {
-	  KNIGHT: 'MOB_KNIGHT',
-	  KING: 'MOB_KING',
-	  HORSE: 'MOB_HORSE'
-	};
-
-	exports.MOB = MOB;
-	var MAP = {
-	  WAYPOINTS: 'MAP_WAYPOINTS',
-	  LAYER: {
-	    PATH: 'MAP_LAYER_PATH',
-	    MOBS: 'mobs',
-	    BALLOONS: 'balloons',
-	    PROPS: 'props'
-	  }
-	};
-
-	exports.MAP = MAP;
-	var BALLOON = 'BALLOON';
-
-	exports.BALLOON = BALLOON;
-	var PROP = {
-	  SHRUB: 'PROP_SHRUB',
-	  TREE: 'PROP_TREE',
-	  WALL: 'PROP_WALL',
-	  TOWER: 'PROP_TOWER'
-	};
-	exports.PROP = PROP;
-
-/***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -845,7 +955,7 @@
 	exports.sceneFont = sceneFont;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -855,7 +965,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(12);
+	var _fontsJs = __webpack_require__(13);
 
 	//
 	// Lifecycle
@@ -896,7 +1006,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -908,11 +1018,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fontsJs = __webpack_require__(12);
+	var _fontsJs = __webpack_require__(13);
 
 	var _gameStateJs = __webpack_require__(1);
 
-	var _levelsIphoneJs = __webpack_require__(15);
+	var _levelsIphoneJs = __webpack_require__(16);
 
 	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
@@ -984,7 +1094,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';

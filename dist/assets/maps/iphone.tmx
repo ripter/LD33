@@ -111,7 +111,6 @@
   <object id="25" name="PROP_WALL" type="PROP_WALL" gid="18" x="-8" y="136" width="64" height="64"/>
   <object id="26" name="PROP_WALL" type="PROP_WALL" gid="18" x="560" y="216" width="64" height="64"/>
   <object id="27" name="PROP_TOWER" type="PROP_TOWER" gid="14" x="560" y="336" width="64" height="64"/>
-  <object id="28" name="PROP_SHRUB" type="PROP_SHRUB" gid="19" x="176" y="280" width="64" height="64"/>
   <object id="31" name="PROP_TREE" type="PROP_TREE" gid="17" x="360" y="216" width="64" height="64"/>
  </objectgroup>
 </map>

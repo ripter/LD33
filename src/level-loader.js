@@ -99,5 +99,6 @@ export function loadTiledMap(game, mapKey) {
     map
     , mobGroup
     , balloonGroup
+    , propGroup
   };
 }
