@@ -57,7 +57,7 @@
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(16);
+	var _endStateJs = __webpack_require__(14);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -113,19 +113,14 @@
 
 	var _constantsJs = __webpack_require__(11);
 
-	window.Mob = Mob;
-
-	var level = undefined;
-	var levelFile = undefined;
-	var map = undefined;
-
+	var map = undefined,
+	    mapName = undefined;
 	var player = undefined;
 	var bullets = undefined;
-	var balloons = undefined;
 	var sfx = undefined;
 
-	function init(lvlFile) {
-	  window.levelFile = levelFile = lvlFile;
+	function init(mapName) {
+	  mapName = mapName;
 	}
 
 	function preload() {
@@ -133,14 +128,14 @@
 	  game.load.image(_constantsJs.MOB.KING, 'assets/king.png', 64, 64);
 	  game.load.image(_constantsJs.MOB.KNIGHT, 'assets/knight.png', 64, 64);
 	  game.load.image(_constantsJs.MOB.HORSE, 'assets/knightOnHorse.png', 64, 64);
-	  game.load.image('wall', 'assets/wall.png', 64, 64);
-	  game.load.image('tower', 'assets/tower.png', 64, 64);
+	  game.load.image(_constantsJs.PROP.WALL, 'assets/wall.png', 64, 64);
+	  game.load.image(_constantsJs.PROP.TOWER, 'assets/tower.png', 64, 64);
 
-	  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
-	  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
+	  game.load.spritesheet(_constantsJs.PROP.TREE, 'assets/tree_spritesheet.png', 64, 64);
+	  game.load.spritesheet(_constantsJs.PROP.SHRUB, 'assets/shrub_spritesheet.png', 64, 64);
 	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
-	  game.load.image('balloon', 'assets/balloon.png', 64, 64);
+	  game.load.image(_constantsJs.BALLOON, 'assets/balloon.png', 64, 64);
 
 	  // backgrounds
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
@@ -161,8 +156,8 @@
 	  game.currentScore = 0;
 
 	  // test loading tile map
-	  var map = (0, _levelLoaderJs.loadTiledMap)(game, 'iphone-map');
-	  window.map = map;
+	  map = (0, _levelLoaderJs.loadTiledMap)(game, 'iphone-map');
+	  window.map = game.currentMap = map;
 
 	  //window.level = level = loadLevel(levelFile);
 	  // load level!
@@ -176,7 +171,7 @@
 	  game.add.text(50, 560, 'SPACEBAR: [Fire]', _fontsJs.infoFont);
 
 	  // it's curtians for you!
-	  //window.curtains = game.add.image(0, 0, 'curtains');
+	  window.curtains = game.add.image(0, 0, 'curtains');
 
 	  // player on top of everything
 	  window.player = player = (0, _dragonJs.spawnDragon)(100, 294);
@@ -193,17 +188,17 @@
 	}
 
 	function update() {
-	  return;
-	  var mobGroup = level.mobGroup;
-	  var fgGroup = level.fgGroup;
-	  var balloons = level.balloons;
+	  //const {mobGroup, fgGroup, balloons} = level;
+	  var _map = map;
+	  var mobGroup = _map.mobGroup;
+	  var balloonGroup = _map.balloonGroup;
 	  var ESC = Phaser.Keyboard.ESC;
 
 	  Controls.update(game, player);
 
 	  game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
-	  game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
-	  game.physics.arcade.collide(mobGroup, balloons, collideBalloon);
+	  // game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
+	  game.physics.arcade.collide(mobGroup, balloonGroup, collideMobBalloon);
 
 	  // debug
 	  if (game.input.keyboard.isDown(ESC)) {
@@ -231,14 +226,16 @@
 	}
 
 	function collideBulletMob(bullet, mob) {
-	  // Bullets only collide once
+	  // Phaser will call this each click they collide.
+	  // We only care about the first time, when the bullet it alive.
 	  if (!bullet.alive) {
 	    return;
 	  }
 
-	  var mobGroup = level.mobGroup;
+	  var _map2 = map;
+	  var mobGroup = _map2.mobGroup;
 
-	  var points = mob.data.points || 1;
+	  var points = mob.points || 1;
 
 	  bullet.kill();
 	  mob.kill();
@@ -247,15 +244,19 @@
 
 	  // Game Over check
 	  if (mobGroup.countLiving() === 0) {
-	    level.state = 'win';
-	    game.state.start('end');
+	    game.state.start('end', true, false, 'win');
 	  }
 	}
 
-	function collideBalloon(mob, balloon) {
+	function collideMobBalloon(mob, balloon) {
+	  var _map3 = map;
+	  var balloonGroup = _map3.balloonGroup;
+
 	  balloon.kill();
-	  level.state = 'lost';
-	  game.state.start('end');
+
+	  if (balloonGroup.countLiving() === 0) {
+	    game.state.start('end');
+	  }
 	}
 
 	exports['default'] = {
@@ -667,7 +668,6 @@
 
 	  return {
 	    background: background,
-	    state: 'pregame',
 	    score: 0,
 	    mobGroup: mobGroup,
 	    fgGroup: fgGroup,
@@ -709,31 +709,46 @@
 	function loadTiledMap(game, mapKey) {
 	  var map = game.add.tilemap(mapKey);
 	  var props = map.properties;
-	  var layer = undefined,
-	      objectLayer = undefined,
-	      mobGroup = undefined;
+	  var mobGroup = undefined,
+	      balloonGroup = undefined,
+	      propGroup = undefined;
 
 	  // Background image
 	  map.properties.background = game.add.image(0, 0, props.background);
 
 	  // WARNING: Hardcoded values!
 	  map.addTilesetImage('paths', 'pathSpriteSheet');
-	  layer = map.createLayer(_constantsJs.MAP.LAYER.PATH);
-	  objectLayer = map.objects;
+	  map.createLayer(_constantsJs.MAP.LAYER.PATH);
 
+	  //
 	  // Mob group!
 	  mobGroup = (0, _groupsJs.physicsGroup)();
 	  // Get the mobs from the map and create them.
 	  Object.keys(_constantsJs.MOB).forEach(function (key) {
-	    map.createFromObjects('mobs', _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
+	    map.createFromObjects(_constantsJs.MAP.LAYER.MOBS, _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
 	  });
 	  // set standard props
 	  mobGroup.setAll('anchor', { x: .25, y: .85 });
+	  mobGroup.setAll('body.moves', false);
 	  mobGroup.forEach(Mob.createPathTween, null, false, map);
+
+	  //
+	  // Props group
+	  propGroup = (0, _groupsJs.physicsGroup)();
+	  // Get all the prop types from the PROP and create each type.
+	  Object.keys(_constantsJs.PROP).forEach(function (key) {
+	    map.createFromObjects(_constantsJs.MAP.LAYER.PROPS, _constantsJs.PROP[key], _constantsJs.PROP[key], null, true, false, propGroup);
+	  });
+
+	  //
+	  // Balloon!
+	  balloonGroup = (0, _groupsJs.physicsGroup)();
+	  map.createFromObjects(_constantsJs.MAP.LAYER.BALLOONS, _constantsJs.BALLOON, _constantsJs.BALLOON, null, true, false, balloonGroup);
 
 	  return {
 	    map: map,
-	    mobGroup: mobGroup
+	    mobGroup: mobGroup,
+	    balloonGroup: balloonGroup
 	  };
 	}
 
@@ -782,10 +797,24 @@
 	var MAP = {
 	  WAYPOINTS: 'MAP_WAYPOINTS',
 	  LAYER: {
-	    PATH: 'MAP_LAYER_PATH'
+	    PATH: 'MAP_LAYER_PATH',
+	    MOBS: 'mobs',
+	    BALLOONS: 'balloons',
+	    PROPS: 'props'
 	  }
 	};
+
 	exports.MAP = MAP;
+	var BALLOON = 'BALLOON';
+
+	exports.BALLOON = BALLOON;
+	var PROP = {
+	  SHRUB: 'PROP_SHRUB',
+	  TREE: 'PROP_TREE',
+	  WALL: 'PROP_WALL',
+	  TOWER: 'PROP_TOWER'
+	};
+	exports.PROP = PROP;
 
 /***/ },
 /* 12 */
@@ -826,17 +855,7 @@
 	  value: true
 	});
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	var _fontsJs = __webpack_require__(12);
-
-	var _levelsLevel1Js = __webpack_require__(14);
-
-	var _levelsLevel1Js2 = _interopRequireDefault(_levelsLevel1Js);
-
-	var _levelsIphoneJs = __webpack_require__(15);
-
-	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
 	//
 	// Lifecycle
@@ -864,14 +883,9 @@
 	function update() {
 	  var SPACEBAR = Phaser.Keyboard.SPACEBAR;
 
-	  // Press Space to Start
-	  if (game.input.keyboard.isDown(SPACEBAR)) {
-	    game.state.start('game', true, false, _levelsLevel1Js2['default']);
-	  }
-
 	  // Tap to Start
 	  if (game.input.activePointer.isDown) {
-	    game.state.start('game', true, false, _levelsIphoneJs2['default']);
+	    game.state.start('game', true, false, 'iphone-map');
 	  }
 	}
 	exports['default'] = {
@@ -883,42 +897,90 @@
 
 /***/ },
 /* 14 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	/*global Phaser */
+	/*global Phaser, game */
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	var Level = {
-	  waypoints: {
-	    mainPath: [{ x: 120, y: 0 }, { x: 120, y: 138 }, { x: 904, y: 138 }, { x: 904, y: 229 }, { x: 120, y: 229 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }],
-	    guardPath: [{ x: 1024, y: 290 }, { x: 200, y: 290 }],
-	    horsePath: [{ x: 1024, y: 290 }, { x: 200, y: 290 }, { x: 120, y: 290 }, { x: 120, y: 354 }, { x: 904, y: 354 }, { x: 904, y: 470 }, { x: 120, y: 470 }, { x: 120, y: 523 }]
-	  },
 
-	  background: 'background',
-	  mobs: [
-	  // the order listed is the order they appear
-	  { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'king', tract: 'mainPath', speed: 90, points: 3 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 200, points: 2 }, { spriteKey: 'horse', tract: 'mainPath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'horse', tract: 'mainPath', speed: 260, points: 2 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'guardPath' }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'knight', tract: 'guardPath', speed: 150 }, { spriteKey: 'horse', tract: 'horsePath', speed: 250 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'knight', tract: 'horsePath' }, { spriteKey: 'horse', tract: 'horsePath', speed: 250, points: 2 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath' }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'knight', tract: 'mainPath', speed: 150 }, { spriteKey: 'horse', tract: 'mainPath', speed: 250, points: 2 }, { spriteKey: 'king', tract: 'mainPath', speed: 120, points: 3 }],
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	  foreground: [
-	  // mainPath y: 138
-	  { x: 120, y: 160, spriteKey: 'wall' }, { x: 304, y: 160, spriteKey: 'wall' }, { x: 370, y: 160, spriteKey: 'wall' }
+	var _fontsJs = __webpack_require__(12);
 
-	  // mainPath y: 229
-	  , { x: 438, y: 240, spriteKey: 'tree' }, { x: 904, y: 240, spriteKey: 'wall' }
+	var _gameStateJs = __webpack_require__(1);
 
-	  // mainPath y: 354
-	  , { x: 438, y: 376, spriteKey: 'tree' }, { x: 538, y: 376, spriteKey: 'tree' }, { x: 120, y: 376, spriteKey: 'wall' }, { x: 155, y: 300, spriteKey: 'tower' }
+	var _levelsIphoneJs = __webpack_require__(15);
 
-	  // mainPath y: 470
-	  , { x: 904, y: 490, spriteKey: 'tower' }, { x: 804, y: 490, spriteKey: 'shrub' }, { x: 654, y: 490, spriteKey: 'shrub' }, { x: 300, y: 490, spriteKey: 'shrub' }],
-	  balloons: [{ x: 120, y: 520, spriteKey: 'balloon' }]
+	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
+
+	var didWin = false;
+
+	//
+	// Lifecycle
+	//
+	function init(gameStatus) {
+	  if (gameStatus === 'win') {
+	    didWin = true;
+	  }
+	}
+
+	function preload() {
+	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
+	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
+	}
+
+	function create() {
+	  addGameOver();
+	  //game.add.text(100, 100, 'You are Monster END!', headerFont);
+	  //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
+	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
+
+	  game.add.text(100, 150, 'Refresh page to play again', _fontsJs.headerFont);
+	}
+
+	function update() {
+	  var ENTER = Phaser.Keyboard.ENTER;
+
+	  if (game.input.keyboard.isDown(ENTER)) {
+	    game.state.start('game', true, false, _levelsIphoneJs2['default']);
+	  }
+	}
+
+	function addGameOver() {
+	  var score = game.currentScore;
+
+	  if (didWin) {
+	    game.add.text(100, 100, 'You WIN!', _fontsJs.headerFont);
+	    game.add.image(400, 100, 'stuffedPrincess');
+	  } else {
+	    game.add.text(100, 100, 'You LOST!', _fontsJs.headerFont);
+	    game.add.image(400, 100, 'carnie');
+	  }
+	}
+
+	// function scoreList() {
+	// 	if(game.storedScore === null){
+
+	// 		game.storedScore = []
+	// 	}
+
+	// 	game.storedScore.unshift(game.currentScore);
+
+	//   if (game.storedScore.legth > 5) {
+	//     game.storedScore.pop();
+	//   }
+	//   localStorage.setItem('scores', game.storedScore);
+	// }
+
+	exports['default'] = {
+	  preload: preload,
+	  create: create,
+	  update: update,
+	  init: init
 	};
-
-	exports['default'] = Level;
 	module.exports = exports['default'];
 
 /***/ },
@@ -946,86 +1008,6 @@
 	  balloons: [{ x: 500, y: 342, spriteKey: 'balloon' }]
 	};
 	exports['default'] = level;
-	module.exports = exports['default'];
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser, game */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _fontsJs = __webpack_require__(12);
-
-	var _gameStateJs = __webpack_require__(1);
-
-	var _levelsIphoneJs = __webpack_require__(15);
-
-	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
-
-	//
-	// Lifecycle
-	//
-	function preload() {
-	  game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
-	  game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
-	}
-
-	function create() {
-	  addGameOver();
-	  //game.add.text(100, 100, 'You are Monster END!', headerFont);
-	  //game.add.text(100, 150, 'Press [ENTER] NOW!!!', headerFont);
-	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
-
-	  game.add.text(100, 150, 'Refresh page to play again', _fontsJs.headerFont);
-	}
-
-	function update() {
-	  var ENTER = Phaser.Keyboard.ENTER;
-
-	  if (game.input.keyboard.isDown(ENTER)) {
-	    game.state.start('game', true, false, _levelsIphoneJs2['default']);
-	  }
-	}
-
-	function addGameOver() {
-	  var score = game.currentScore;
-	  var didWin = level.state === 'win';
-
-	  if (didWin) {
-	    game.add.text(100, 100, 'You WIN!', _fontsJs.headerFont);
-	    game.add.image(500, 100, 'stuffedPrincess');
-	  } else {
-	    game.add.text(100, 100, 'You LOST!', _fontsJs.headerFont);
-	    game.add.image(100, 300, 'carnie');
-	  }
-	}
-
-	// function scoreList() {
-	// 	if(game.storedScore === null){
-
-	// 		game.storedScore = []
-	// 	}
-
-	// 	game.storedScore.unshift(game.currentScore);
-
-	//   if (game.storedScore.legth > 5) {
-	//     game.storedScore.pop();
-	//   }
-	//   localStorage.setItem('scores', game.storedScore);
-	// }
-
-	exports['default'] = {
-	  preload: preload,
-	  create: create,
-	  update: update
-	};
 	module.exports = exports['default'];
 
 /***/ }

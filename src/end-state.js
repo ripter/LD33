@@ -6,10 +6,18 @@ import {updateScore} from './game-state.js';
 
 import lvl2 from './levels/iphone.js';
 
+let didWin = false;
 
 //
 // Lifecycle
 //
+function init(gameStatus) {
+  if (gameStatus === 'win') {
+    didWin = true;
+  }
+}
+
+
 function preload() {
   game.load.image('carnie', 'assets/carnieDragon.png', 210, 317);
   game.load.image('stuffedPrincess', 'assets/stuffedPrincess.png', 178, 203);
@@ -36,15 +44,14 @@ function update() {
 
 function addGameOver() {
   const score = game.currentScore;
-  const didWin = level.state === 'win';
   
   if (didWin) {
     game.add.text(100, 100, 'You WIN!', headerFont);
-    game.add.image(500, 100, 'stuffedPrincess');
+    game.add.image(400, 100, 'stuffedPrincess');
   }
   else {
     game.add.text(100, 100, 'You LOST!', headerFont);
-    game.add.image(100, 300, 'carnie');
+    game.add.image(400, 100, 'carnie');
   }
 }
 
@@ -68,4 +75,5 @@ export default {
   preload: preload
   , create: create
   , update: update 
+  , init: init
 };

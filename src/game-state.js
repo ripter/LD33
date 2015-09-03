@@ -8,21 +8,16 @@ import * as Mob from './mob.js';
 import * as Controls from './controls.js';
 import {loadLevel, loadTiledMap} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
-import {MOB} from './constants.js';
+import {MOB, BALLOON, PROP} from './constants.js';
 
-window.Mob = Mob;
 
-let level;
-let levelFile;
-let map;
-
+let map, mapName;
 let player;
 let bullets;
-let balloons;
 let sfx;
 
-function init(lvlFile) {
-  window.levelFile = levelFile = lvlFile;
+function init(mapName) {
+  mapName = mapName;
 }
 
 function preload() {
@@ -30,14 +25,14 @@ function preload() {
   game.load.image(MOB.KING, 'assets/king.png', 64, 64);
   game.load.image(MOB.KNIGHT, 'assets/knight.png', 64, 64);
   game.load.image(MOB.HORSE, 'assets/knightOnHorse.png', 64, 64);
-  game.load.image('wall', 'assets/wall.png', 64, 64);
-  game.load.image('tower', 'assets/tower.png', 64, 64);
+  game.load.image(PROP.WALL, 'assets/wall.png', 64, 64);
+  game.load.image(PROP.TOWER, 'assets/tower.png', 64, 64);
 
-  game.load.spritesheet('tree', 'assets/tree_spritesheet.png', 64, 64);
-  game.load.spritesheet('shrub', 'assets/shrub_spritesheet.png', 64, 64);
+  game.load.spritesheet(PROP.TREE, 'assets/tree_spritesheet.png', 64, 64);
+  game.load.spritesheet(PROP.SHRUB, 'assets/shrub_spritesheet.png', 64, 64);
   game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
-  game.load.image('balloon', 'assets/balloon.png', 64, 64);
+  game.load.image(BALLOON, 'assets/balloon.png', 64, 64);
   
   // backgrounds
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
@@ -58,8 +53,8 @@ function create() {
   game.currentScore = 0;
 
   // test loading tile map
-  let map = loadTiledMap(game, 'iphone-map');
-  window.map = map;
+  map = loadTiledMap(game, 'iphone-map');
+  window.map = game.currentMap = map;
   
 
   //window.level = level = loadLevel(levelFile);
@@ -74,7 +69,7 @@ function create() {
   game.add.text(50, 560, 'SPACEBAR: [Fire]', infoFont);
   
   // it's curtians for you!
-  //window.curtains = game.add.image(0, 0, 'curtains');
+  window.curtains = game.add.image(0, 0, 'curtains');
 
   // player on top of everything
   window.player = player = spawnDragon(100, 294);
@@ -94,15 +89,15 @@ function create() {
 }
 
 function update() {
-  return;
-  const {mobGroup, fgGroup, balloons} = level;
+  //const {mobGroup, fgGroup, balloons} = level;
+  const {mobGroup, balloonGroup} = map;
   const {ESC} = Phaser.Keyboard;
 
   Controls.update(game, player);
 
   game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
-  game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
-  game.physics.arcade.collide(mobGroup, balloons, collideBalloon); 
+  // game.physics.arcade.collide(bullets, fgGroup, collideBulletProp);
+  game.physics.arcade.collide(mobGroup, balloonGroup, collideMobBalloon); 
   
   // debug
   if (game.input.keyboard.isDown(ESC)) {
@@ -129,11 +124,12 @@ function collideBulletProp(bullet, prop) {
 }
 
 function collideBulletMob(bullet, mob) {
-  // Bullets only collide once
+  // Phaser will call this each click they collide.
+  // We only care about the first time, when the bullet it alive.
   if (!bullet.alive) { return; }
 
-  const {mobGroup} = level;
-  const points = mob.data.points || 1;
+  const {mobGroup} = map;
+  const points = mob.points || 1;
 
   bullet.kill();
   mob.kill();
@@ -142,15 +138,18 @@ function collideBulletMob(bullet, mob) {
 
   // Game Over check
   if (mobGroup.countLiving() === 0) {
-    level.state = 'win';
-    game.state.start('end');
+    game.state.start('end', true, false, 'win');
   }
 }
 
-function collideBalloon(mob, balloon) {
+function collideMobBalloon(mob, balloon) {
+  const {balloonGroup} = map;
+
   balloon.kill();
-  level.state = 'lost';
-  game.state.start('end');
+  
+  if (balloonGroup.countLiving() === 0) {
+    game.state.start('end');
+  }
 }
 
 

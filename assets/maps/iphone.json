@@ -42,6 +42,10 @@
                          "y":136
                         }, 
                         {
+                         "x":304,
+                         "y":136
+                        }, 
+                        {
                          "x":32,
                          "y":136
                         }, 
@@ -50,11 +54,19 @@
                          "y":200
                         }, 
                         {
+                         "x":304,
+                         "y":200
+                        }, 
+                        {
                          "x":576,
                          "y":200
                         }, 
                         {
                          "x":576,
+                         "y":264
+                        }, 
+                        {
+                         "x":304,
                          "y":264
                         }, 
                         {
@@ -146,8 +158,128 @@
          "width":20,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":11,
+         "name":"balloons",
+         "objects":[
+                {
+                 "gid":10,
+                 "height":64,
+                 "id":23,
+                 "name":"BALLOON",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"BALLOON",
+                 "visible":true,
+                 "width":64,
+                 "x":16,
+                 "y":360
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":20,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":11,
+         "name":"props",
+         "objects":[
+                {
+                 "gid":18,
+                 "height":64,
+                 "id":25,
+                 "name":"PROP_WALL",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"PROP_WALL",
+                 "visible":true,
+                 "width":64,
+                 "x":-8,
+                 "y":136
+                }, 
+                {
+                 "gid":18,
+                 "height":64,
+                 "id":26,
+                 "name":"PROP_WALL",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"PROP_WALL",
+                 "visible":true,
+                 "width":64,
+                 "x":560,
+                 "y":216
+                }, 
+                {
+                 "gid":14,
+                 "height":64,
+                 "id":27,
+                 "name":"PROP_TOWER",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"PROP_TOWER",
+                 "visible":true,
+                 "width":64,
+                 "x":560,
+                 "y":336
+                }, 
+                {
+                 "gid":19,
+                 "height":64,
+                 "id":28,
+                 "name":"PROP_SHRUB",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"PROP_SHRUB",
+                 "visible":true,
+                 "width":64,
+                 "x":176,
+                 "y":280
+                }, 
+                {
+                 "gid":17,
+                 "height":64,
+                 "id":31,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"PROP_TREE",
+                 "visible":true,
+                 "width":64,
+                 "x":360,
+                 "y":216
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":20,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":23,
+ "nextobjectid":32,
  "orientation":"orthogonal",
  "properties":
     {
@@ -216,6 +348,109 @@
              "2":
                 {
                  "image":"..\/king.png"
+                }
+            },
+         "tilewidth":64
+        }, 
+        {
+         "firstgid":10,
+         "margin":0,
+         "name":"balloons",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":64,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/balloon.png"
+                }
+            },
+         "tilewidth":64
+        }, 
+        {
+         "firstgid":11,
+         "margin":0,
+         "name":"props",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":8,
+         "tileheight":64,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/shrub_burnt1.png"
+                },
+             "1":
+                {
+                 "image":"..\/shrub_burnt2.png"
+                },
+             "2":
+                {
+                 "image":"..\/shrub.png"
+                },
+             "3":
+                {
+                 "image":"..\/tower.png"
+                },
+             "4":
+                {
+                 "image":"..\/tree_burnt1.png"
+                },
+             "5":
+                {
+                 "image":"..\/tree_burnt2.png"
+                },
+             "6":
+                {
+                 "image":"..\/tree.png"
+                },
+             "7":
+                {
+                 "image":"..\/wall.png"
+                }
+            },
+         "tilewidth":64
+        }, 
+        {
+         "firstgid":19,
+         "image":"..\/shrub_spritesheet.png",
+         "imageheight":64,
+         "imagewidth":192,
+         "margin":0,
+         "name":"shrub_spritesheet",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":3,
+         "tileheight":64,
+         "tiles":
+            {
+             "0":
+                {
+                 "animation":[
+                        {
+                         "duration":1000,
+                         "tileid":0
+                        }, 
+                        {
+                         "duration":1000,
+                         "tileid":1
+                        }, 
+                        {
+                         "duration":1000,
+                         "tileid":2
+                        }]
                 }
             },
          "tilewidth":64

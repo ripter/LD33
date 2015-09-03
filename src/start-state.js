@@ -2,8 +2,6 @@
 'use strict';
 
 import {headerFont, sceneFont} from './fonts.js';
-import lvl1 from './levels/level1.js';
-import lvl2 from './levels/iphone.js';
 
 //
 // Lifecycle
@@ -32,14 +30,9 @@ function create() {
 function update() {
   const {SPACEBAR} = Phaser.Keyboard;
   
-  // Press Space to Start
-  if (game.input.keyboard.isDown(SPACEBAR)) {
-    game.state.start('game', true, false, lvl1);
-  }
-  
   // Tap to Start
   if (game.input.activePointer.isDown) {
-    game.state.start('game', true, false, lvl2);
+    game.state.start('game', true, false, 'iphone-map');
   }
 
 }
