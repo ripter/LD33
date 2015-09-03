@@ -3,6 +3,7 @@
 
 import * as Mob from './mob.js';
 import * as Foreground from './foreground.js';
+import * as Prop from './prop.js';
 import * as Balloon from './balloon.js';
 import {MAP, MOB, BALLOON, PROP} from './constants.js';
 
@@ -89,6 +90,7 @@ export function loadTiledMap(game, mapKey) {
   Object.keys(PROP).forEach((key) => {
     map.createFromObjects(MAP.LAYER.PROPS, PROP[key], PROP[key], null, true, false, propGroup);
   });
+  propGroup.forEach(Prop.addAnimation);
   
   //
   // Balloon!

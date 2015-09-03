@@ -97,7 +97,7 @@
 
 	var _propJs = __webpack_require__(5);
 
-	var Props = _interopRequireWildcard(_propJs);
+	var Prop = _interopRequireWildcard(_propJs);
 
 	var _mobJs = __webpack_require__(7);
 
@@ -188,7 +188,6 @@
 	}
 
 	function update() {
-	  //const {mobGroup, fgGroup, balloons} = level;
 	  var _map = map;
 	  var mobGroup = _map.mobGroup;
 	  var balloonGroup = _map.balloonGroup;
@@ -198,7 +197,7 @@
 	  Controls.update(game, player);
 
 	  game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
-	  game.physics.arcade.collide(bullets, propGroup, collideBulletProp);
+	  game.physics.arcade.overlap(bullets, propGroup, collideBulletProp);
 	  game.physics.arcade.collide(mobGroup, balloonGroup, collideMobBalloon);
 
 	  // debug
@@ -223,8 +222,7 @@
 	  bullet.kill();
 	  sfx.hit.play();
 
-	  //prop.destroy();
-	  Props.onHit(prop);
+	  Prop.onHit(prop);
 	}
 
 	function collideBulletMob(bullet, mob) {
@@ -686,6 +684,10 @@
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
+	var _propJs = __webpack_require__(5);
+
+	var Prop = _interopRequireWildcard(_propJs);
+
 	var _balloonJs = __webpack_require__(12);
 
 	var Balloon = _interopRequireWildcard(_balloonJs);
@@ -778,6 +780,7 @@
 	  Object.keys(_constantsJs.PROP).forEach(function (key) {
 	    map.createFromObjects(_constantsJs.MAP.LAYER.PROPS, _constantsJs.PROP[key], _constantsJs.PROP[key], null, true, false, propGroup);
 	  });
+	  propGroup.forEach(Prop.addAnimation);
 
 	  //
 	  // Balloon!

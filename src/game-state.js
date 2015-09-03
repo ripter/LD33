@@ -3,7 +3,7 @@
 
 import {physicsGroup} from './groups.js';
 import {spawnDragon} from './dragon.js';
-import * as Props from './prop.js';
+import * as Prop from './prop.js';
 import * as Mob from './mob.js';
 import * as Controls from './controls.js';
 import {loadLevel, loadTiledMap} from './level-loader.js';
@@ -89,14 +89,13 @@ function create() {
 }
 
 function update() {
-  //const {mobGroup, fgGroup, balloons} = level;
   const {mobGroup, balloonGroup, propGroup} = map;
   const {ESC} = Phaser.Keyboard;
 
   Controls.update(game, player);
 
   game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
-  game.physics.arcade.collide(bullets, propGroup, collideBulletProp);
+  game.physics.arcade.overlap(bullets, propGroup, collideBulletProp);
   game.physics.arcade.collide(mobGroup, balloonGroup, collideMobBalloon); 
   
   // debug
@@ -120,8 +119,7 @@ function collideBulletProp(bullet, prop) {
   bullet.kill();
   sfx.hit.play();
   
-  //prop.destroy();
-  Props.onHit(prop);
+  Prop.onHit(prop);
 }
 
 function collideBulletMob(bullet, mob) {

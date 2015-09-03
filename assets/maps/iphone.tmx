@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="11" tilewidth="32" tileheight="32" nextobjectid="32">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="11" tilewidth="32" tileheight="32" nextobjectid="33">
  <properties>
   <property name="background" value="bg-iphone"/>
  </properties>
@@ -112,5 +112,6 @@
   <object id="26" name="PROP_WALL" type="PROP_WALL" gid="18" x="560" y="216" width="64" height="64"/>
   <object id="27" name="PROP_TOWER" type="PROP_TOWER" gid="14" x="560" y="336" width="64" height="64"/>
   <object id="31" name="PROP_TREE" type="PROP_TREE" gid="17" x="360" y="216" width="64" height="64"/>
+  <object id="32" name="PROP_SHRUB" gid="13" x="24" y="248" width="64" height="64"/>
  </objectgroup>
 </map>

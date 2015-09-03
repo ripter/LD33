@@ -255,6 +255,22 @@
                  "width":64,
                  "x":360,
                  "y":216
+                }, 
+                {
+                 "gid":13,
+                 "height":64,
+                 "id":32,
+                 "name":"PROP_SHRUB",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":24,
+                 "y":248
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -263,7 +279,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":32,
+ "nextobjectid":33,
  "orientation":"orthogonal",
  "properties":
     {
