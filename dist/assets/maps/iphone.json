@@ -166,7 +166,7 @@
                      "pathName":"mainPath"
                     },
                  "rotation":0,
-                 "type":"",
+                 "type":"mainPath",
                  "visible":true,
                  "width":64,
                  "x":56,
@@ -182,11 +182,11 @@
                      "pathName":"altPath"
                     },
                  "rotation":0,
-                 "type":"",
+                 "type":"altPath",
                  "visible":true,
                  "width":64,
-                 "x":344,
-                 "y":-8
+                 "x":352,
+                 "y":-32
                 }, 
                 {
                  "gid":7,
@@ -198,11 +198,139 @@
                      "pathName":"mainPath"
                     },
                  "rotation":0,
-                 "type":"",
+                 "type":"mainPath",
                  "visible":true,
                  "width":64,
                  "x":456,
                  "y":-32
+                }, 
+                {
+                 "gid":8,
+                 "height":64,
+                 "id":54,
+                 "name":"MOB_KNIGHT",
+                 "properties":
+                    {
+                     "pathName":"altPath"
+                    },
+                 "rotation":0,
+                 "type":"altPath",
+                 "visible":true,
+                 "width":64,
+                 "x":352,
+                 "y":-32
+                }, 
+                {
+                 "gid":8,
+                 "height":64,
+                 "id":55,
+                 "name":"MOB_KNIGHT",
+                 "properties":
+                    {
+                     "pathName":"altPath"
+                    },
+                 "rotation":0,
+                 "type":"altPath",
+                 "visible":true,
+                 "width":64,
+                 "x":352,
+                 "y":-32
+                }, 
+                {
+                 "gid":8,
+                 "height":64,
+                 "id":56,
+                 "name":"MOB_KNIGHT",
+                 "properties":
+                    {
+                     "pathName":"altPath"
+                    },
+                 "rotation":0,
+                 "type":"altPath",
+                 "visible":true,
+                 "width":64,
+                 "x":352,
+                 "y":-32
+                }, 
+                {
+                 "gid":7,
+                 "height":64,
+                 "id":57,
+                 "name":"MOB_HORSE",
+                 "properties":
+                    {
+                     "pathName":"altPath"
+                    },
+                 "rotation":0,
+                 "type":"altPath",
+                 "visible":true,
+                 "width":64,
+                 "x":456,
+                 "y":-32
+                }, 
+                {
+                 "gid":8,
+                 "height":64,
+                 "id":58,
+                 "name":"MOB_KNIGHT",
+                 "properties":
+                    {
+                     "pathName":"mainPath"
+                    },
+                 "rotation":0,
+                 "type":"mainPath",
+                 "visible":true,
+                 "width":64,
+                 "x":352,
+                 "y":-32
+                }, 
+                {
+                 "gid":8,
+                 "height":64,
+                 "id":59,
+                 "name":"MOB_KNIGHT",
+                 "properties":
+                    {
+                     "pathName":"mainPath"
+                    },
+                 "rotation":0,
+                 "type":"mainPath",
+                 "visible":true,
+                 "width":64,
+                 "x":352,
+                 "y":-32
+                }, 
+                {
+                 "gid":8,
+                 "height":64,
+                 "id":60,
+                 "name":"MOB_KNIGHT",
+                 "properties":
+                    {
+                     "pathName":"mainPath"
+                    },
+                 "rotation":0,
+                 "type":"mainPath",
+                 "visible":true,
+                 "width":64,
+                 "x":352,
+                 "y":-32
+                }, 
+                {
+                 "gid":9,
+                 "height":64,
+                 "id":61,
+                 "name":"MOB_KING",
+                 "properties":
+                    {
+                     "pathName":"altPath"
+                    },
+                 "rotation":0,
+                 "type":"altPath",
+                 "visible":true,
+                 "width":64,
+                 "x":56,
+                 "y":-24
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -217,20 +345,36 @@
          "name":"balloons",
          "objects":[
                 {
-                 "gid":10,
-                 "height":64,
-                 "id":23,
+                 "gid":18,
+                 "height":32,
+                 "id":51,
                  "name":"BALLOON",
                  "properties":
                     {
 
                     },
                  "rotation":0,
-                 "type":"BALLOON",
+                 "type":"",
                  "visible":true,
-                 "width":64,
-                 "x":256,
-                 "y":352
+                 "width":32,
+                 "x":0,
+                 "y":376
+                }, 
+                {
+                 "gid":18,
+                 "height":32,
+                 "id":53,
+                 "name":"BALLOON",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":576,
+                 "y":376
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -245,7 +389,7 @@
          "name":"props",
          "objects":[
                 {
-                 "gid":18,
+                 "gid":17,
                  "height":64,
                  "id":25,
                  "name":"PROP_WALL",
@@ -257,11 +401,11 @@
                  "type":"PROP_WALL",
                  "visible":true,
                  "width":64,
-                 "x":-8,
+                 "x":0,
                  "y":136
                 }, 
                 {
-                 "gid":18,
+                 "gid":17,
                  "height":64,
                  "id":26,
                  "name":"PROP_WALL",
@@ -273,11 +417,11 @@
                  "type":"PROP_WALL",
                  "visible":true,
                  "width":64,
-                 "x":560,
+                 "x":608,
                  "y":216
                 }, 
                 {
-                 "gid":14,
+                 "gid":13,
                  "height":64,
                  "id":27,
                  "name":"PROP_TOWER",
@@ -293,7 +437,7 @@
                  "y":120
                 }, 
                 {
-                 "gid":17,
+                 "gid":16,
                  "height":64,
                  "id":31,
                  "name":"PROP_TREE",
@@ -302,14 +446,14 @@
 
                     },
                  "rotation":0,
-                 "type":"PROP_TREE",
+                 "type":"",
                  "visible":true,
                  "width":64,
-                 "x":360,
-                 "y":216
+                 "x":488,
+                 "y":192
                 }, 
                 {
-                 "gid":13,
+                 "gid":12,
                  "height":64,
                  "id":32,
                  "name":"PROP_SHRUB",
@@ -321,8 +465,264 @@
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":24,
+                 "x":0,
+                 "y":320
+                }, 
+                {
+                 "gid":12,
+                 "height":64,
+                 "id":62,
+                 "name":"PROP_SHRUB",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":72,
+                 "y":320
+                }, 
+                {
+                 "gid":12,
+                 "height":64,
+                 "id":63,
+                 "name":"PROP_SHRUB",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":40,
+                 "y":312
+                }, 
+                {
+                 "gid":12,
+                 "height":64,
+                 "id":64,
+                 "name":"PROP_SHRUB",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":304,
+                 "y":288
+                }, 
+                {
+                 "gid":12,
+                 "height":64,
+                 "id":66,
+                 "name":"PROP_SHRUB",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":336,
+                 "y":296
+                }, 
+                {
+                 "gid":12,
+                 "height":64,
+                 "id":67,
+                 "name":"PROP_SHRUB",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":264,
+                 "y":296
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":68,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":440,
+                 "y":144
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":69,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":344,
+                 "y":184
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":70,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":208,
+                 "y":160
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":71,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":152,
+                 "y":176
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":72,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":384,
+                 "y":168
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":73,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":120,
+                 "y":152
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":74,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":120,
+                 "y":152
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":75,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":432,
                  "y":248
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":76,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":568,
+                 "y":248
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":77,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":0,
+                 "y":224
+                }, 
+                {
+                 "gid":16,
+                 "height":64,
+                 "id":78,
+                 "name":"PROP_TREE",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":24,
+                 "y":232
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -331,7 +731,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":46,
+ "nextobjectid":79,
  "orientation":"orthogonal",
  "properties":
     {
@@ -423,33 +823,13 @@
         {
          "firstgid":10,
          "margin":0,
-         "name":"balloons",
-         "properties":
-            {
-
-            },
-         "spacing":0,
-         "tilecount":1,
-         "tileheight":64,
-         "tiles":
-            {
-             "0":
-                {
-                 "image":"..\/balloon.png"
-                }
-            },
-         "tilewidth":64
-        }, 
-        {
-         "firstgid":11,
-         "margin":0,
          "name":"props",
          "properties":
             {
 
             },
          "spacing":0,
-         "tilecount":8,
+         "tilecount":9,
          "tileheight":64,
          "tiles":
             {
@@ -484,41 +864,10 @@
              "7":
                 {
                  "image":"..\/wall.png"
-                }
-            },
-         "tilewidth":64
-        }, 
-        {
-         "firstgid":19,
-         "image":"..\/shrub_spritesheet.png",
-         "imageheight":64,
-         "imagewidth":192,
-         "margin":0,
-         "name":"shrub_spritesheet",
-         "properties":
-            {
-
-            },
-         "spacing":0,
-         "tilecount":3,
-         "tileheight":64,
-         "tiles":
-            {
-             "0":
+                },
+             "8":
                 {
-                 "animation":[
-                        {
-                         "duration":1000,
-                         "tileid":0
-                        }, 
-                        {
-                         "duration":1000,
-                         "tileid":1
-                        }, 
-                        {
-                         "duration":1000,
-                         "tileid":2
-                        }]
+                 "image":"..\/balloon-32x32.png"
                 }
             },
          "tilewidth":64

@@ -5,7 +5,9 @@ import {spawnFire} from './fire.js';
 import {debounce} from './util.js';
 
 const MOVE_DELAY = 300;
+const FIRE_DELAY = 500;
 const atMoveSpeed = debounce(MOVE_DELAY);
+const atFireSpeed = debounce(FIRE_DELAY);
 
 
 export function update(game, sprite) {
@@ -21,7 +23,10 @@ export function update(game, sprite) {
       playerTween.onComplete.add(() => {
         const {x, y} = sprite;
 
-        spawnFire(x, y);
+        // Limit the fire speed on top of the movement speed.
+        atFireSpeed(game.time.events, () => { 
+          spawnFire(x, y);
+        });
       });
 
       // move to the pointer

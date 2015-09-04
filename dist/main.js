@@ -135,7 +135,7 @@
 	  game.load.spritesheet(_constantsJs.PROP.SHRUB, 'assets/shrub_spritesheet.png', 64, 64);
 	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
-	  game.load.image(_constantsJs.BALLOON, 'assets/balloon.png', 64, 64);
+	  game.load.image(_constantsJs.BALLOON, 'assets/balloon-32x32.png', 32, 32);
 
 	  // backgrounds
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
@@ -590,7 +590,9 @@
 	var _utilJs = __webpack_require__(9);
 
 	var MOVE_DELAY = 300;
+	var FIRE_DELAY = 500;
 	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
+	var atFireSpeed = (0, _utilJs.debounce)(FIRE_DELAY);
 
 	function update(game, sprite) {
 	  var pointer = game.input.activePointer;
@@ -606,7 +608,10 @@
 	        var x = sprite.x;
 	        var y = sprite.y;
 
-	        (0, _fireJs.spawnFire)(x, y);
+	        // Limit the fire speed on top of the movement speed.
+	        atFireSpeed(game.time.events, function () {
+	          (0, _fireJs.spawnFire)(x, y);
+	        });
 	      });
 
 	      // move to the pointer

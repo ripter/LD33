@@ -32,7 +32,7 @@ function preload() {
   game.load.spritesheet(PROP.SHRUB, 'assets/shrub_spritesheet.png', 64, 64);
   game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
 
-  game.load.image(BALLOON, 'assets/balloon.png', 64, 64);
+  game.load.image(BALLOON, 'assets/balloon-32x32.png', 32, 32);
   
   // backgrounds
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
