@@ -23,7 +23,7 @@
                  "polyline":[
                         {
                          "x":0,
-                         "y":-64
+                         "y":-8
                         }, 
                         {
                          "x":0,
@@ -95,7 +95,7 @@
                  "polyline":[
                         {
                          "x":0,
-                         "y":-64
+                         "y":-8
                         }, 
                         {
                          "x":0,
@@ -766,8 +766,37 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":152,
-                 "y":-64
+                 "x":608,
+                 "y":-24
+                }, 
+                {
+                 "height":0,
+                 "id":82,
+                 "name":"MAP_SPAWNER",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":40,
+                         "y":0
+                        }, 
+                        {
+                         "x":16,
+                         "y":24
+                        }],
+                 "properties":
+                    {
+                     "mobList":"MOB_HORSE, MOB_KNIGHT, MOB_KING",
+                     "pathName":"mainPath"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":0,
+                 "y":-24
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -776,7 +805,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":82,
+ "nextobjectid":83,
  "orientation":"orthogonal",
  "properties":
     {

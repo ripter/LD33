@@ -8,7 +8,7 @@ const SPEED = Phaser.Timer.SECOND * 15;
 const HIT_RANGE = 5;
 
 export class Mob extends Phaser.Sprite {
-  constructor(type, group, waypoints) {
+  constructor(type, group) {
     const {game} = group;
     super(game, 100, 100, type);
     // We need to add to the group so we get physics .body
@@ -18,12 +18,20 @@ export class Mob extends Phaser.Sprite {
     this.alive = false;
     this.anchor = {x: .5, y: 1};
     this.body.moves = false;
-    
+    this.mobType = type;
   }
   
   // Start the mob moving along the path.
   start() {
-    this.pathTween.start().loop(true);
+    const {x, y} = this.pathStart;
+
+    // reset to first path point
+    this.reset(x, y);
+    this.pathTween.start();//.loop(true);
+    
+    this.pathTween.onComplete.add((sprite, tween) => {
+      this.kill();
+    });
   }
   
   // Sets the path to follow.

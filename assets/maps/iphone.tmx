@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="82">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="83">
  <properties>
   <property name="background" value="bg-iphone"/>
  </properties>
@@ -77,12 +77,12 @@
    <property name="type" value="PATH"/>
   </properties>
   <object id="34" x="16" y="8">
-   <polyline points="0,-64 0,72 224,72 224,136 0,136 0,200 224,200 224,264 0,264 0,416"/>
+   <polyline points="0,-8 0,72 224,72 224,136 0,136 0,200 224,200 224,264 0,264 0,416"/>
   </object>
  </objectgroup>
  <objectgroup name="altPath">
   <object id="35" x="624" y="8">
-   <polyline points="0,-64 0,40 -288,40 -288,104 -32,104 -32,200 -288,200 -288,264 -32,264 -32,416"/>
+   <polyline points="0,-8 0,40 -288,40 -288,104 -32,104 -32,200 -288,200 -288,264 -32,264 -32,416"/>
   </object>
  </objectgroup>
  <objectgroup name="mobs">
@@ -174,10 +174,17 @@
   <object id="78" name="PROP_TREE" gid="16" x="24" y="232" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="MAP_LAYER_SPAWN">
-  <object id="79" name="MAP_SPAWNER" x="152" y="-64">
+  <object id="79" name="MAP_SPAWNER" x="608" y="-24">
    <properties>
     <property name="mobList" value="MOB_HORSE, MOB_KNIGHT"/>
     <property name="pathName" value="altPath"/>
+   </properties>
+   <polygon points="0,0 40,0 16,24"/>
+  </object>
+  <object id="82" name="MAP_SPAWNER" x="0" y="-24">
+   <properties>
+    <property name="mobList" value="MOB_HORSE, MOB_KNIGHT, MOB_KING"/>
+    <property name="pathName" value="mainPath"/>
    </properties>
    <polygon points="0,0 40,0 16,24"/>
   </object>

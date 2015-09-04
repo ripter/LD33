@@ -522,7 +522,7 @@
 	var Mob = (function (_Phaser$Sprite) {
 	  _inherits(Mob, _Phaser$Sprite);
 
-	  function Mob(type, group, waypoints) {
+	  function Mob(type, group) {
 	    _classCallCheck(this, Mob);
 
 	    var game = group.game;
@@ -535,6 +535,7 @@
 	    this.alive = false;
 	    this.anchor = { x: .5, y: 1 };
 	    this.body.moves = false;
+	    this.mobType = type;
 	  }
 
 	  // Start the mob moving along the path.
@@ -542,7 +543,19 @@
 	  _createClass(Mob, [{
 	    key: 'start',
 	    value: function start() {
-	      this.pathTween.start().loop(true);
+	      var _this = this;
+
+	      var _pathStart = this.pathStart;
+	      var x = _pathStart.x;
+	      var y = _pathStart.y;
+
+	      // reset to first path point
+	      this.reset(x, y);
+	      this.pathTween.start(); //.loop(true);
+
+	      this.pathTween.onComplete.add(function (sprite, tween) {
+	        _this.kill();
+	      });
 	    }
 
 	    // Sets the path to follow.
@@ -968,6 +981,8 @@
 
 	var _mobJs = __webpack_require__(7);
 
+	var DELAY = Phaser.Timer.SECOND;
+
 	var Spawner = (function () {
 	  function Spawner(group, options, waypoints) {
 	    _classCallCheck(this, Spawner);
@@ -975,7 +990,9 @@
 	    this.availableMobs = options.mobList.split(',').map(function (str) {
 	      return str.trim();
 	    });
-	    this.options = options;
+	    this.options = Object.assign({}, {
+	      speed: DELAY
+	    }, options);;
 	    this.group = group;
 	    this.game = group.game;
 	    this.waypoints = waypoints;
@@ -984,9 +1001,16 @@
 	  _createClass(Spawner, [{
 	    key: 'start',
 	    value: function start() {
-	      console.log('spawner.start', arguments);
-	      var mob = this.next();
-	      mob.start();
+	      var _this = this;
+
+	      var game = this.game;
+	      var speed = this.options.speed;
+
+	      // Start the spawn loop.
+	      game.time.events.loop(speed, function () {
+	        var mob = _this.next();
+	        mob.start();
+	      });
 	    }
 	  }, {
 	    key: 'stop',
@@ -997,12 +1021,26 @@
 	    key: 'next',
 	    value: function next() {
 	      var game = this.game;
+	      var group = this.group;
 	      var waypoints = this.waypoints;
 
 	      var type = Phaser.ArrayUtils.getRandomItem(this.availableMobs);
-	      var mob = new _mobJs.Mob(type, this.group);
+	      var freeMobs = group.filter(function (sprite) {
+	        return sprite.alive === false && sprite.mobType === type;
+	      });
+	      var mob = undefined;
 
+	      //Do we have any free mobs we can recycle?
+	      if (freeMobs.total > 0) {
+	        mob = freeMobs.first;
+	      } else {
+	        // We have to create a new one.
+	        mob = new _mobJs.Mob(type, group);
+	      }
+
+	      // Set the path
 	      mob.setPath(waypoints);
+
 	      return mob;
 	    }
 	  }]);
