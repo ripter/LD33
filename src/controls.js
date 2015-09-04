@@ -1,16 +1,16 @@
 /*global Phaser */
 'use strict';
 
-import {spawnFire} from './fire.js';
-import {debounce} from './util.js';
+import {Fire} from './fire.js';
+import {debounce, getFirst} from './util.js';
 
 const MOVE_DELAY = 300;
 const FIRE_DELAY = 500;
 const atMoveSpeed = debounce(MOVE_DELAY);
 const atFireSpeed = debounce(FIRE_DELAY);
 
-
-export function update(game, sprite) {
+export function update(game, sprite, map) {
+  const {bulletGroup} = map;
   const pointer = game.input.activePointer;
   let playerTween;
   
@@ -25,7 +25,17 @@ export function update(game, sprite) {
 
         // Limit the fire speed on top of the movement speed.
         atFireSpeed(game.time.events, () => { 
-          spawnFire(x, y);
+          let fire = bulletGroup.getFirstDead();
+          
+          // if we are recycling
+          if (fire) {
+            fire.reset(x, y);
+          }
+          // We need to create a new one
+          else {
+            console.log('NEW BULLET');
+            fire = new Fire(x, y, bulletGroup);
+          }
         });
       });
 

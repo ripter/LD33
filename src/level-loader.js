@@ -6,7 +6,7 @@ import * as Foreground from './foreground.js';
 import * as Prop from './prop.js';
 import * as Balloon from './balloon.js';
 import {Spawner} from './spawner.js';
-import {MAP, MOB, BALLOON, PROP} from './constants.js';
+import {MAP, MOB, PROP, OTHER} from './constants.js';
 
 // Groups with physics.
 import {physicsGroup} from './groups.js';
@@ -15,6 +15,7 @@ export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
   const props = map.properties;
   let layer, mobGroup, balloonGroup, propGroup, spawnLayer, spawnerList;
+  let bulletGroup;
   
   // Background image
   map.properties.background = game.add.image(0, 0, props.background); 
@@ -50,9 +51,13 @@ export function loadTiledMap(game, mapKey) {
   propGroup.forEach(Prop.addAnimation);
   
   //
+  // Bullet group
+  bulletGroup = physicsGroup();
+  
+  //
   // Balloon!
   balloonGroup = physicsGroup(); 
-  map.createFromObjects(MAP.LAYER.BALLOONS, BALLOON, BALLOON, null, true, false, balloonGroup);
+  map.createFromObjects(MAP.LAYER.BALLOONS, OTHER.BALLOON, OTHER.BALLOON, null, true, false, balloonGroup);
 
   return {
     map
@@ -60,6 +65,7 @@ export function loadTiledMap(game, mapKey) {
     , balloonGroup
     , propGroup
     , spawnerList
+    , bulletGroup
   };
 }
 

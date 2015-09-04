@@ -23,3 +23,14 @@ export function debounce(delay) {
     return func();
   };
 }
+
+export function getFirst(group, predicate) {
+  const availableSet = group.filter(predicate);
+  
+  // are there any we can recycle?
+  if (availableSet.total > 0) {
+    return availableSet.first;
+  }
+  
+  return null;
+}

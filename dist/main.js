@@ -95,7 +95,7 @@
 
 	var _dragonJs = __webpack_require__(3);
 
-	var _propJs = __webpack_require__(5);
+	var _propJs = __webpack_require__(6);
 
 	var Prop = _interopRequireWildcard(_propJs);
 
@@ -111,12 +111,11 @@
 
 	var _fontsJs = __webpack_require__(14);
 
-	var _constantsJs = __webpack_require__(6);
+	var _constantsJs = __webpack_require__(5);
 
 	var map = undefined,
 	    mapName = undefined;
 	var player = undefined;
-	var bullets = undefined;
 	var sfx = undefined;
 
 	function init(mapName) {
@@ -133,9 +132,9 @@
 
 	  game.load.spritesheet(_constantsJs.PROP.TREE, 'assets/tree_spritesheet.png', 64, 64);
 	  game.load.spritesheet(_constantsJs.PROP.SHRUB, 'assets/shrub_spritesheet.png', 64, 64);
-	  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
+	  game.load.spritesheet(_constantsJs.OTHER.FIRE, 'assets/fire_4frame_20x40.png', 20, 40);
 
-	  game.load.image(_constantsJs.BALLOON, 'assets/balloon-32x32.png', 32, 32);
+	  game.load.image(_constantsJs.OTHER.BALLOON, 'assets/balloon-32x32.png', 32, 32);
 
 	  // backgrounds
 	  game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
@@ -161,7 +160,7 @@
 
 	  //window.level = level = loadLevel(levelFile);
 	  // load level!
-	  window.bullets = bullets = (0, _groupsJs.physicsGroup)();
+	  //window.bullets = bullets = physicsGroup();
 
 	  // Score!
 	  game.textScore = game.add.text(800, 10, 'SCORE: 0', _fontsJs.headerFont);
@@ -195,12 +194,13 @@
 	  var mobGroup = _map.mobGroup;
 	  var balloonGroup = _map.balloonGroup;
 	  var propGroup = _map.propGroup;
+	  var bulletGroup = _map.bulletGroup;
 	  var ESC = Phaser.Keyboard.ESC;
 
-	  Controls.update(game, player);
+	  Controls.update(game, player, map);
 
-	  game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
-	  game.physics.arcade.overlap(bullets, propGroup, collideBulletProp);
+	  game.physics.arcade.overlap(bulletGroup, mobGroup, collideBulletMob);
+	  game.physics.arcade.overlap(bulletGroup, propGroup, collideBulletProp);
 	  game.physics.arcade.collide(mobGroup, balloonGroup, collideMobBalloon);
 
 	  // debug
@@ -321,7 +321,7 @@
 
 /***/ },
 /* 4 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
 	'use strict';
@@ -329,16 +329,67 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 	exports.spawnFire = spawnFire;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _constantsJs = __webpack_require__(5);
+
 	var SPEED = 300;
 	var OFFSET_Y = 0;
 	var OFFSET_X = 29;
 
+	// debug stats
+	window.bulletCount = 0;
+
+	var Fire = (function (_Phaser$Sprite) {
+	  _inherits(Fire, _Phaser$Sprite);
+
+	  function Fire(x, y, group) {
+	    _classCallCheck(this, Fire);
+
+	    var game = group.game;
+
+	    _get(Object.getPrototypeOf(Fire.prototype), 'constructor', this).call(this, game, x + OFFSET_X, y + OFFSET_Y, _constantsJs.OTHER.FIRE);
+	    // We need to add to the group so we get physics .body
+	    group.add(this);
+
+	    this.animations.add('fly');
+	    this.animations.play('fly', 24, true);
+	    this.body.velocity.y = -SPEED;
+	    this.checkWorldBounds = true;
+	    this.outOfBoundsKill = true;
+
+	    // debug stats
+	    window.bulletCount++;
+	  }
+
+	  _createClass(Fire, [{
+	    key: 'reset',
+	    value: function reset(x, y) {
+	      _get(Object.getPrototypeOf(Fire.prototype), 'reset', this).call(this, x + OFFSET_X, y + OFFSET_Y);
+	      this.body.velocity.y = -SPEED;
+	    }
+	  }]);
+
+	  return Fire;
+	})(Phaser.Sprite);
+
+	exports.Fire = Fire;
+	;
+
 	// totally not a constructor
 	// constructors use NEW, we use SPAWN. Totally different! :)
 
-	function spawnFire(x, y) {
-	  var sprite = bullets.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
+	function spawnFire(x, y, group) {
+	  var sprite = group.create(x + OFFSET_X, y + OFFSET_Y, 'fire');
 
 	  sprite.animations.add('fly');
 	  sprite.animations.play('fly', 24, true);
@@ -348,6 +399,48 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	var MOB = {
+	  KNIGHT: 'MOB_KNIGHT',
+	  KING: 'MOB_KING',
+	  HORSE: 'MOB_HORSE'
+	};
+
+	exports.MOB = MOB;
+	var MAP = {
+	  LAYER: {
+	    PATH: 'MAP_LAYER_PATH',
+	    MOBS: 'mobs',
+	    BALLOONS: 'balloons',
+	    PROPS: 'props',
+	    SPAWN: 'MAP_LAYER_SPAWN'
+	  },
+	  SPAWNER: 'MAP_SPAWNER'
+	};
+
+	exports.MAP = MAP;
+	var OTHER = {
+	  BALLOON: 'BALLOON',
+	  FIRE: 'FIRE'
+	};
+
+	exports.OTHER = OTHER;
+	var PROP = {
+	  SHRUB: 'PROP_SHRUB',
+	  TREE: 'PROP_TREE',
+	  WALL: 'PROP_WALL',
+	  TOWER: 'PROP_TOWER'
+	};
+	exports.PROP = PROP;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -358,7 +451,7 @@
 	exports.addAnimation = addAnimation;
 	exports.onHit = onHit;
 
-	var _constantsJs = __webpack_require__(6);
+	var _constantsJs = __webpack_require__(5);
 
 	function addAnimation(sprite) {
 	  var type = sprite.name; //Tiled calls it name instead of type
@@ -454,45 +547,6 @@
 	}
 
 /***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	var MOB = {
-	  KNIGHT: 'MOB_KNIGHT',
-	  KING: 'MOB_KING',
-	  HORSE: 'MOB_HORSE'
-	};
-
-	exports.MOB = MOB;
-	var MAP = {
-	  LAYER: {
-	    PATH: 'MAP_LAYER_PATH',
-	    MOBS: 'mobs',
-	    BALLOONS: 'balloons',
-	    PROPS: 'props',
-	    SPAWN: 'MAP_LAYER_SPAWN'
-	  },
-	  SPAWNER: 'MAP_SPAWNER'
-	};
-
-	exports.MAP = MAP;
-	var BALLOON = 'BALLOON';
-
-	exports.BALLOON = BALLOON;
-	var PROP = {
-	  SHRUB: 'PROP_SHRUB',
-	  TREE: 'PROP_TREE',
-	  WALL: 'PROP_WALL',
-	  TOWER: 'PROP_TOWER'
-	};
-	exports.PROP = PROP;
-
-/***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -513,11 +567,14 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _constantsJs = __webpack_require__(6);
+	var _constantsJs = __webpack_require__(5);
 
 	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = Phaser.Timer.SECOND * 15;
 	var HIT_RANGE = 5;
+
+	// debug stats
+	window.mobCount = 0;
 
 	var Mob = (function (_Phaser$Sprite) {
 	  _inherits(Mob, _Phaser$Sprite);
@@ -536,6 +593,9 @@
 	    this.anchor = { x: .5, y: 1 };
 	    this.body.moves = false;
 	    this.mobType = type;
+
+	    // debug stats
+	    window.mobCount += 1;
 	  }
 
 	  // Start the mob moving along the path.
@@ -556,6 +616,13 @@
 	      this.pathTween.onComplete.add(function (sprite, tween) {
 	        _this.kill();
 	      });
+	    }
+	  }, {
+	    key: 'kill',
+	    value: function kill() {
+	      _get(Object.getPrototypeOf(Mob.prototype), 'kill', this).call(this);
+	      // Stop the tweeens!
+	      this.pathTween.stop();
 	    }
 
 	    // Sets the path to follow.
@@ -642,7 +709,9 @@
 	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
 	var atFireSpeed = (0, _utilJs.debounce)(FIRE_DELAY);
 
-	function update(game, sprite) {
+	function update(game, sprite, map) {
+	  var bulletGroup = map.bulletGroup;
+
 	  var pointer = game.input.activePointer;
 	  var playerTween = undefined;
 
@@ -658,7 +727,17 @@
 
 	        // Limit the fire speed on top of the movement speed.
 	        atFireSpeed(game.time.events, function () {
-	          (0, _fireJs.spawnFire)(x, y);
+	          var fire = bulletGroup.getFirstDead();
+
+	          // if we are recycling
+	          if (fire) {
+	            fire.reset(x, y);
+	          }
+	          // We need to create a new one
+	          else {
+	              console.log('NEW BULLET');
+	              fire = new _fireJs.Fire(x, y, bulletGroup);
+	            }
 	        });
 	      });
 
@@ -696,6 +775,7 @@
 	  value: true
 	});
 	exports.debounce = debounce;
+	exports.getFirst = getFirst;
 
 	function debounce(delay) {
 	  var isReady = true;
@@ -716,6 +796,17 @@
 	    // call the function
 	    return func();
 	  };
+	}
+
+	function getFirst(group, predicate) {
+	  var availableSet = group.filter(predicate);
+
+	  // are there any we can recycle?
+	  if (availableSet.total > 0) {
+	    return availableSet.first;
+	  }
+
+	  return null;
 	}
 
 /***/ },
@@ -740,7 +831,7 @@
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
-	var _propJs = __webpack_require__(5);
+	var _propJs = __webpack_require__(6);
 
 	var Prop = _interopRequireWildcard(_propJs);
 
@@ -750,7 +841,7 @@
 
 	var _spawnerJs = __webpack_require__(13);
 
-	var _constantsJs = __webpack_require__(6);
+	var _constantsJs = __webpack_require__(5);
 
 	// Groups with physics.
 
@@ -765,6 +856,7 @@
 	      propGroup = undefined,
 	      spawnLayer = undefined,
 	      spawnerList = undefined;
+	  var bulletGroup = undefined;
 
 	  // Background image
 	  map.properties.background = game.add.image(0, 0, props.background);
@@ -800,16 +892,21 @@
 	  propGroup.forEach(Prop.addAnimation);
 
 	  //
+	  // Bullet group
+	  bulletGroup = (0, _groupsJs.physicsGroup)();
+
+	  //
 	  // Balloon!
 	  balloonGroup = (0, _groupsJs.physicsGroup)();
-	  map.createFromObjects(_constantsJs.MAP.LAYER.BALLOONS, _constantsJs.BALLOON, _constantsJs.BALLOON, null, true, false, balloonGroup);
+	  map.createFromObjects(_constantsJs.MAP.LAYER.BALLOONS, _constantsJs.OTHER.BALLOON, _constantsJs.OTHER.BALLOON, null, true, false, balloonGroup);
 
 	  return {
 	    map: map,
 	    mobGroup: mobGroup,
 	    balloonGroup: balloonGroup,
 	    propGroup: propGroup,
-	    spawnerList: spawnerList
+	    spawnerList: spawnerList,
+	    bulletGroup: bulletGroup
 	  };
 	}
 
@@ -981,6 +1078,8 @@
 
 	var _mobJs = __webpack_require__(7);
 
+	var _utilJs = __webpack_require__(9);
+
 	var DELAY = Phaser.Timer.SECOND;
 
 	var Spawner = (function () {
@@ -1025,18 +1124,27 @@
 	      var waypoints = this.waypoints;
 
 	      var type = Phaser.ArrayUtils.getRandomItem(this.availableMobs);
-	      var freeMobs = group.filter(function (sprite) {
+	      var mob = (0, _utilJs.getFirst)(group, function (sprite) {
 	        return sprite.alive === false && sprite.mobType === type;
 	      });
-	      var mob = undefined;
 
-	      //Do we have any free mobs we can recycle?
-	      if (freeMobs.total > 0) {
-	        mob = freeMobs.first;
-	      } else {
-	        // We have to create a new one.
+	      // Did get a mob to reuse?
+	      if (!mob) {
 	        mob = new _mobJs.Mob(type, group);
 	      }
+
+	      // const freeMobs = group.filter((sprite) => {
+	      //   return sprite.alive === false && sprite.mobType === type;
+	      // });
+	      // let mob;
+
+	      // //Do we have any free mobs we can recycle?
+	      // if (freeMobs.total > 0) {
+	      //   mob = freeMobs.first;
+	      // } else {
+	      //   // We have to create a new one.
+	      //   mob = new Mob(type, group);
+	      // }
 
 	      // Set the path
 	      mob.setPath(waypoints);
@@ -1174,6 +1282,13 @@
 	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
 
 	  game.add.text(100, 150, 'Refresh page to play again', _fontsJs.headerFont);
+
+	  //
+	  // debug stats
+	  console.group('Stats');
+	  console.log('bulletCount', window.bulletCount);
+	  console.log('mobCount', window.mobCount);
+	  console.groupEnd();
 	}
 
 	function update() {

@@ -8,12 +8,11 @@ import * as Mob from './mob.js';
 import * as Controls from './controls.js';
 import {loadLevel, loadTiledMap} from './level-loader.js';
 import {headerFont, infoFont} from './fonts.js';
-import {MOB, BALLOON, PROP} from './constants.js';
+import {MOB, PROP, OTHER} from './constants.js';
 
 
 let map, mapName;
 let player;
-let bullets;
 let sfx;
 
 function init(mapName) {
@@ -30,9 +29,9 @@ function preload() {
 
   game.load.spritesheet(PROP.TREE, 'assets/tree_spritesheet.png', 64, 64);
   game.load.spritesheet(PROP.SHRUB, 'assets/shrub_spritesheet.png', 64, 64);
-  game.load.spritesheet('fire', 'assets/fire_4frame_20x40.png', 20, 40);
+  game.load.spritesheet(OTHER.FIRE, 'assets/fire_4frame_20x40.png', 20, 40);
 
-  game.load.image(BALLOON, 'assets/balloon-32x32.png', 32, 32);
+  game.load.image(OTHER.BALLOON, 'assets/balloon-32x32.png', 32, 32);
   
   // backgrounds
   game.load.image('background', 'assets/levelLayoutTest.png', 1024, 525);
@@ -59,7 +58,7 @@ function create() {
 
   //window.level = level = loadLevel(levelFile);
   // load level!
-  window.bullets = bullets = physicsGroup();
+  //window.bullets = bullets = physicsGroup();
 
   // Score!
   game.textScore = game.add.text(800, 10, 'SCORE: 0', headerFont);
@@ -92,13 +91,13 @@ function create() {
 }
 
 function update() {
-  const {mobGroup, balloonGroup, propGroup} = map;
+  const {mobGroup, balloonGroup, propGroup, bulletGroup} = map;
   const {ESC} = Phaser.Keyboard;
 
-  Controls.update(game, player);
+  Controls.update(game, player, map);
 
-  game.physics.arcade.overlap(bullets, mobGroup, collideBulletMob);
-  game.physics.arcade.overlap(bullets, propGroup, collideBulletProp);
+  game.physics.arcade.overlap(bulletGroup, mobGroup, collideBulletMob);
+  game.physics.arcade.overlap(bulletGroup, propGroup, collideBulletProp);
   game.physics.arcade.collide(mobGroup, balloonGroup, collideMobBalloon); 
   
   // debug

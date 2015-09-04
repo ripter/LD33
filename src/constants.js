@@ -17,7 +17,10 @@ export const MAP = {
   , SPAWNER: 'MAP_SPAWNER'
 };
 
-export const BALLOON = 'BALLOON';
+export const OTHER = {
+  BALLOON: 'BALLOON'
+  , FIRE: 'FIRE'
+};
 
 export const PROP = {
   SHRUB: 'PROP_SHRUB'

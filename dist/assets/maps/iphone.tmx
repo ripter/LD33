@@ -183,7 +183,7 @@
   </object>
   <object id="82" name="MAP_SPAWNER" x="0" y="-24">
    <properties>
-    <property name="mobList" value="MOB_HORSE, MOB_KNIGHT, MOB_KING"/>
+    <property name="mobList" value="MOB_HORSE, MOB_KNIGHT, MOB_KING, MOB_HORSE, MOB_KNIGHT"/>
     <property name="pathName" value="mainPath"/>
    </properties>
    <polygon points="0,0 40,0 16,24"/>

@@ -3,6 +3,7 @@
 
 const DELAY = Phaser.Timer.SECOND;
 import {Mob} from './mob.js';
+import {getFirst} from './util.js';
 
 export class Spawner {
   constructor(group, options, waypoints) {
@@ -33,18 +34,27 @@ export class Spawner {
   next() {
     const {game, group, waypoints} = this;
     const type = Phaser.ArrayUtils.getRandomItem(this.availableMobs);
-    const freeMobs = group.filter((sprite) => {
+    let mob = getFirst(group, (sprite) => {
       return sprite.alive === false && sprite.mobType === type;
     });
-    let mob;
     
-    //Do we have any free mobs we can recycle?
-    if (freeMobs.total > 0) {
-      mob = freeMobs.first; 
-    } else {
-      // We have to create a new one.
-      mob = new Mob(type, group); 
+    // Did get a mob to reuse?
+    if (!mob) {
+      mob = new Mob(type, group);
     }
+    
+    // const freeMobs = group.filter((sprite) => {
+    //   return sprite.alive === false && sprite.mobType === type;
+    // });
+    // let mob;
+    
+    // //Do we have any free mobs we can recycle?
+    // if (freeMobs.total > 0) {
+    //   mob = freeMobs.first; 
+    // } else {
+    //   // We have to create a new one.
+    //   mob = new Mob(type, group); 
+    // }
     
     // Set the path
     mob.setPath(waypoints);

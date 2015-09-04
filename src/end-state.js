@@ -30,6 +30,14 @@ function create() {
   game.add.text(100, 200, 'Your score: ' + game.currentScore, headerFont);
 
   game.add.text(100, 150, 'Refresh page to play again', headerFont);
+  
+
+  //
+  // debug stats
+  console.group('Stats');
+  console.log('bulletCount', window.bulletCount);
+  console.log('mobCount', window.mobCount);
+  console.groupEnd();
 }
 
 function update() {
