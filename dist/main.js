@@ -53,11 +53,11 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(14);
+	var _startStateJs = __webpack_require__(15);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(15);
+	var _endStateJs = __webpack_require__(16);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -109,7 +109,7 @@
 
 	var _levelLoaderJs = __webpack_require__(10);
 
-	var _fontsJs = __webpack_require__(13);
+	var _fontsJs = __webpack_require__(14);
 
 	var _constantsJs = __webpack_require__(6);
 
@@ -178,7 +178,10 @@
 
 	  //
 	  // Start the action!
-	  Mob.startTimedGame(map.mobGroup);
+	  //Mob.startTimedGame(map.mobGroup);
+	  map.spawnerList.forEach(function (spawner) {
+	    spawner.start();
+	  });
 
 	  // sounds
 	  window.sfx = sfx = {
@@ -491,7 +494,7 @@
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
 	'use strict';
@@ -499,46 +502,79 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports.createPathTween = createPathTween;
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 	exports.startTimedGame = startTimedGame;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _constantsJs = __webpack_require__(6);
+
 	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = Phaser.Timer.SECOND * 15;
 	var HIT_RANGE = 5;
 
-	// Create tween between all points in the path.
+	var Mob = (function (_Phaser$Sprite) {
+	  _inherits(Mob, _Phaser$Sprite);
 
-	function createPathTween(sprite, map) {
-	  var game = sprite.game;
-	  var speed = sprite.speed || SPEED;
-	  var pathName = sprite.pathName;
-	  var pathTween = game.add.tween(sprite);
-	  var _map$objects$pathName$0 = map.objects[pathName][0];
-	  var x = _map$objects$pathName$0.x;
-	  var y = _map$objects$pathName$0.y;
-	  var polyline = _map$objects$pathName$0.polyline;
+	  function Mob(type, group, waypoints) {
+	    _classCallCheck(this, Mob);
 
-	  // We want:
-	  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]}
-	  var sx = polyline.map(function (point) {
-	    return point[0] + x;
-	  });
-	  var sy = polyline.map(function (point) {
-	    return point[1] + y;
-	  });
+	    var game = group.game;
 
-	  // speed is per point. So points that are further away will cause
-	  // the sprite to move faster.
-	  // On the plus, we can control speed via points.
-	  // Options:
-	  //  set speed as a function of distance between points.
-	  //  allow sprite to adjust the speed
-	  //  allow points to set/adjust the speed
-	  pathTween.to({ x: sx, y: sy }, speed);
+	    _get(Object.getPrototypeOf(Mob.prototype), 'constructor', this).call(this, game, 100, 100, type);
+	    // We need to add to the group so we get physics .body
+	    group.add(this);
 
-	  sprite.pathTween = pathTween;
-	  sprite.pathStart = { x: sx[0], y: sy[0] };
-	  return sprite;
-	}
+	    this.speed = SPEED;
+	    this.alive = false;
+	    this.anchor = { x: .5, y: 1 };
+	    this.body.moves = false;
+	  }
+
+	  // Start the mob moving along the path.
+
+	  _createClass(Mob, [{
+	    key: 'start',
+	    value: function start() {
+	      this.pathTween.start().loop(true);
+	    }
+
+	    // Sets the path to follow.
+	  }, {
+	    key: 'setPath',
+	    value: function setPath(waypoints) {
+	      var game = this.game;
+	      var speed = this.speed;
+	      var x = waypoints.x;
+	      var y = waypoints.y;
+
+	      var pathTween = game.add.tween(this);
+
+	      // speed is per point. So points that are further away will cause
+	      // the sprite to move faster.
+	      // On the plus, we can control speed via points.
+	      // Options:
+	      //  set speed as a function of distance between points.
+	      //  allow sprite to adjust the speed
+	      //  allow points to set/adjust the speed
+	      pathTween.to({ x: x, y: y }, speed);
+
+	      this.pathStart = { x: x[0], y: y[0] };
+	      this.pathTween = pathTween;
+	    }
+	  }]);
+
+	  return Mob;
+	})(Phaser.Sprite);
+
+	exports.Mob = Mob;
+	;
 
 	// start the timed game
 
@@ -699,6 +735,8 @@
 
 	var Balloon = _interopRequireWildcard(_balloonJs);
 
+	var _spawnerJs = __webpack_require__(13);
+
 	var _constantsJs = __webpack_require__(6);
 
 	// Groups with physics.
@@ -711,7 +749,9 @@
 	  var layer = undefined,
 	      mobGroup = undefined,
 	      balloonGroup = undefined,
-	      propGroup = undefined;
+	      propGroup = undefined,
+	      spawnLayer = undefined,
+	      spawnerList = undefined;
 
 	  // Background image
 	  map.properties.background = game.add.image(0, 0, props.background);
@@ -722,17 +762,16 @@
 	  //layer.resizeWorld();
 
 	  //
-	  // Mob group!
+	  // Spawner
 	  mobGroup = (0, _groupsJs.physicsGroup)();
-	  // Get the mobs from the map and create them.
-	  Object.keys(_constantsJs.MOB).forEach(function (key) {
-	    map.createFromObjects(_constantsJs.MAP.LAYER.MOBS, _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
+	  spawnLayer = map.objects[_constantsJs.MAP.LAYER.SPAWN];
+	  spawnerList = spawnLayer.map(function (spawnDataItem) {
+	    var pathName = spawnDataItem.properties.pathName;
+	    var layer = map.objects[pathName][0];
+	    var waypoints = toTweenPoints(layer);
+
+	    return new _spawnerJs.Spawner(mobGroup, spawnDataItem.properties, waypoints);
 	  });
-	  // set standard properties
-	  mobGroup.setAll('anchor', { x: .5, y: 1 });
-	  mobGroup.setAll('body.moves', false);
-	  mobGroup.setAll('alive', false);
-	  mobGroup.forEach(Mob.createPathTween, null, false, map);
 
 	  //
 	  // Props group
@@ -756,7 +795,25 @@
 	    map: map,
 	    mobGroup: mobGroup,
 	    balloonGroup: balloonGroup,
-	    propGroup: propGroup
+	    propGroup: propGroup,
+	    spawnerList: spawnerList
+	  };
+	}
+
+	function toTweenPoints(layer) {
+	  var x = layer.x;
+	  var y = layer.y;
+	  var polyline = layer.polyline;
+
+	  // We want:
+	  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]}
+	  return {
+	    x: polyline.map(function (point) {
+	      return point[0] + x;
+	    }),
+	    y: polyline.map(function (point) {
+	      return point[1] + y;
+	    })
 	  };
 	}
 
@@ -896,6 +953,68 @@
 
 /***/ },
 /* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _mobJs = __webpack_require__(7);
+
+	var Spawner = (function () {
+	  function Spawner(group, options, waypoints) {
+	    _classCallCheck(this, Spawner);
+
+	    this.availableMobs = options.mobList.split(',').map(function (str) {
+	      return str.trim();
+	    });
+	    this.options = options;
+	    this.group = group;
+	    this.game = group.game;
+	    this.waypoints = waypoints;
+	  }
+
+	  _createClass(Spawner, [{
+	    key: 'start',
+	    value: function start() {
+	      console.log('spawner.start', arguments);
+	      var mob = this.next();
+	      mob.start();
+	    }
+	  }, {
+	    key: 'stop',
+	    value: function stop() {
+	      console.log('spawner.stop', arguments);
+	    }
+	  }, {
+	    key: 'next',
+	    value: function next() {
+	      var game = this.game;
+	      var waypoints = this.waypoints;
+
+	      var type = Phaser.ArrayUtils.getRandomItem(this.availableMobs);
+	      var mob = new _mobJs.Mob(type, this.group);
+
+	      mob.setPath(waypoints);
+	      return mob;
+	    }
+	  }]);
+
+	  return Spawner;
+	})();
+
+	exports.Spawner = Spawner;
+	;
+
+/***/ },
+/* 14 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -923,7 +1042,7 @@
 	exports.sceneFont = sceneFont;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -933,7 +1052,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(13);
+	var _fontsJs = __webpack_require__(14);
 
 	//
 	// Lifecycle
@@ -974,7 +1093,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -986,11 +1105,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fontsJs = __webpack_require__(13);
+	var _fontsJs = __webpack_require__(14);
 
 	var _gameStateJs = __webpack_require__(1);
 
-	var _levelsIphoneJs = __webpack_require__(16);
+	var _levelsIphoneJs = __webpack_require__(17);
 
 	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
@@ -1062,7 +1181,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';

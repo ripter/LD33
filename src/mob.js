@@ -1,36 +1,51 @@
 /*global Phaser, game */
 'use strict';
 
+import {MOB} from './constants.js';
+
 const DELAY = Phaser.Timer.SECOND;
 const SPEED = Phaser.Timer.SECOND * 15;
 const HIT_RANGE = 5;
 
-// Create tween between all points in the path.
-export function createPathTween(sprite, map) {
-  const game = sprite.game;
-  const speed = sprite.speed || SPEED;
-  const pathName = sprite.pathName;
-  const pathTween = game.add.tween(sprite);
-  const {x, y, polyline} = map.objects[pathName][0];
-  // We want:
-  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]} 
-  const sx = polyline.map((point) => { return point[0] + x; });
-  const sy = polyline.map((point) => { return point[1] + y; });
+export class Mob extends Phaser.Sprite {
+  constructor(type, group, waypoints) {
+    const {game} = group;
+    super(game, 100, 100, type);
+    // We need to add to the group so we get physics .body
+    group.add(this);
+    
+    this.speed = SPEED;
+    this.alive = false;
+    this.anchor = {x: .5, y: 1};
+    this.body.moves = false;
+    
+  }
   
-  // speed is per point. So points that are further away will cause
-  // the sprite to move faster. 
-  // On the plus, we can control speed via points.
-  // Options:
-  //  set speed as a function of distance between points.
-  //  allow sprite to adjust the speed
-  //  allow points to set/adjust the speed
-  pathTween.to({x: sx, y: sy}, speed);
+  // Start the mob moving along the path.
+  start() {
+    this.pathTween.start().loop(true);
+  }
   
+  // Sets the path to follow.
+  setPath(waypoints) {
+    const {game, speed} = this;
+    const {x, y} = waypoints;
+    const pathTween = game.add.tween(this);
 
-  sprite.pathTween = pathTween;
-  sprite.pathStart = {x: sx[0], y: sy[0]};
-  return sprite;
-}
+    // speed is per point. So points that are further away will cause
+    // the sprite to move faster. 
+    // On the plus, we can control speed via points.
+    // Options:
+    //  set speed as a function of distance between points.
+    //  allow sprite to adjust the speed
+    //  allow points to set/adjust the speed
+    pathTween.to({x: x, y: y}, speed);
+
+    this.pathStart = {x: x[0], y: y[0]};
+    this.pathTween = pathTween; 
+  }
+};
+
 
 // start the timed game
 export function startTimedGame(mobGroup) {
@@ -58,3 +73,5 @@ export function startTimedGame(mobGroup) {
     index += 1;
   });
 }
+
+

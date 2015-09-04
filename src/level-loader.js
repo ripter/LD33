@@ -5,6 +5,7 @@ import * as Mob from './mob.js';
 import * as Foreground from './foreground.js';
 import * as Prop from './prop.js';
 import * as Balloon from './balloon.js';
+import {Spawner} from './spawner.js';
 import {MAP, MOB, BALLOON, PROP} from './constants.js';
 
 // Groups with physics.
@@ -13,7 +14,7 @@ import {physicsGroup} from './groups.js';
 export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
   const props = map.properties;
-  let layer, mobGroup, balloonGroup, propGroup;
+  let layer, mobGroup, balloonGroup, propGroup, spawnLayer, spawnerList;
   
   // Background image
   map.properties.background = game.add.image(0, 0, props.background); 
@@ -24,18 +25,17 @@ export function loadTiledMap(game, mapKey) {
   //layer.resizeWorld();
   
   //
-  // Mob group!
+  // Spawner
   mobGroup = physicsGroup();
-  // Get the mobs from the map and create them.
-  Object.keys(MOB).forEach((key) => {
-    map.createFromObjects(MAP.LAYER.MOBS, MOB[key], MOB[key], null, true, false, mobGroup);
+  spawnLayer = map.objects[MAP.LAYER.SPAWN]; 
+  spawnerList = spawnLayer.map((spawnDataItem) => {
+    const pathName = spawnDataItem.properties.pathName;
+    const layer = map.objects[pathName][0];
+    const waypoints = toTweenPoints(layer);
+
+    return new Spawner(mobGroup, spawnDataItem.properties, waypoints);
   });
-  // set standard properties
-  mobGroup.setAll('anchor', {x: .5, y: 1});
-  mobGroup.setAll('body.moves', false);
-  mobGroup.setAll('alive', false);
-  mobGroup.forEach(Mob.createPathTween, null, false, map);
- 
+
   //
   // Props group
   propGroup = physicsGroup();
@@ -59,5 +59,17 @@ export function loadTiledMap(game, mapKey) {
     , mobGroup
     , balloonGroup
     , propGroup
+    , spawnerList
+  };
+}
+
+
+function toTweenPoints(layer) {
+  const {x, y, polyline} = layer;
+  // We want:
+  //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]} 
+  return {
+    x: polyline.map((point) => { return point[0] + x; })
+    , y: polyline.map((point) => { return point[1] + y; })
   };
 }

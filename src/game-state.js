@@ -78,7 +78,10 @@ function create() {
 
   //
   // Start the action!
-  Mob.startTimedGame(map.mobGroup);
+  //Mob.startTimedGame(map.mobGroup);
+  map.spawnerList.forEach((spawner) => {
+    spawner.start();
+  });
 
   
   // sounds
