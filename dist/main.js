@@ -467,13 +467,14 @@
 
 	exports.MOB = MOB;
 	var MAP = {
-	  WAYPOINTS: 'MAP_WAYPOINTS',
 	  LAYER: {
 	    PATH: 'MAP_LAYER_PATH',
 	    MOBS: 'mobs',
 	    BALLOONS: 'balloons',
-	    PROPS: 'props'
-	  }
+	    PROPS: 'props',
+	    SPAWN: 'MAP_LAYER_SPAWN'
+	  },
+	  SPAWNER: 'MAP_SPAWNER'
 	};
 
 	exports.MAP = MAP;
@@ -498,29 +499,11 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports.spawn = spawn;
 	exports.createPathTween = createPathTween;
 	exports.startTimedGame = startTimedGame;
 	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = Phaser.Timer.SECOND * 15;
 	var HIT_RANGE = 5;
-
-	// Spawn a new sprite in the group.
-
-	function spawn(group, data, waypoints) {
-	  var spriteKey = data.spriteKey;
-
-	  var sprite = group.create(0, 0, spriteKey);
-
-	  sprite.alive = false;
-	  sprite.visible = false;
-	  sprite.anchor = { x: .5, y: 1 };
-	  sprite.body.moves = false; // use tweens
-	  sprite.data = data;
-	  //sprite.pathTween = createPathTween(sprite, waypoints);
-
-	  return sprite;
-	}
 
 	// Create tween between all points in the path.
 
@@ -551,7 +534,9 @@
 	  //  allow sprite to adjust the speed
 	  //  allow points to set/adjust the speed
 	  pathTween.to({ x: sx, y: sy }, speed);
+
 	  sprite.pathTween = pathTween;
+	  sprite.pathStart = { x: sx[0], y: sy[0] };
 	  return sprite;
 	}
 
@@ -563,9 +548,23 @@
 
 	  // activate/reset one human at a time with a time delay
 	  game.time.events.repeat(DELAY, length, function () {
-	    var mob = mobGroup.getAt(index);
+	    // FIX: get next mob in line
+	    // IDEA: alternate between paths
+	    // IDEA: Pick at random
+	    // IDEA: alternate paths & pick at random for that path.
+	    //const mob = mobGroup.getAt(index);
+	    var deadList = mobGroup.filter(function (sprite) {
+	      return !sprite.alive;
+	    });
+	    var mob = Phaser.ArrayUtils.getRandomItem(deadList.list);
+	    var _mob$pathStart = mob.pathStart;
+	    var x = _mob$pathStart.x;
+	    var y = _mob$pathStart.y;
 
-	    mob.reset(0, 0);
+	    // reset to first path point
+	    mob.reset(x, y);
+
+	    // FUTURE: if balloon is gone, pick another path on loop
 	    mob.pathTween.start().loop(true);
 
 	    // Keep our own index
@@ -680,7 +679,6 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports.loadLevel = loadLevel;
 	exports.loadTiledMap = loadTiledMap;
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
@@ -707,55 +705,6 @@
 
 	var _groupsJs = __webpack_require__(2);
 
-	// Load the level from a lvl object.
-
-	function loadLevel(lvl) {
-	  // These are in order by z-index
-	  var background = game.add.image(0, 0, lvl.background);
-	  var mobGroup = spawnMobGroup(lvl.mobs, lvl.waypoints);
-	  var fgGroup = spawnForegroundGroup(lvl.foreground);
-	  var balloonGroup = spawnBalloonGroup(lvl.balloons);
-
-	  return {
-	    background: background,
-	    score: 0,
-	    mobGroup: mobGroup,
-	    fgGroup: fgGroup,
-	    balloons: balloonGroup
-	  };
-	}
-
-	function spawnMobGroup(mobList, waypoints) {
-	  var group = (0, _groupsJs.physicsGroup)();
-
-	  mobList.forEach(function (mobData) {
-	    var pathName = mobData.pathName;
-	    var sprite = Mob.spawn(group, mobData, waypoints[pathName]);
-	  });
-
-	  return group;
-	}
-
-	function spawnForegroundGroup(foregroundList) {
-	  var group = (0, _groupsJs.physicsGroup)();
-
-	  foregroundList.forEach(function (data) {
-	    var sprite = Foreground.spawn(group, data);
-	  });
-
-	  return group;
-	}
-
-	function spawnBalloonGroup(balloonList) {
-	  var group = (0, _groupsJs.physicsGroup)();
-
-	  balloonList.forEach(function (data) {
-	    var sprite = Balloon.spawn(group, data);
-	  });
-
-	  return group;
-	}
-
 	function loadTiledMap(game, mapKey) {
 	  var map = game.add.tilemap(mapKey);
 	  var props = map.properties;
@@ -780,9 +729,9 @@
 	    map.createFromObjects(_constantsJs.MAP.LAYER.MOBS, _constantsJs.MOB[key], _constantsJs.MOB[key], null, true, false, mobGroup);
 	  });
 	  // set standard properties
-	  //mobGroup.setAll('anchor', {x: .25, y: .85});
 	  mobGroup.setAll('anchor', { x: .5, y: 1 });
 	  mobGroup.setAll('body.moves', false);
+	  mobGroup.setAll('alive', false);
 	  mobGroup.forEach(Mob.createPathTween, null, false, map);
 
 	  //
@@ -793,7 +742,8 @@
 	    map.createFromObjects(_constantsJs.MAP.LAYER.PROPS, _constantsJs.PROP[key], _constantsJs.PROP[key], null, true, false, propGroup);
 	  });
 	  // set standard properties
-	  propGroup.setAll('anchor', { x: .25, y: .85 });
+	  //propGroup.setAll('anchor', {x: .25, y: .85});
+	  mobGroup.setAll('anchor', { x: .5, y: 1 });
 	  propGroup.setAll('body.moves', false);
 	  propGroup.forEach(Prop.addAnimation);
 

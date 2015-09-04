@@ -163,7 +163,8 @@
                  "name":"MOB_KING",
                  "properties":
                     {
-                     "pathName":"mainPath"
+                     "pathName":"mainPath",
+                     "speed":"18000"
                     },
                  "rotation":0,
                  "type":"mainPath",
@@ -195,7 +196,8 @@
                  "name":"MOB_HORSE",
                  "properties":
                     {
-                     "pathName":"mainPath"
+                     "pathName":"mainPath",
+                     "speed":"10000"
                     },
                  "rotation":0,
                  "type":"mainPath",
@@ -259,13 +261,14 @@
                  "name":"MOB_HORSE",
                  "properties":
                     {
-                     "pathName":"altPath"
+                     "pathName":"altPath",
+                     "speed":"10000"
                     },
                  "rotation":0,
                  "type":"altPath",
                  "visible":true,
                  "width":64,
-                 "x":456,
+                 "x":528,
                  "y":-32
                 }, 
                 {
@@ -323,7 +326,8 @@
                  "name":"MOB_KING",
                  "properties":
                     {
-                     "pathName":"altPath"
+                     "pathName":"altPath",
+                     "speed":"18000"
                     },
                  "rotation":0,
                  "type":"altPath",
@@ -657,8 +661,8 @@
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":120,
-                 "y":152
+                 "x":184,
+                 "y":256
                 }, 
                 {
                  "gid":16,
@@ -730,8 +734,49 @@
          "width":0,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":12,
+         "name":"MAP_LAYER_SPAWN",
+         "objects":[
+                {
+                 "height":0,
+                 "id":79,
+                 "name":"MAP_SPAWNER",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":40,
+                         "y":0
+                        }, 
+                        {
+                         "x":16,
+                         "y":24
+                        }],
+                 "properties":
+                    {
+                     "mobList":"MOB_HORSE, MOB_KNIGHT",
+                     "pathName":"altPath"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":152,
+                 "y":-64
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":21,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":79,
+ "nextobjectid":82,
  "orientation":"orthogonal",
  "properties":
     {

@@ -7,13 +7,14 @@ export const MOB = {
 };
 
 export const MAP = {
-  WAYPOINTS: 'MAP_WAYPOINTS'
-  , LAYER: {
+  LAYER: {
     PATH: 'MAP_LAYER_PATH'
     , MOBS: 'mobs'
     , BALLOONS: 'balloons'
     , PROPS: 'props'
+    , SPAWN: 'MAP_LAYER_SPAWN'
   }
+  , SPAWNER: 'MAP_SPAWNER'
 };
 
 export const BALLOON = 'BALLOON';

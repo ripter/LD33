@@ -10,55 +10,6 @@ import {MAP, MOB, BALLOON, PROP} from './constants.js';
 // Groups with physics.
 import {physicsGroup} from './groups.js';
 
-// Load the level from a lvl object.
-export function loadLevel(lvl) {
-  // These are in order by z-index
-  const background = game.add.image(0, 0, lvl.background);
-  const mobGroup = spawnMobGroup(lvl.mobs, lvl.waypoints);
-  const fgGroup = spawnForegroundGroup(lvl.foreground);
-  const balloonGroup = spawnBalloonGroup(lvl.balloons);
-
-  return {
-    background: background
-    , score: 0
-    , mobGroup: mobGroup
-    , fgGroup: fgGroup
-    , balloons: balloonGroup
-  };
-}
-
-function spawnMobGroup(mobList, waypoints) {
-  let group = physicsGroup();
-
-  mobList.forEach((mobData) => {
-    const pathName = mobData.pathName;
-    const sprite = Mob.spawn(group, mobData, waypoints[pathName]);
-  });
-
-  return group;
-}
-
-function spawnForegroundGroup(foregroundList) {
-  let group = physicsGroup();
-
-  foregroundList.forEach((data) => {
-    const sprite = Foreground.spawn(group, data);
-  });
-
-  return group;
-}
-
-function spawnBalloonGroup(balloonList) {
-  let group = physicsGroup();
-  
-  balloonList.forEach((data) => {
-    const sprite = Balloon.spawn(group, data);
-  });
-
-  return group;
-}
-
-
 export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
   const props = map.properties;
@@ -80,11 +31,11 @@ export function loadTiledMap(game, mapKey) {
     map.createFromObjects(MAP.LAYER.MOBS, MOB[key], MOB[key], null, true, false, mobGroup);
   });
   // set standard properties
-  //mobGroup.setAll('anchor', {x: .25, y: .85});
   mobGroup.setAll('anchor', {x: .5, y: 1});
   mobGroup.setAll('body.moves', false);
+  mobGroup.setAll('alive', false);
   mobGroup.forEach(Mob.createPathTween, null, false, map);
-  
+ 
   //
   // Props group
   propGroup = physicsGroup();
@@ -93,7 +44,8 @@ export function loadTiledMap(game, mapKey) {
     map.createFromObjects(MAP.LAYER.PROPS, PROP[key], PROP[key], null, true, false, propGroup);
   });
   // set standard properties
-  propGroup.setAll('anchor', {x: .25, y: .85});
+  //propGroup.setAll('anchor', {x: .25, y: .85});
+  mobGroup.setAll('anchor', {x: .5, y: 1});
   propGroup.setAll('body.moves', false);
   propGroup.forEach(Prop.addAnimation);
   
