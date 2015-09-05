@@ -33,7 +33,6 @@ export function update(game, sprite, map) {
           }
           // We need to create a new one
           else {
-            console.log('NEW BULLET');
             fire = new Fire(x, y, bulletGroup);
           }
         });

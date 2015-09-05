@@ -85,7 +85,7 @@
    <polyline points="0,-8 0,40 -288,40 -288,104 -32,104 -32,200 -288,200 -288,264 -32,264 -32,416"/>
   </object>
  </objectgroup>
- <objectgroup name="mobs">
+ <objectgroup name="mobs" visible="0">
   <object id="43" name="MOB_KING" type="mainPath" gid="9" x="56" y="-24" width="64" height="64">
    <properties>
     <property name="pathName" value="mainPath"/>
@@ -148,7 +148,7 @@
  </objectgroup>
  <objectgroup name="balloons">
   <object id="51" name="BALLOON" gid="18" x="0" y="376" width="32" height="32"/>
-  <object id="53" name="BALLOON" gid="18" x="576" y="376" width="32" height="32"/>
+  <object id="53" name="BALLOON" gid="18" x="528" y="376" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="props">
   <object id="25" name="PROP_WALL" type="PROP_WALL" gid="17" x="0" y="136" width="64" height="64"/>

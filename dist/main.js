@@ -579,7 +579,7 @@
 	var Mob = (function (_Phaser$Sprite) {
 	  _inherits(Mob, _Phaser$Sprite);
 
-	  function Mob(type, group) {
+	  function Mob(type, group, waypoints) {
 	    _classCallCheck(this, Mob);
 
 	    var game = group.game;
@@ -594,6 +594,7 @@
 	    this.body.moves = false;
 	    this.mobType = type;
 
+	    this.setPath(waypoints);
 	    // debug stats
 	    window.mobCount += 1;
 	  }
@@ -603,8 +604,6 @@
 	  _createClass(Mob, [{
 	    key: 'start',
 	    value: function start() {
-	      var _this = this;
-
 	      var _pathStart = this.pathStart;
 	      var x = _pathStart.x;
 	      var y = _pathStart.y;
@@ -612,23 +611,25 @@
 	      // reset to first path point
 	      this.reset(x, y);
 	      this.pathTween.start(); //.loop(true);
-
-	      this.pathTween.onComplete.add(function (sprite, tween) {
-	        _this.kill();
-	      });
 	    }
 	  }, {
 	    key: 'kill',
 	    value: function kill() {
 	      _get(Object.getPrototypeOf(Mob.prototype), 'kill', this).call(this);
+	      console.log('kill');
+
 	      // Stop the tweeens!
-	      this.pathTween.stop();
+	      if (this.pathTween.isRunning) {
+	        this.pathTween.stop();
+	      }
 	    }
 
 	    // Sets the path to follow.
 	  }, {
 	    key: 'setPath',
 	    value: function setPath(waypoints) {
+	      var _this = this;
+
 	      var game = this.game;
 	      var speed = this.speed;
 	      var x = waypoints.x;
@@ -644,6 +645,10 @@
 	      //  allow sprite to adjust the speed
 	      //  allow points to set/adjust the speed
 	      pathTween.to({ x: x, y: y }, speed);
+	      pathTween.onComplete.add(function () {
+	        console.log('pathTween.onComplete');
+	        _this.kill();
+	      });
 
 	      this.pathStart = { x: x[0], y: y[0] };
 	      this.pathTween = pathTween;
@@ -735,7 +740,6 @@
 	          }
 	          // We need to create a new one
 	          else {
-	              console.log('NEW BULLET');
 	              fire = new _fireJs.Fire(x, y, bulletGroup);
 	            }
 	        });
@@ -1130,24 +1134,14 @@
 
 	      // Did get a mob to reuse?
 	      if (!mob) {
-	        mob = new _mobJs.Mob(type, group);
+	        console.log(type, '');
+	        // console.group('New mob');
+	        // console.log('type', type);
+	        // console.log('countLiving', group.countLiving());
+	        // console.log('countDead', group.countDead());
+	        // console.groupEnd();
+	        mob = new _mobJs.Mob(type, group, waypoints);
 	      }
-
-	      // const freeMobs = group.filter((sprite) => {
-	      //   return sprite.alive === false && sprite.mobType === type;
-	      // });
-	      // let mob;
-
-	      // //Do we have any free mobs we can recycle?
-	      // if (freeMobs.total > 0) {
-	      //   mob = freeMobs.first;
-	      // } else {
-	      //   // We have to create a new one.
-	      //   mob = new Mob(type, group);
-	      // }
-
-	      // Set the path
-	      mob.setPath(waypoints);
 
 	      return mob;
 	    }

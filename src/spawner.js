@@ -40,24 +40,14 @@ export class Spawner {
     
     // Did get a mob to reuse?
     if (!mob) {
-      mob = new Mob(type, group);
+      console.log(type, '');
+      // console.group('New mob');
+      // console.log('type', type);
+      // console.log('countLiving', group.countLiving());
+      // console.log('countDead', group.countDead());
+      // console.groupEnd();
+      mob = new Mob(type, group, waypoints);
     }
-    
-    // const freeMobs = group.filter((sprite) => {
-    //   return sprite.alive === false && sprite.mobType === type;
-    // });
-    // let mob;
-    
-    // //Do we have any free mobs we can recycle?
-    // if (freeMobs.total > 0) {
-    //   mob = freeMobs.first; 
-    // } else {
-    //   // We have to create a new one.
-    //   mob = new Mob(type, group); 
-    // }
-    
-    // Set the path
-    mob.setPath(waypoints);
 
     return mob;
   }

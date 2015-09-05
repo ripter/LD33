@@ -11,7 +11,7 @@ const HIT_RANGE = 5;
 window.mobCount = 0;
 
 export class Mob extends Phaser.Sprite {
-  constructor(type, group) {
+  constructor(type, group, waypoints) {
     const {game} = group;
     super(game, 100, 100, type);
     // We need to add to the group so we get physics .body
@@ -23,6 +23,7 @@ export class Mob extends Phaser.Sprite {
     this.body.moves = false;
     this.mobType = type;
     
+    this.setPath(waypoints);
     // debug stats
     window.mobCount += 1;
   }
@@ -35,15 +36,16 @@ export class Mob extends Phaser.Sprite {
     this.reset(x, y);
     this.pathTween.start();//.loop(true);
     
-    this.pathTween.onComplete.add((sprite, tween) => {
-      this.kill();
-    });
   }
   
   kill() {
     super.kill();
+    console.log('kill');
+
     // Stop the tweeens!
-    this.pathTween.stop();
+    if (this.pathTween.isRunning) {
+      this.pathTween.stop();
+    }
   }
   
   // Sets the path to follow.
@@ -60,6 +62,10 @@ export class Mob extends Phaser.Sprite {
     //  allow sprite to adjust the speed
     //  allow points to set/adjust the speed
     pathTween.to({x: x, y: y}, speed);
+    pathTween.onComplete.add(() => {
+      console.log('pathTween.onComplete');
+      this.kill();
+    });
 
     this.pathStart = {x: x[0], y: y[0]};
     this.pathTween = pathTween; 
