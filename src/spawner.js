@@ -31,36 +31,24 @@ export class Spawner {
     console.log('spawner.stop', arguments);
   }
 
+  // Returns the next mob
   next() {
     const {game, group, waypoints} = this;
     const type = Phaser.ArrayUtils.getRandomItem(this.availableMobs);
     let mob = getFirst(group, (sprite) => {
       return sprite.alive === false && sprite.mobType === type;
     });
-    let alive = makeArray(group.forEachAlive.bind(group));
-    let dead = makeArray(group.forEachDead.bind(group));
     
     // Did get a mob to reuse?
     if (!mob) {
-      console.log(type, 'dead.length', dead.length, 'countDead', group.countDead());
-      
-      if (dead.length > 0) {
-        debugger;
-      }
-      // console.group('New mob');
-      // console.log('type', type);
-      // console.log('countLiving', group.countLiving());
-      // console.log('countDead', group.countDead());
-      // console.groupEnd();
       mob = new Mob(type, group, waypoints);
-    } else {
-      console.log('RESUSE', type, mob.uuid);
     }
-
     return mob;
   }
 };
 
+// Takes a forEach function
+// @returns {Array} 
 function makeArray(forEachFunc) {
   const result = [];
   

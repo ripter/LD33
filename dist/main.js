@@ -103,7 +103,7 @@
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _controlsJs = __webpack_require__(9);
+	var _controlsJs = __webpack_require__(8);
 
 	var Controls = _interopRequireWildcard(_controlsJs);
 
@@ -570,8 +570,7 @@
 
 	var _constantsJs = __webpack_require__(5);
 
-	var _utilJs = __webpack_require__(8);
-
+	var USE_TWEEN = true;
 	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = Phaser.Timer.SECOND * 15;
 	var HIT_RANGE = 5;
@@ -591,16 +590,16 @@
 	    // We need to add to the group so we get physics .body
 	    group.add(this);
 
-	    this.uuid = (0, _utilJs.createUUID)();
 	    this.speed = SPEED;
 	    this.alive = false;
 	    this.anchor = { x: .5, y: 1 };
-	    this.body.moves = false;
+	    if (USE_TWEEN) {
+	      this.body.moves = false;
+	    }
 	    this.mobType = type;
 
 	    this.waypoints = waypoints;
 	    this.pathStart = { x: waypoints.x[0], y: waypoints.y[0] };
-	    //this.setPath(waypoints);
 
 	    // debug stats
 	    window.mobCount += 1;
@@ -617,16 +616,20 @@
 
 	      // reset to first path point
 	      this.reset(x, y);
-	      this.setPath(this.waypoints);
-	      this.pathTween.start(); //.loop(true);
+
+	      if (USE_TWEEN) {
+	        this.setPath(this.waypoints);
+	        this.pathTween.start();
+	      }
 	    }
 	  }, {
 	    key: 'kill',
 	    value: function kill() {
-	      console.log('Mob.kill', this.mobType, this.alive);
-	      // Stop the tweeens!
-	      if (this.pathTween.isRunning) {
-	        this.pathTween.stop();
+	      if (USE_TWEEN) {
+	        // Stop the tweeens!
+	        if (this.pathTween.isRunning) {
+	          this.pathTween.stop();
+	        }
 	      }
 
 	      _get(Object.getPrototypeOf(Mob.prototype), 'kill', this).call(this);
@@ -638,27 +641,29 @@
 	    value: function setPath(waypoints) {
 	      var _this = this;
 
-	      var game = this.game;
-	      var speed = this.speed;
-	      var x = waypoints.x;
-	      var y = waypoints.y;
+	      if (USE_TWEEN) {
+	        var _game = this.game;
+	        var speed = this.speed;
+	        var x = waypoints.x;
+	        var y = waypoints.y;
 
-	      var pathTween = game.add.tween(this);
+	        var pathTween = _game.add.tween(this);
 
-	      // speed is per point. So points that are further away will cause
-	      // the sprite to move faster.
-	      // On the plus, we can control speed via points.
-	      // Options:
-	      //  set speed as a function of distance between points.
-	      //  allow sprite to adjust the speed
-	      //  allow points to set/adjust the speed
-	      pathTween.to({ x: x, y: y }, speed);
-	      pathTween.onComplete.addOnce(function () {
-	        _this.kill();
-	      });
+	        // speed is per point. So points that are further away will cause
+	        // the sprite to move faster.
+	        // On the plus, we can control speed via points.
+	        // Options:
+	        //  set speed as a function of distance between points.
+	        //  allow sprite to adjust the speed
+	        //  allow points to set/adjust the speed
+	        pathTween.to({ x: x, y: y }, speed);
+	        pathTween.onComplete.addOnce(function () {
+	          _this.kill();
+	        });
 
-	      //this.pathStart = {x: x[0], y: y[0]};
-	      this.pathTween = pathTween;
+	        //this.pathStart = {x: x[0], y: y[0]};
+	        this.pathTween = pathTween;
+	      }
 	    }
 	  }]);
 
@@ -702,6 +707,77 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global Phaser */
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.update = update;
+
+	var _fireJs = __webpack_require__(4);
+
+	var _utilJs = __webpack_require__(9);
+
+	var MOVE_DELAY = 300;
+	var FIRE_DELAY = 500;
+	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
+	var atFireSpeed = (0, _utilJs.debounce)(FIRE_DELAY);
+
+	function update(game, sprite, map) {
+	  var bulletGroup = map.bulletGroup;
+
+	  var pointer = game.input.activePointer;
+	  var playerTween = undefined;
+
+	  if (pointer.isDown) {
+	    // We need to limit the speed since this function is called on update
+	    atMoveSpeed(game.time.events, function () {
+	      playerTween = game.add.tween(sprite);
+
+	      // Fire when the tween completes
+	      playerTween.onComplete.add(function () {
+	        var x = sprite.x;
+	        var y = sprite.y;
+
+	        // Limit the fire speed on top of the movement speed.
+	        atFireSpeed(game.time.events, function () {
+	          var fire = bulletGroup.getFirstDead();
+
+	          // if we are recycling
+	          if (fire) {
+	            fire.reset(x, y);
+	          }
+	          // We need to create a new one
+	          else {
+	              fire = new _fireJs.Fire(x, y, bulletGroup);
+	            }
+	        });
+	      });
+
+	      // move to the pointer
+	      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
+	    });
+	  }
+	}
+
+	// Returns an object to use with tween.to
+	function toPointer(sprite, pointer) {
+	  var width = sprite.width;
+	  var x = pointer.x;
+
+	  // Adjust for sprite size
+	  x -= width / 2;
+
+	  return {
+	    x: x
+	  };
+	}
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -758,77 +834,6 @@
 	        v = c == 'x' ? r : r & 0x3 | 0x8;
 	    return v.toString(16);
 	  });
-	}
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*global Phaser */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.update = update;
-
-	var _fireJs = __webpack_require__(4);
-
-	var _utilJs = __webpack_require__(8);
-
-	var MOVE_DELAY = 300;
-	var FIRE_DELAY = 500;
-	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
-	var atFireSpeed = (0, _utilJs.debounce)(FIRE_DELAY);
-
-	function update(game, sprite, map) {
-	  var bulletGroup = map.bulletGroup;
-
-	  var pointer = game.input.activePointer;
-	  var playerTween = undefined;
-
-	  if (pointer.isDown) {
-	    // We need to limit the speed since this function is called on update
-	    atMoveSpeed(game.time.events, function () {
-	      playerTween = game.add.tween(sprite);
-
-	      // Fire when the tween completes
-	      playerTween.onComplete.add(function () {
-	        var x = sprite.x;
-	        var y = sprite.y;
-
-	        // Limit the fire speed on top of the movement speed.
-	        atFireSpeed(game.time.events, function () {
-	          var fire = bulletGroup.getFirstDead();
-
-	          // if we are recycling
-	          if (fire) {
-	            fire.reset(x, y);
-	          }
-	          // We need to create a new one
-	          else {
-	              fire = new _fireJs.Fire(x, y, bulletGroup);
-	            }
-	        });
-	      });
-
-	      // move to the pointer
-	      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
-	    });
-	  }
-	}
-
-	// Returns an object to use with tween.to
-	function toPointer(sprite, pointer) {
-	  var width = sprite.width;
-	  var x = pointer.x;
-
-	  // Adjust for sprite size
-	  x -= width / 2;
-
-	  return {
-	    x: x
-	  };
 	}
 
 /***/ },
@@ -1100,7 +1105,7 @@
 
 	var _mobJs = __webpack_require__(7);
 
-	var _utilJs = __webpack_require__(8);
+	var _utilJs = __webpack_require__(9);
 
 	var DELAY = Phaser.Timer.SECOND;
 
@@ -1138,6 +1143,8 @@
 	    value: function stop() {
 	      console.log('spawner.stop', arguments);
 	    }
+
+	    // Returns the next mob
 	  }, {
 	    key: 'next',
 	    value: function next() {
@@ -1149,26 +1156,11 @@
 	      var mob = (0, _utilJs.getFirst)(group, function (sprite) {
 	        return sprite.alive === false && sprite.mobType === type;
 	      });
-	      var alive = makeArray(group.forEachAlive.bind(group));
-	      var dead = makeArray(group.forEachDead.bind(group));
 
 	      // Did get a mob to reuse?
 	      if (!mob) {
-	        console.log(type, 'dead.length', dead.length, 'countDead', group.countDead());
-
-	        if (dead.length > 0) {
-	          debugger;
-	        }
-	        // console.group('New mob');
-	        // console.log('type', type);
-	        // console.log('countLiving', group.countLiving());
-	        // console.log('countDead', group.countDead());
-	        // console.groupEnd();
 	        mob = new _mobJs.Mob(type, group, waypoints);
-	      } else {
-	        console.log('RESUSE', type, mob.uuid);
 	      }
-
 	      return mob;
 	    }
 	  }]);
@@ -1179,6 +1171,8 @@
 	exports.Spawner = Spawner;
 	;
 
+	// Takes a forEach function
+	// @returns {Array}
 	function makeArray(forEachFunc) {
 	  var result = [];
 

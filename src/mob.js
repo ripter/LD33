@@ -3,6 +3,7 @@
 
 import {MOB} from './constants.js';
 
+const USE_TWEEN = true;
 const DELAY = Phaser.Timer.SECOND;
 const SPEED = Phaser.Timer.SECOND * 15;
 const HIT_RANGE = 5;
@@ -20,7 +21,9 @@ export class Mob extends Phaser.Sprite {
     this.speed = SPEED;
     this.alive = false;
     this.anchor = {x: .5, y: 1};
-    this.body.moves = false;
+    if (USE_TWEEN) {
+      this.body.moves = false;
+    }
     this.mobType = type;
     
     this.waypoints = waypoints;
@@ -36,14 +39,19 @@ export class Mob extends Phaser.Sprite {
 
     // reset to first path point
     this.reset(x, y);
-    this.setPath(this.waypoints);
-    this.pathTween.start();//.loop(true);
+    
+    if (USE_TWEEN) {
+      this.setPath(this.waypoints);
+      this.pathTween.start();
+    }
   }
   
   kill() {
-    // Stop the tweeens!
-    if (this.pathTween.isRunning) {
-      this.pathTween.stop();
+    if (USE_TWEEN) {
+      // Stop the tweeens!
+      if (this.pathTween.isRunning) {
+        this.pathTween.stop();
+      }
     }
 
     super.kill();
@@ -51,24 +59,26 @@ export class Mob extends Phaser.Sprite {
   
   // Sets the path to follow.
   setPath(waypoints) {
-    const {game, speed} = this;
-    const {x, y} = waypoints;
-    const pathTween = game.add.tween(this);
+    if (USE_TWEEN) {
+      const {game, speed} = this;
+      const {x, y} = waypoints;
+      const pathTween = game.add.tween(this);
 
-    // speed is per point. So points that are further away will cause
-    // the sprite to move faster. 
-    // On the plus, we can control speed via points.
-    // Options:
-    //  set speed as a function of distance between points.
-    //  allow sprite to adjust the speed
-    //  allow points to set/adjust the speed
-    pathTween.to({x: x, y: y}, speed);
-    pathTween.onComplete.addOnce(() => {
-      this.kill();
-    });
+      // speed is per point. So points that are further away will cause
+      // the sprite to move faster. 
+      // On the plus, we can control speed via points.
+      // Options:
+      //  set speed as a function of distance between points.
+      //  allow sprite to adjust the speed
+      //  allow points to set/adjust the speed
+      pathTween.to({x: x, y: y}, speed);
+      pathTween.onComplete.addOnce(() => {
+        this.kill();
+      });
 
-    //this.pathStart = {x: x[0], y: y[0]};
-    this.pathTween = pathTween; 
+      //this.pathStart = {x: x[0], y: y[0]};
+      this.pathTween = pathTween; 
+    }
   }
 };
 
