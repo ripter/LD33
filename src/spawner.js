@@ -37,18 +37,36 @@ export class Spawner {
     let mob = getFirst(group, (sprite) => {
       return sprite.alive === false && sprite.mobType === type;
     });
+    let alive = makeArray(group.forEachAlive.bind(group));
+    let dead = makeArray(group.forEachDead.bind(group));
     
     // Did get a mob to reuse?
     if (!mob) {
-      console.log(type, '');
+      console.log(type, 'dead.length', dead.length, 'countDead', group.countDead());
+      
+      if (dead.length > 0) {
+        debugger;
+      }
       // console.group('New mob');
       // console.log('type', type);
       // console.log('countLiving', group.countLiving());
       // console.log('countDead', group.countDead());
       // console.groupEnd();
       mob = new Mob(type, group, waypoints);
+    } else {
+      console.log('RESUSE', type, mob.uuid);
     }
 
     return mob;
   }
 };
+
+function makeArray(forEachFunc) {
+  const result = [];
+  
+  forEachFunc((item) => {
+    result.push(item);
+  });
+  
+  return result;
+}

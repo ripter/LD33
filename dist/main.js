@@ -103,7 +103,7 @@
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _controlsJs = __webpack_require__(8);
+	var _controlsJs = __webpack_require__(9);
 
 	var Controls = _interopRequireWildcard(_controlsJs);
 
@@ -146,6 +146,7 @@
 
 	  // MAP
 	  game.load.tilemap('iphone-map', 'assets/maps/iphone.json', null, Phaser.Tilemap.TILED_JSON);
+	  game.load.tilemap('iphone-simple', 'assets/maps/iphone.simple.json', null, Phaser.Tilemap.TILED_JSON);
 	  game.load.image('pathSpriteSheet', 'assets/paths/pathSpriteSheet.png');
 	}
 
@@ -155,7 +156,7 @@
 	  game.currentScore = 0;
 
 	  // test loading tile map
-	  map = (0, _levelLoaderJs.loadTiledMap)(game, 'iphone-map');
+	  map = (0, _levelLoaderJs.loadTiledMap)(game, 'iphone-simple');
 	  window.map = game.currentMap = map;
 
 	  //window.level = level = loadLevel(levelFile);
@@ -569,6 +570,8 @@
 
 	var _constantsJs = __webpack_require__(5);
 
+	var _utilJs = __webpack_require__(8);
+
 	var DELAY = Phaser.Timer.SECOND;
 	var SPEED = Phaser.Timer.SECOND * 15;
 	var HIT_RANGE = 5;
@@ -588,13 +591,16 @@
 	    // We need to add to the group so we get physics .body
 	    group.add(this);
 
+	    this.uuid = (0, _utilJs.createUUID)();
 	    this.speed = SPEED;
 	    this.alive = false;
 	    this.anchor = { x: .5, y: 1 };
 	    this.body.moves = false;
 	    this.mobType = type;
 
-	    this.setPath(waypoints);
+	    this.waypoints = waypoints;
+	    this.pathStart = { x: waypoints.x[0], y: waypoints.y[0] };
+	    //this.setPath(waypoints);
 	    // debug stats
 	    window.mobCount += 1;
 	  }
@@ -610,18 +616,19 @@
 
 	      // reset to first path point
 	      this.reset(x, y);
+	      this.setPath(this.waypoints);
 	      this.pathTween.start(); //.loop(true);
 	    }
 	  }, {
 	    key: 'kill',
 	    value: function kill() {
-	      _get(Object.getPrototypeOf(Mob.prototype), 'kill', this).call(this);
-	      console.log('kill');
-
+	      console.log('Mob.kill', this.mobType, this.alive);
 	      // Stop the tweeens!
 	      if (this.pathTween.isRunning) {
 	        this.pathTween.stop();
 	      }
+
+	      _get(Object.getPrototypeOf(Mob.prototype), 'kill', this).call(this);
 	    }
 
 	    // Sets the path to follow.
@@ -645,12 +652,11 @@
 	      //  allow sprite to adjust the speed
 	      //  allow points to set/adjust the speed
 	      pathTween.to({ x: x, y: y }, speed);
-	      pathTween.onComplete.add(function () {
-	        console.log('pathTween.onComplete');
+	      pathTween.onComplete.addOnce(function () {
 	        _this.kill();
 	      });
 
-	      this.pathStart = { x: x[0], y: y[0] };
+	      //this.pathStart = {x: x[0], y: y[0]};
 	      this.pathTween = pathTween;
 	    }
 	  }]);
@@ -695,6 +701,66 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	// Calls function only after delay time has passed.
+	// poor man's debounce, using phaser's event timer
+	// Returns a function that can only be called after the deplay.
+	// If func can not be called, returns false.
+	// If func can be called, returns result of func
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.debounce = debounce;
+	exports.getFirst = getFirst;
+	exports.createUUID = createUUID;
+
+	function debounce(delay) {
+	  var isReady = true;
+
+	  return function (eventTimer, func) {
+	    // ignore calls until ready
+	    if (!isReady) {
+	      return false;
+	    }
+	    // We are going to call func, so we are not ready.
+	    isReady = false;
+
+	    // Start the delay
+	    eventTimer.add(delay, function () {
+	      isReady = true;
+	    });
+
+	    // call the function
+	    return func();
+	  };
+	}
+
+	function getFirst(group, predicate) {
+	  var availableSet = group.filter(predicate);
+
+	  // are there any we can recycle?
+	  if (availableSet.total > 0) {
+	    return availableSet.first;
+	  }
+
+	  return null;
+	}
+
+	// http://stackoverflow.com/a/2117523
+
+	function createUUID() {
+	  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+	    var r = Math.random() * 16 | 0,
+	        v = c == 'x' ? r : r & 0x3 | 0x8;
+	    return v.toString(16);
+	  });
+	}
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser */
@@ -707,7 +773,7 @@
 
 	var _fireJs = __webpack_require__(4);
 
-	var _utilJs = __webpack_require__(9);
+	var _utilJs = __webpack_require__(8);
 
 	var MOVE_DELAY = 300;
 	var FIRE_DELAY = 500;
@@ -762,55 +828,6 @@
 	  return {
 	    x: x
 	  };
-	}
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	// Calls function only after delay time has passed.
-	// poor man's debounce, using phaser's event timer
-	// Returns a function that can only be called after the deplay.
-	// If func can not be called, returns false.
-	// If func can be called, returns result of func
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.debounce = debounce;
-	exports.getFirst = getFirst;
-
-	function debounce(delay) {
-	  var isReady = true;
-
-	  return function (eventTimer, func) {
-	    // ignore calls until ready
-	    if (!isReady) {
-	      return false;
-	    }
-	    // We are going to call func, so we are not ready.
-	    isReady = false;
-
-	    // Start the delay
-	    eventTimer.add(delay, function () {
-	      isReady = true;
-	    });
-
-	    // call the function
-	    return func();
-	  };
-	}
-
-	function getFirst(group, predicate) {
-	  var availableSet = group.filter(predicate);
-
-	  // are there any we can recycle?
-	  if (availableSet.total > 0) {
-	    return availableSet.first;
-	  }
-
-	  return null;
 	}
 
 /***/ },
@@ -1082,7 +1099,7 @@
 
 	var _mobJs = __webpack_require__(7);
 
-	var _utilJs = __webpack_require__(9);
+	var _utilJs = __webpack_require__(8);
 
 	var DELAY = Phaser.Timer.SECOND;
 
@@ -1131,16 +1148,24 @@
 	      var mob = (0, _utilJs.getFirst)(group, function (sprite) {
 	        return sprite.alive === false && sprite.mobType === type;
 	      });
+	      var alive = makeArray(group.forEachAlive.bind(group));
+	      var dead = makeArray(group.forEachDead.bind(group));
 
 	      // Did get a mob to reuse?
 	      if (!mob) {
-	        console.log(type, '');
+	        console.log(type, 'dead.length', dead.length, 'countDead', group.countDead());
+
+	        if (dead.length > 0) {
+	          debugger;
+	        }
 	        // console.group('New mob');
 	        // console.log('type', type);
 	        // console.log('countLiving', group.countLiving());
 	        // console.log('countDead', group.countDead());
 	        // console.groupEnd();
 	        mob = new _mobJs.Mob(type, group, waypoints);
+	      } else {
+	        console.log('RESUSE', type, mob.uuid);
 	      }
 
 	      return mob;
@@ -1152,6 +1177,16 @@
 
 	exports.Spawner = Spawner;
 	;
+
+	function makeArray(forEachFunc) {
+	  var result = [];
+
+	  forEachFunc(function (item) {
+	    result.push(item);
+	  });
+
+	  return result;
+	}
 
 /***/ },
 /* 14 */

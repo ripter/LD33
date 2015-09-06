@@ -2,6 +2,7 @@
 'use strict';
 
 import {MOB} from './constants.js';
+import {createUUID} from './util.js';
 
 const DELAY = Phaser.Timer.SECOND;
 const SPEED = Phaser.Timer.SECOND * 15;
@@ -17,13 +18,16 @@ export class Mob extends Phaser.Sprite {
     // We need to add to the group so we get physics .body
     group.add(this);
     
+    this.uuid = createUUID();
     this.speed = SPEED;
     this.alive = false;
     this.anchor = {x: .5, y: 1};
     this.body.moves = false;
     this.mobType = type;
     
-    this.setPath(waypoints);
+    this.waypoints = waypoints;
+    this.pathStart = {x: waypoints.x[0], y: waypoints.y[0]};
+    //this.setPath(waypoints);
     // debug stats
     window.mobCount += 1;
   }
@@ -34,18 +38,18 @@ export class Mob extends Phaser.Sprite {
 
     // reset to first path point
     this.reset(x, y);
+    this.setPath(this.waypoints);
     this.pathTween.start();//.loop(true);
-    
   }
   
   kill() {
-    super.kill();
-    console.log('kill');
-
+    console.log('Mob.kill', this.mobType, this.alive);
     // Stop the tweeens!
     if (this.pathTween.isRunning) {
       this.pathTween.stop();
     }
+
+    super.kill();
   }
   
   // Sets the path to follow.
@@ -62,12 +66,11 @@ export class Mob extends Phaser.Sprite {
     //  allow sprite to adjust the speed
     //  allow points to set/adjust the speed
     pathTween.to({x: x, y: y}, speed);
-    pathTween.onComplete.add(() => {
-      console.log('pathTween.onComplete');
+    pathTween.onComplete.addOnce(() => {
       this.kill();
     });
 
-    this.pathStart = {x: x[0], y: y[0]};
+    //this.pathStart = {x: x[0], y: y[0]};
     this.pathTween = pathTween; 
   }
 };

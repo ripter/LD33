@@ -43,6 +43,7 @@ function preload() {
   
   // MAP
   game.load.tilemap('iphone-map', 'assets/maps/iphone.json', null, Phaser.Tilemap.TILED_JSON);
+  game.load.tilemap('iphone-simple', 'assets/maps/iphone.simple.json', null, Phaser.Tilemap.TILED_JSON);
   game.load.image('pathSpriteSheet', 'assets/paths/pathSpriteSheet.png');
 }
 
@@ -52,7 +53,7 @@ function create() {
   game.currentScore = 0;
 
   // test loading tile map
-  map = loadTiledMap(game, 'iphone-map');
+  map = loadTiledMap(game, 'iphone-simple');
   window.map = game.currentMap = map;
   
 

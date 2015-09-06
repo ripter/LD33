@@ -1,7 +1,7 @@
 { "height":12,
  "layers":[
         {
-         "data":[6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 3, 1, 3, 1, 3, 3, 5, 1, 0, 5, 3, 3, 5, 1, 5, 5, 5, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 1, 3, 3, 5, 1, 3, 3, 1, 1, 5, 0, 1, 1, 3, 5, 1, 3, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 1, 1, 5, 1, 1, 1, 1, 3, 0, 0, 5, 1, 1, 1, 3, 1, 1, 5, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 3, 1, 5, 3, 3, 3, 0, 0, 5, 1, 5, 3, 3, 1, 3, 3, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 5, 3, 3, 3, 5, 3, 3, 3, 5, 3, 1, 3, 1, 5, 3, 5, 1, 3, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 1, 5, 1, 5, 1, 5, 3, 1, 3, 5, 3, 1, 5, 1, 3, 3, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 1, 3, 3, 5, 3, 3, 3, 1, 1, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 3, 5, 3, 5, 3, 5, 3, 1, 5, 5, 5, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 3, 1, 3, 3, 3, 3, 5, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":12,
          "name":"MAP_LAYER_PATH",
          "opacity":1,
@@ -14,52 +14,56 @@
         {
          "draworder":"topdown",
          "height":0,
-         "name":"mainPath",
+         "name":"zigPath",
          "objects":[
                 {
                  "height":0,
-                 "id":34,
+                 "id":83,
                  "name":"",
                  "polyline":[
                         {
                          "x":0,
-                         "y":-8
+                         "y":0
                         }, 
                         {
-                         "x":0,
-                         "y":72
+                         "x":80,
+                         "y":0
                         }, 
                         {
-                         "x":224,
-                         "y":72
+                         "x":80,
+                         "y":64
                         }, 
                         {
-                         "x":224,
-                         "y":136
+                         "x":144,
+                         "y":64
                         }, 
                         {
-                         "x":0,
-                         "y":136
+                         "x":144,
+                         "y":128
                         }, 
                         {
-                         "x":0,
-                         "y":200
+                         "x":208,
+                         "y":128
                         }, 
                         {
-                         "x":224,
-                         "y":200
+                         "x":208,
+                         "y":192
                         }, 
                         {
-                         "x":224,
-                         "y":264
+                         "x":272,
+                         "y":192
                         }, 
                         {
-                         "x":0,
-                         "y":264
+                         "x":272,
+                         "y":256
                         }, 
                         {
-                         "x":0,
-                         "y":416
+                         "x":656,
+                         "y":256
+                        }, 
+                        {
+                         "x":656,
+                         "y":296
                         }],
                  "properties":
                     {
@@ -69,8 +73,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":16,
-                 "y":8
+                 "x":0,
+                 "y":48
                 }],
          "opacity":1,
          "properties":
@@ -79,266 +83,6 @@
             },
          "type":"objectgroup",
          "visible":true,
-         "width":0,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "height":0,
-         "name":"altPath",
-         "objects":[
-                {
-                 "height":0,
-                 "id":35,
-                 "name":"",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":-8
-                        }, 
-                        {
-                         "x":0,
-                         "y":40
-                        }, 
-                        {
-                         "x":-288,
-                         "y":40
-                        }, 
-                        {
-                         "x":-288,
-                         "y":104
-                        }, 
-                        {
-                         "x":-32,
-                         "y":104
-                        }, 
-                        {
-                         "x":-32,
-                         "y":200
-                        }, 
-                        {
-                         "x":-288,
-                         "y":200
-                        }, 
-                        {
-                         "x":-288,
-                         "y":264
-                        }, 
-                        {
-                         "x":-32,
-                         "y":264
-                        }, 
-                        {
-                         "x":-32,
-                         "y":416
-                        }],
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":624,
-                 "y":8
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "width":0,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "height":0,
-         "name":"mobs",
-         "objects":[
-                {
-                 "gid":9,
-                 "height":64,
-                 "id":43,
-                 "name":"MOB_KING",
-                 "properties":
-                    {
-                     "pathName":"mainPath",
-                     "speed":"18000"
-                    },
-                 "rotation":0,
-                 "type":"mainPath",
-                 "visible":true,
-                 "width":64,
-                 "x":56,
-                 "y":-24
-                }, 
-                {
-                 "gid":8,
-                 "height":64,
-                 "id":44,
-                 "name":"MOB_KNIGHT",
-                 "properties":
-                    {
-                     "pathName":"altPath"
-                    },
-                 "rotation":0,
-                 "type":"altPath",
-                 "visible":true,
-                 "width":64,
-                 "x":352,
-                 "y":-32
-                }, 
-                {
-                 "gid":7,
-                 "height":64,
-                 "id":45,
-                 "name":"MOB_HORSE",
-                 "properties":
-                    {
-                     "pathName":"mainPath",
-                     "speed":"10000"
-                    },
-                 "rotation":0,
-                 "type":"mainPath",
-                 "visible":true,
-                 "width":64,
-                 "x":456,
-                 "y":-32
-                }, 
-                {
-                 "gid":8,
-                 "height":64,
-                 "id":54,
-                 "name":"MOB_KNIGHT",
-                 "properties":
-                    {
-                     "pathName":"altPath"
-                    },
-                 "rotation":0,
-                 "type":"altPath",
-                 "visible":true,
-                 "width":64,
-                 "x":352,
-                 "y":-32
-                }, 
-                {
-                 "gid":8,
-                 "height":64,
-                 "id":55,
-                 "name":"MOB_KNIGHT",
-                 "properties":
-                    {
-                     "pathName":"altPath"
-                    },
-                 "rotation":0,
-                 "type":"altPath",
-                 "visible":true,
-                 "width":64,
-                 "x":352,
-                 "y":-32
-                }, 
-                {
-                 "gid":8,
-                 "height":64,
-                 "id":56,
-                 "name":"MOB_KNIGHT",
-                 "properties":
-                    {
-                     "pathName":"altPath"
-                    },
-                 "rotation":0,
-                 "type":"altPath",
-                 "visible":true,
-                 "width":64,
-                 "x":352,
-                 "y":-32
-                }, 
-                {
-                 "gid":7,
-                 "height":64,
-                 "id":57,
-                 "name":"MOB_HORSE",
-                 "properties":
-                    {
-                     "pathName":"altPath",
-                     "speed":"10000"
-                    },
-                 "rotation":0,
-                 "type":"altPath",
-                 "visible":true,
-                 "width":64,
-                 "x":528,
-                 "y":-32
-                }, 
-                {
-                 "gid":8,
-                 "height":64,
-                 "id":58,
-                 "name":"MOB_KNIGHT",
-                 "properties":
-                    {
-                     "pathName":"mainPath"
-                    },
-                 "rotation":0,
-                 "type":"mainPath",
-                 "visible":true,
-                 "width":64,
-                 "x":352,
-                 "y":-32
-                }, 
-                {
-                 "gid":8,
-                 "height":64,
-                 "id":59,
-                 "name":"MOB_KNIGHT",
-                 "properties":
-                    {
-                     "pathName":"mainPath"
-                    },
-                 "rotation":0,
-                 "type":"mainPath",
-                 "visible":true,
-                 "width":64,
-                 "x":352,
-                 "y":-32
-                }, 
-                {
-                 "gid":8,
-                 "height":64,
-                 "id":60,
-                 "name":"MOB_KNIGHT",
-                 "properties":
-                    {
-                     "pathName":"mainPath"
-                    },
-                 "rotation":0,
-                 "type":"mainPath",
-                 "visible":true,
-                 "width":64,
-                 "x":352,
-                 "y":-32
-                }, 
-                {
-                 "gid":9,
-                 "height":64,
-                 "id":61,
-                 "name":"MOB_KING",
-                 "properties":
-                    {
-                     "pathName":"altPath",
-                     "speed":"18000"
-                    },
-                 "rotation":0,
-                 "type":"altPath",
-                 "visible":true,
-                 "width":64,
-                 "x":56,
-                 "y":-24
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
          "width":0,
          "x":0,
          "y":0
@@ -361,24 +105,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":0,
-                 "y":376
-                }, 
-                {
-                 "gid":18,
-                 "height":32,
-                 "id":53,
-                 "name":"BALLOON",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":528,
-                 "y":376
+                 "x":640,
+                 "y":368
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -730,45 +458,16 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "width":0,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":0,
+         "height":12,
          "name":"MAP_LAYER_SPAWN",
          "objects":[
-                {
-                 "height":0,
-                 "id":79,
-                 "name":"MAP_SPAWNER",
-                 "polygon":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":40,
-                         "y":0
-                        }, 
-                        {
-                         "x":16,
-                         "y":24
-                        }],
-                 "properties":
-                    {
-                     "mobList":"MOB_HORSE, MOB_KNIGHT",
-                     "pathName":"altPath"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":608,
-                 "y":-24
-                }, 
                 {
                  "height":0,
                  "id":82,
@@ -788,8 +487,8 @@
                         }],
                  "properties":
                     {
-                     "mobList":"MOB_HORSE, MOB_KNIGHT, MOB_KING, MOB_HORSE, MOB_KNIGHT",
-                     "pathName":"mainPath"
+                     "mobList":"MOB_KNIGHT",
+                     "pathName":"zigPath"
                     },
                  "rotation":0,
                  "type":"",
@@ -801,11 +500,11 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":0,
+         "width":21,
          "x":0,
          "y":0
         }],
- "nextobjectid":83,
+ "nextobjectid":85,
  "orientation":"orthogonal",
  "properties":
     {
