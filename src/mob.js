@@ -2,7 +2,6 @@
 'use strict';
 
 import {MOB} from './constants.js';
-import {createUUID} from './util.js';
 
 const DELAY = Phaser.Timer.SECOND;
 const SPEED = Phaser.Timer.SECOND * 15;
@@ -18,7 +17,6 @@ export class Mob extends Phaser.Sprite {
     // We need to add to the group so we get physics .body
     group.add(this);
     
-    this.uuid = createUUID();
     this.speed = SPEED;
     this.alive = false;
     this.anchor = {x: .5, y: 1};
@@ -27,7 +25,7 @@ export class Mob extends Phaser.Sprite {
     
     this.waypoints = waypoints;
     this.pathStart = {x: waypoints.x[0], y: waypoints.y[0]};
-    //this.setPath(waypoints);
+
     // debug stats
     window.mobCount += 1;
   }
@@ -43,7 +41,6 @@ export class Mob extends Phaser.Sprite {
   }
   
   kill() {
-    console.log('Mob.kill', this.mobType, this.alive);
     // Stop the tweeens!
     if (this.pathTween.isRunning) {
       this.pathTween.stop();

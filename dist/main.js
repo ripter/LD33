@@ -601,6 +601,7 @@
 	    this.waypoints = waypoints;
 	    this.pathStart = { x: waypoints.x[0], y: waypoints.y[0] };
 	    //this.setPath(waypoints);
+
 	    // debug stats
 	    window.mobCount += 1;
 	  }
