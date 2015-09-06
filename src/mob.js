@@ -1,6 +1,7 @@
 /*global Phaser, game */
 'use strict';
 
+import * as mobTween from './mob/tween.js';
 import {MOB} from './constants.js';
 
 const USE_TWEEN = true;
@@ -18,16 +19,16 @@ export class Mob extends Phaser.Sprite {
     // We need to add to the group so we get physics .body
     group.add(this);
     
-    this.speed = SPEED;
     this.alive = false;
     this.anchor = {x: .5, y: 1};
-    if (USE_TWEEN) {
-      this.body.moves = false;
-    }
     this.mobType = type;
-    
-    this.waypoints = waypoints;
     this.pathStart = {x: waypoints.x[0], y: waypoints.y[0]};
+    this.speed = SPEED;
+    this.waypoints = waypoints;
+
+    if (USE_TWEEN) {
+      mobTween.init(this);
+    }
 
     // debug stats
     window.mobCount += 1;
@@ -35,51 +36,28 @@ export class Mob extends Phaser.Sprite {
   
   // Start the mob moving along the path.
   start() {
+    const {waypoints} = this;
     const {x, y} = this.pathStart;
 
     // reset to first path point
     this.reset(x, y);
     
     if (USE_TWEEN) {
-      this.setPath(this.waypoints);
-      this.pathTween.start();
+      mobTween.start(this, waypoints) 
+        .onComplete.addOnce(() => {
+        this.kill();
+      });
     }
   }
   
   kill() {
     if (USE_TWEEN) {
-      // Stop the tweeens!
-      if (this.pathTween.isRunning) {
-        this.pathTween.stop();
-      }
+      mobTween.stop(this);
     }
 
     super.kill();
   }
   
-  // Sets the path to follow.
-  setPath(waypoints) {
-    if (USE_TWEEN) {
-      const {game, speed} = this;
-      const {x, y} = waypoints;
-      const pathTween = game.add.tween(this);
-
-      // speed is per point. So points that are further away will cause
-      // the sprite to move faster. 
-      // On the plus, we can control speed via points.
-      // Options:
-      //  set speed as a function of distance between points.
-      //  allow sprite to adjust the speed
-      //  allow points to set/adjust the speed
-      pathTween.to({x: x, y: y}, speed);
-      pathTween.onComplete.addOnce(() => {
-        this.kill();
-      });
-
-      //this.pathStart = {x: x[0], y: y[0]};
-      this.pathTween = pathTween; 
-    }
-  }
 };
 
 

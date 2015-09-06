@@ -53,11 +53,11 @@
 
 	var _gameStateJs2 = _interopRequireDefault(_gameStateJs);
 
-	var _startStateJs = __webpack_require__(15);
+	var _startStateJs = __webpack_require__(16);
 
 	var _startStateJs2 = _interopRequireDefault(_startStateJs);
 
-	var _endStateJs = __webpack_require__(16);
+	var _endStateJs = __webpack_require__(17);
 
 	var _endStateJs2 = _interopRequireDefault(_endStateJs);
 
@@ -103,13 +103,13 @@
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _controlsJs = __webpack_require__(8);
+	var _controlsJs = __webpack_require__(9);
 
 	var Controls = _interopRequireWildcard(_controlsJs);
 
-	var _levelLoaderJs = __webpack_require__(10);
+	var _levelLoaderJs = __webpack_require__(11);
 
-	var _fontsJs = __webpack_require__(14);
+	var _fontsJs = __webpack_require__(15);
 
 	var _constantsJs = __webpack_require__(5);
 
@@ -564,9 +564,15 @@
 
 	exports.startTimedGame = startTimedGame;
 
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _mobTweenJs = __webpack_require__(8);
+
+	var mobTween = _interopRequireWildcard(_mobTweenJs);
 
 	var _constantsJs = __webpack_require__(5);
 
@@ -590,16 +596,16 @@
 	    // We need to add to the group so we get physics .body
 	    group.add(this);
 
-	    this.speed = SPEED;
 	    this.alive = false;
 	    this.anchor = { x: .5, y: 1 };
-	    if (USE_TWEEN) {
-	      this.body.moves = false;
-	    }
 	    this.mobType = type;
-
-	    this.waypoints = waypoints;
 	    this.pathStart = { x: waypoints.x[0], y: waypoints.y[0] };
+	    this.speed = SPEED;
+	    this.waypoints = waypoints;
+
+	    if (USE_TWEEN) {
+	      mobTween.init(this);
+	    }
 
 	    // debug stats
 	    window.mobCount += 1;
@@ -610,6 +616,9 @@
 	  _createClass(Mob, [{
 	    key: 'start',
 	    value: function start() {
+	      var _this = this;
+
+	      var waypoints = this.waypoints;
 	      var _pathStart = this.pathStart;
 	      var x = _pathStart.x;
 	      var y = _pathStart.y;
@@ -618,52 +627,19 @@
 	      this.reset(x, y);
 
 	      if (USE_TWEEN) {
-	        this.setPath(this.waypoints);
-	        this.pathTween.start();
+	        mobTween.start(this, waypoints).onComplete.addOnce(function () {
+	          _this.kill();
+	        });
 	      }
 	    }
 	  }, {
 	    key: 'kill',
 	    value: function kill() {
 	      if (USE_TWEEN) {
-	        // Stop the tweeens!
-	        if (this.pathTween.isRunning) {
-	          this.pathTween.stop();
-	        }
+	        mobTween.stop(this);
 	      }
 
 	      _get(Object.getPrototypeOf(Mob.prototype), 'kill', this).call(this);
-	    }
-
-	    // Sets the path to follow.
-	  }, {
-	    key: 'setPath',
-	    value: function setPath(waypoints) {
-	      var _this = this;
-
-	      if (USE_TWEEN) {
-	        var _game = this.game;
-	        var speed = this.speed;
-	        var x = waypoints.x;
-	        var y = waypoints.y;
-
-	        var pathTween = _game.add.tween(this);
-
-	        // speed is per point. So points that are further away will cause
-	        // the sprite to move faster.
-	        // On the plus, we can control speed via points.
-	        // Options:
-	        //  set speed as a function of distance between points.
-	        //  allow sprite to adjust the speed
-	        //  allow points to set/adjust the speed
-	        pathTween.to({ x: x, y: y }, speed);
-	        pathTween.onComplete.addOnce(function () {
-	          _this.kill();
-	        });
-
-	        //this.pathStart = {x: x[0], y: y[0]};
-	        this.pathTween = pathTween;
-	      }
 	    }
 	  }]);
 
@@ -707,6 +683,75 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	/*global Phaser, game */
+	'use strict';
+
+	// initalize the sprite for tween functions
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.init = init;
+	exports.start = start;
+	exports.stop = stop;
+
+	function init(sprite) {
+	  // Let the physics engine know we
+	  // are using tweens now.
+	  sprite.body.moves = false;
+	}
+
+	// Start the tween
+	// waypoints:
+	//     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]}
+
+	function start(sprite, waypoints) {
+	  setPath(sprite, waypoints);
+	  sprite.pathTween.start();
+
+	  return sprite.pathTween;
+	}
+
+	// Stop the tween
+
+	function stop(sprite) {
+	  if (!sprite.pathTween) {
+	    return;
+	  }
+
+	  // Stop the tweeens!
+	  if (sprite.pathTween.isRunning) {
+	    sprite.pathTween.stop();
+	  }
+	  sprite.pathTween = null;
+	}
+
+	// Sets the path to follow.
+	function setPath(sprite, waypoints) {
+	  var game = sprite.game;
+	  var speed = sprite.speed;
+	  var x = waypoints.x;
+	  var y = waypoints.y;
+
+	  var pathTween = game.add.tween(sprite);
+
+	  // speed is per point. So points that are further away will cause
+	  // the sprite to move faster.
+	  // On the plus, we can control speed via points.
+	  // Options:
+	  //  set speed as a function of distance between points.
+	  //  allow sprite to adjust the speed
+	  //  allow points to set/adjust the speed
+	  pathTween.to({ x: x, y: y }, speed);
+
+	  //this.pathStart = {x: x[0], y: y[0]};
+	  sprite.pathTween = pathTween;
+	  return pathTween;
+	}
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser */
@@ -719,7 +764,7 @@
 
 	var _fireJs = __webpack_require__(4);
 
-	var _utilJs = __webpack_require__(9);
+	var _utilJs = __webpack_require__(10);
 
 	var MOVE_DELAY = 300;
 	var FIRE_DELAY = 500;
@@ -777,7 +822,7 @@
 	}
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -837,7 +882,7 @@
 	}
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game, bullets */
@@ -854,7 +899,7 @@
 
 	var Mob = _interopRequireWildcard(_mobJs);
 
-	var _foregroundJs = __webpack_require__(11);
+	var _foregroundJs = __webpack_require__(12);
 
 	var Foreground = _interopRequireWildcard(_foregroundJs);
 
@@ -862,11 +907,11 @@
 
 	var Prop = _interopRequireWildcard(_propJs);
 
-	var _balloonJs = __webpack_require__(12);
+	var _balloonJs = __webpack_require__(13);
 
 	var Balloon = _interopRequireWildcard(_balloonJs);
 
-	var _spawnerJs = __webpack_require__(13);
+	var _spawnerJs = __webpack_require__(14);
 
 	var _constantsJs = __webpack_require__(5);
 
@@ -955,7 +1000,7 @@
 	}
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -1063,7 +1108,7 @@
 	}
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -1089,7 +1134,7 @@
 	}
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser */
@@ -1105,7 +1150,7 @@
 
 	var _mobJs = __webpack_require__(7);
 
-	var _utilJs = __webpack_require__(9);
+	var _utilJs = __webpack_require__(10);
 
 	var DELAY = Phaser.Timer.SECOND;
 
@@ -1184,7 +1229,7 @@
 	}
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/*global Phaser, game */
@@ -1212,7 +1257,7 @@
 	exports.sceneFont = sceneFont;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -1222,7 +1267,7 @@
 	  value: true
 	});
 
-	var _fontsJs = __webpack_require__(14);
+	var _fontsJs = __webpack_require__(15);
 
 	//
 	// Lifecycle
@@ -1263,7 +1308,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*global Phaser, game */
@@ -1275,11 +1320,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _fontsJs = __webpack_require__(14);
+	var _fontsJs = __webpack_require__(15);
 
 	var _gameStateJs = __webpack_require__(1);
 
-	var _levelsIphoneJs = __webpack_require__(17);
+	var _levelsIphoneJs = __webpack_require__(18);
 
 	var _levelsIphoneJs2 = _interopRequireDefault(_levelsIphoneJs);
 
@@ -1358,7 +1403,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
