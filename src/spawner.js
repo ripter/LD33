@@ -1,7 +1,7 @@
 /*global Phaser */
 'use strict';
 
-const DELAY = Phaser.Timer.SECOND;
+const DELAY = Phaser.Timer.SECOND * 3;
 import {Mob} from './mob.js';
 import {getFirst} from './util.js';
 

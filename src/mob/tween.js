@@ -1,4 +1,4 @@
-/*global Phaser, game */
+/*global */
 'use strict';
 
 

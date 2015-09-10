@@ -2,9 +2,10 @@
 'use strict';
 
 import * as mobTween from './mob/tween.js';
+import * as mobPath from './mob/path.js';
 import {MOB} from './constants.js';
 
-const USE_TWEEN = true;
+const USE_TWEEN = false;
 const DELAY = Phaser.Timer.SECOND;
 const SPEED = Phaser.Timer.SECOND * 15;
 const HIT_RANGE = 5;
@@ -24,10 +25,13 @@ export class Mob extends Phaser.Sprite {
     this.mobType = type;
     this.pathStart = {x: waypoints.x[0], y: waypoints.y[0]};
     this.speed = SPEED;
-    this.waypoints = waypoints;
 
+    // Setup a path system
+    this.waypoints = waypoints;
     if (USE_TWEEN) {
       mobTween.init(this);
+    } else {
+      mobPath.init(this);
     }
 
     // debug stats
@@ -47,6 +51,15 @@ export class Mob extends Phaser.Sprite {
         .onComplete.addOnce(() => {
         this.kill();
       });
+    } else {
+      mobPath.start(this, waypoints);
+    }
+  }
+  
+  update() {
+    super.update();
+    if (!USE_TWEEN) {
+      mobPath.update(this);
     }
   }
   
