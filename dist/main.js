@@ -1237,7 +1237,7 @@
 
 	var _utilJs = __webpack_require__(11);
 
-	var DELAY = Phaser.Timer.SECOND * 3;
+	var DELAY = Phaser.Timer.SECOND;
 
 	var Spawner = (function () {
 	  function Spawner(group, options, waypoints) {
