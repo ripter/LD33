@@ -7,6 +7,7 @@ import * as Foreground from './foreground.js';
 import * as Prop from './prop.js';
 import * as Balloon from './balloon.js';
 import {Spawner} from './spawner.js';
+import {splitTrim} from './util.js';
 import {MAP, MOB, PROP, OTHER} from './constants.js';
 
 // Groups with physics.
@@ -15,7 +16,7 @@ import {physicsGroup} from './groups.js';
 export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
   const props = map.properties;
-  let mobGroup, balloonGroup, propGroup, spawnLayer, spawnerList;
+  let mobGroup, balloonGroup, propGroup;
   let bulletGroup;
   
   // Background image
@@ -29,22 +30,17 @@ export function loadTiledMap(game, mapKey) {
   //
   // Paths
   // Path layers end with the word 'Path'
-  const pathNameList = Object.keys(map.objects).filter((key) => {
-    return key.endsWith('Path');
-  });
-  let paths = pathNameList.reduce((prev, pathName) => {
-    prev[pathName] = createPath(map.objects[pathName]);
-    return prev;
-    //return createPath(map.objects[pathName]);
-  }, {});
+  let paths = createPaths(map.objects);
 
+  
   //
   // Spawner
   mobGroup = physicsGroup();
-  spawnLayer = map.objects[MAP.LAYER.SPAWN]; 
-  spawnerList = spawnLayer.map((spawnDataItem) => {
-    return new Spawner(mobGroup, spawnDataItem.properties, paths);
-  });
+  const spawnerList = createSpawnerList(map.objects, mobGroup, paths); 
+  
+  //
+  // TapZones
+  const tapZoneList = createTapzoneList(map.objects);
 
   //
   // Props group
@@ -70,10 +66,11 @@ export function loadTiledMap(game, mapKey) {
 
   return {
     map
+    , spawnerList
+    , tapZoneList
     , mobGroup
     , balloonGroup
     , propGroup
-    , spawnerList
     , bulletGroup
   };
 }
@@ -98,3 +95,48 @@ function createPath(layerPath) {
   
   return path;
 }
+
+
+// Object layers that end with the word 'Path'
+// return {pathName: pointList , ...}
+function createPaths(objects) {
+  const pathNameList = Object.keys(objects).filter((key) => {
+    return key.endsWith('Path');
+  });
+  let paths = pathNameList.reduce((prev, pathName) => {
+    prev[pathName] = createPath(objects[pathName]);
+    return prev;
+  }, {});
+  
+  return paths;
+}
+
+
+// creates a spawner that spawns in group.
+function createSpawnerList(objects, group, paths) {
+  const spawnLayer = objects[MAP.LAYER.SPAWN]; 
+  const spawnerList = spawnLayer.map((spawnDataItem) => {
+    return new Spawner(group, spawnDataItem.properties, paths);
+  });
+  
+  return spawnerList;
+}
+
+
+function createTapzoneList(objects) {
+  const layer = objects[MAP.LAYER.TAPZONE];
+  const zoneList = layer.map((zone) => {
+    const rect = new Phaser.Rectangle(zone.x, zone.y, zone.width, zone.height);
+    const fire = splitTrim(zone.properties.fire);
+
+    rect.fire = {
+      x: parseInt(fire[0], 10)
+      , y: parseInt(fire[1], 10)
+    };
+
+    return rect;
+  });
+  
+  return zoneList;
+}
+

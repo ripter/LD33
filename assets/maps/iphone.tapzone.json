@@ -1,13 +1,13 @@
 { "height":12,
  "layers":[
         {
-         "height":12,
+         "height":0,
          "image":"..\/..\/dist\/assets\/bg-iphone.png",
          "name":"background",
          "opacity":1,
          "type":"imagelayer",
          "visible":false,
-         "width":21,
+         "width":0,
          "x":0,
          "y":0
         }, 
@@ -495,7 +495,7 @@
                  "properties":
                     {
                      "mobList":"MOB_KNIGHT",
-                     "pathList":"zigPath, longReversePath"
+                     "pathList":"zigPath"
                     },
                  "rotation":0,
                  "type":"",
@@ -514,57 +514,54 @@
         {
          "draworder":"topdown",
          "height":12,
-         "name":"longReversePath",
+         "name":"MAP_LAYER_TAPZONE",
          "objects":[
                 {
-                 "height":0,
-                 "id":86,
-                 "name":"",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":-48
-                        }, 
-                        {
-                         "x":-384,
-                         "y":-56
-                        }, 
-                        {
-                         "x":-384,
-                         "y":-120
-                        }, 
-                        {
-                         "x":48,
-                         "y":-120
-                        }, 
-                        {
-                         "x":48,
-                         "y":-184
-                        }, 
-                        {
-                         "x":-512,
-                         "y":-184
-                        }, 
-                        {
-                         "x":-512,
-                         "y":-248
-                        }, 
-                        {
-                         "x":48,
-                         "y":-248
-                        }, 
-                        {
-                         "x":48,
-                         "y":-312
-                        }, 
-                        {
-                         "x":-656,
-                         "y":-312
-                        }],
+                 "height":384,
+                 "id":89,
+                 "name":"left",
+                 "properties":
+                    {
+                     "fire":"192, 352"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":264,
+                 "x":56,
+                 "y":0
+                }, 
+                {
+                 "height":384,
+                 "id":90,
+                 "name":"right",
+                 "properties":
+                    {
+                     "fire":"480, 352"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":264,
+                 "x":352,
+                 "y":0
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":21,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":12,
+         "name":"MAP_LAYER_FIRE",
+         "objects":[
+                {
+                 "height":64,
+                 "id":91,
+                 "name":"left",
                  "properties":
                     {
 
@@ -572,22 +569,33 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":656,
-                 "y":360
+                 "width":64,
+                 "x":192,
+                 "y":352
+                }, 
+                {
+                 "height":64,
+                 "id":92,
+                 "name":"right",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":480,
+                 "y":352
                 }],
          "opacity":1,
-         "properties":
-            {
-             "type":"MAP_LAYER_PATH"
-            },
          "type":"objectgroup",
          "visible":true,
          "width":21,
          "x":0,
          "y":0
         }],
- "nextobjectid":88,
+ "nextobjectid":93,
  "orientation":"orthogonal",
  "properties":
     {

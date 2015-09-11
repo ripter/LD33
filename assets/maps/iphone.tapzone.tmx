@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="88">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="93">
  <properties>
   <property name="background" value="bg-iphone"/>
  </properties>
@@ -110,17 +110,25 @@
   <object id="82" name="MAP_SPAWNER" x="0" y="-24">
    <properties>
     <property name="mobList" value="MOB_KNIGHT"/>
-    <property name="pathList" value="zigPath, longReversePath"/>
+    <property name="pathList" value="zigPath"/>
    </properties>
    <polygon points="0,0 40,0 16,24"/>
   </object>
  </objectgroup>
- <objectgroup name="longReversePath">
-  <properties>
-   <property name="type" value="MAP_LAYER_PATH"/>
-  </properties>
-  <object id="86" x="656" y="360">
-   <polyline points="0,0 0,-48 -384,-56 -384,-120 48,-120 48,-184 -512,-184 -512,-248 48,-248 48,-312 -656,-312"/>
+ <objectgroup name="MAP_LAYER_TAPZONE">
+  <object id="89" name="left" x="56" y="0" width="264" height="384">
+   <properties>
+    <property name="fire" value="192, 352"/>
+   </properties>
   </object>
+  <object id="90" name="right" x="352" y="0" width="264" height="384">
+   <properties>
+    <property name="fire" value="480, 352"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="MAP_LAYER_FIRE">
+  <object id="91" name="left" x="192" y="352" width="64" height="64"/>
+  <object id="92" name="right" x="480" y="352" width="64" height="64"/>
  </objectgroup>
 </map>

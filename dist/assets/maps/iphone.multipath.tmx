@@ -76,18 +76,14 @@
 </data>
  </layer>
  <objectgroup name="zigPath">
-  <properties>
-   <property name="rose" value="is a puppy"/>
-   <property name="type" value="MAP_LAYER_PATH"/>
-  </properties>
   <object id="83" x="0" y="48">
    <polyline points="0,0 80,0 80,64 144,64 144,128 208,128 208,192 272,192 272,256 656,256 656,296"/>
   </object>
  </objectgroup>
- <objectgroup name="balloons" visible="0">
+ <objectgroup name="balloons">
   <object id="51" name="BALLOON" gid="18" x="640" y="368" width="32" height="32"/>
  </objectgroup>
- <objectgroup name="props" visible="0">
+ <objectgroup name="props">
   <object id="25" name="PROP_WALL" type="PROP_WALL" gid="17" x="0" y="136" width="64" height="64"/>
   <object id="26" name="PROP_WALL" type="PROP_WALL" gid="17" x="608" y="216" width="64" height="64"/>
   <object id="27" name="PROP_TOWER" type="PROP_TOWER" gid="13" x="304" y="120" width="64" height="64"/>

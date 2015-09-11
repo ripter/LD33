@@ -9,7 +9,28 @@ const FIRE_DELAY = 500;
 const atMoveSpeed = debounce(MOVE_DELAY);
 const atFireSpeed = debounce(FIRE_DELAY);
 
+
 export function update(game, sprite, map) {
+  const {bulletGroup, tapZoneList} = map;
+  const pointer = game.input.activePointer;
+
+  if (!pointer.isDown) { return; }
+
+  const activeZone = tapZoneList.find((zone) => {
+    return Phaser.Rectangle.containsPoint(zone, pointer);
+  });  
+  
+  if (!activeZone) { return; }
+
+  atFireSpeed(game.time.events, () => {
+    const {x, y} = activeZone.fire;
+
+    fireBullet(x, y, bulletGroup);
+  });
+}
+
+// Clike to move and fire
+export function updateTapAndMove(game, sprite, map) {
   const {bulletGroup} = map;
   const pointer = game.input.activePointer;
   let playerTween;
@@ -25,16 +46,7 @@ export function update(game, sprite, map) {
 
         // Limit the fire speed on top of the movement speed.
         atFireSpeed(game.time.events, () => { 
-          let fire = bulletGroup.getFirstDead();
-          
-          // if we are recycling
-          if (fire) {
-            fire.reset(x, y);
-          }
-          // We need to create a new one
-          else {
-            fire = new Fire(x, y, bulletGroup);
-          }
+          fireBullet(x, y, bulletGroup);
         });
       });
 
@@ -42,6 +54,22 @@ export function update(game, sprite, map) {
       playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
     });
   }
+}
+
+
+function fireBullet(x, y, group) {
+  let fire = group.getFirstDead();
+
+  // if we are recycling
+  if (fire) {
+    fire.reset(x, y);
+  }
+  // We need to create a new one
+  else {
+    fire = new Fire(x, y, group);
+  }
+  
+  return fire;
 }
 
 // Returns an object to use with tween.to

@@ -12,8 +12,8 @@ Then the player will be forced to lift and tap again.
 
 There is a lane per Egg/Tresaure/Balloon on the map.
 
-[ ] spawner supports several paths.
-->[ ] Mob should take waypoints in start
+[x] spawner supports several paths.
+->[x] Mob should take waypoints in start
 [ ] Add TapZones to the map.
 [ ] TapZones could place the Egg/Treasure/Balloon.
 [ ] Tap: TapZone to fire in that lane.

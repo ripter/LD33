@@ -148,6 +148,7 @@
 	  game.load.tilemap('iphone-map', 'assets/maps/iphone.json', null, Phaser.Tilemap.TILED_JSON);
 	  game.load.tilemap('iphone-simple', 'assets/maps/iphone.simple.json', null, Phaser.Tilemap.TILED_JSON);
 	  game.load.tilemap('iphone-multipath', 'assets/maps/iphone.multipath.json', null, Phaser.Tilemap.TILED_JSON);
+	  game.load.tilemap('iphone-tapzone', 'assets/maps/iphone.tapzone.json', null, Phaser.Tilemap.TILED_JSON);
 	  game.load.image('pathSpriteSheet', 'assets/paths/pathSpriteSheet.png');
 	}
 
@@ -158,7 +159,7 @@
 
 	  // test loading tile map
 	  //map = loadTiledMap(game, 'iphone-simple');
-	  map = (0, _levelLoaderJs.loadTiledMap)(game, 'iphone-multipath');
+	  map = (0, _levelLoaderJs.loadTiledMap)(game, 'iphone-tapzone');
 	  window.map = game.currentMap = map;
 
 	  //window.level = level = loadLevel(levelFile);
@@ -423,7 +424,9 @@
 	    MOBS: 'mobs',
 	    BALLOONS: 'balloons',
 	    PROPS: 'props',
-	    SPAWN: 'MAP_LAYER_SPAWN'
+	    SPAWN: 'MAP_LAYER_SPAWN',
+	    TAPZONE: 'MAP_LAYER_TAPZONE',
+	    'FIRE': 'MAP_LAYER_FIRE'
 	  },
 	  SPAWNER: 'MAP_SPAWNER'
 	};
@@ -844,6 +847,7 @@
 	  value: true
 	});
 	exports.update = update;
+	exports.updateTapAndMove = updateTapAndMove;
 
 	var _fireJs = __webpack_require__(4);
 
@@ -855,6 +859,35 @@
 	var atFireSpeed = (0, _utilJs.debounce)(FIRE_DELAY);
 
 	function update(game, sprite, map) {
+	  var bulletGroup = map.bulletGroup;
+	  var tapZoneList = map.tapZoneList;
+
+	  var pointer = game.input.activePointer;
+
+	  if (!pointer.isDown) {
+	    return;
+	  }
+
+	  var activeZone = tapZoneList.find(function (zone) {
+	    return Phaser.Rectangle.containsPoint(zone, pointer);
+	  });
+
+	  if (!activeZone) {
+	    return;
+	  }
+
+	  atFireSpeed(game.time.events, function () {
+	    var _activeZone$fire = activeZone.fire;
+	    var x = _activeZone$fire.x;
+	    var y = _activeZone$fire.y;
+
+	    fireBullet(x, y, bulletGroup);
+	  });
+	}
+
+	// Clike to move and fire
+
+	function updateTapAndMove(game, sprite, map) {
 	  var bulletGroup = map.bulletGroup;
 
 	  var pointer = game.input.activePointer;
@@ -872,16 +905,7 @@
 
 	        // Limit the fire speed on top of the movement speed.
 	        atFireSpeed(game.time.events, function () {
-	          var fire = bulletGroup.getFirstDead();
-
-	          // if we are recycling
-	          if (fire) {
-	            fire.reset(x, y);
-	          }
-	          // We need to create a new one
-	          else {
-	              fire = new _fireJs.Fire(x, y, bulletGroup);
-	            }
+	          fireBullet(x, y, bulletGroup);
 	        });
 	      });
 
@@ -889,6 +913,21 @@
 	      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
 	    });
 	  }
+	}
+
+	function fireBullet(x, y, group) {
+	  var fire = group.getFirstDead();
+
+	  // if we are recycling
+	  if (fire) {
+	    fire.reset(x, y);
+	  }
+	  // We need to create a new one
+	  else {
+	      fire = new _fireJs.Fire(x, y, group);
+	    }
+
+	  return fire;
 	}
 
 	// Returns an object to use with tween.to
@@ -1013,6 +1052,8 @@
 
 	var _spawnerJs = __webpack_require__(16);
 
+	var _utilJs = __webpack_require__(11);
+
 	var _constantsJs = __webpack_require__(5);
 
 	// Groups with physics.
@@ -1024,9 +1065,7 @@
 	  var props = map.properties;
 	  var mobGroup = undefined,
 	      balloonGroup = undefined,
-	      propGroup = undefined,
-	      spawnLayer = undefined,
-	      spawnerList = undefined;
+	      propGroup = undefined;
 	  var bulletGroup = undefined;
 
 	  // Background image
@@ -1040,22 +1079,16 @@
 	  //
 	  // Paths
 	  // Path layers end with the word 'Path'
-	  var pathNameList = Object.keys(map.objects).filter(function (key) {
-	    return key.endsWith('Path');
-	  });
-	  var paths = pathNameList.reduce(function (prev, pathName) {
-	    prev[pathName] = createPath(map.objects[pathName]);
-	    return prev;
-	    //return createPath(map.objects[pathName]);
-	  }, {});
+	  var paths = createPaths(map.objects);
 
 	  //
 	  // Spawner
 	  mobGroup = (0, _groupsJs.physicsGroup)();
-	  spawnLayer = map.objects[_constantsJs.MAP.LAYER.SPAWN];
-	  spawnerList = spawnLayer.map(function (spawnDataItem) {
-	    return new _spawnerJs.Spawner(mobGroup, spawnDataItem.properties, paths);
-	  });
+	  var spawnerList = createSpawnerList(map.objects, mobGroup, paths);
+
+	  //
+	  // TapZones
+	  var tapZoneList = createTapzoneList(map.objects);
 
 	  //
 	  // Props group
@@ -1081,10 +1114,11 @@
 
 	  return {
 	    map: map,
+	    spawnerList: spawnerList,
+	    tapZoneList: tapZoneList,
 	    mobGroup: mobGroup,
 	    balloonGroup: balloonGroup,
 	    propGroup: propGroup,
-	    spawnerList: spawnerList,
 	    bulletGroup: bulletGroup
 	  };
 	}
@@ -1122,6 +1156,47 @@
 	  };
 
 	  return path;
+	}
+
+	// Object layers that end with the word 'Path'
+	// return {pathName: pointList , ...}
+	function createPaths(objects) {
+	  var pathNameList = Object.keys(objects).filter(function (key) {
+	    return key.endsWith('Path');
+	  });
+	  var paths = pathNameList.reduce(function (prev, pathName) {
+	    prev[pathName] = createPath(objects[pathName]);
+	    return prev;
+	  }, {});
+
+	  return paths;
+	}
+
+	// creates a spawner that spawns in group.
+	function createSpawnerList(objects, group, paths) {
+	  var spawnLayer = objects[_constantsJs.MAP.LAYER.SPAWN];
+	  var spawnerList = spawnLayer.map(function (spawnDataItem) {
+	    return new _spawnerJs.Spawner(group, spawnDataItem.properties, paths);
+	  });
+
+	  return spawnerList;
+	}
+
+	function createTapzoneList(objects) {
+	  var layer = objects[_constantsJs.MAP.LAYER.TAPZONE];
+	  var zoneList = layer.map(function (zone) {
+	    var rect = new Phaser.Rectangle(zone.x, zone.y, zone.width, zone.height);
+	    var fire = (0, _utilJs.splitTrim)(zone.properties.fire);
+
+	    rect.fire = {
+	      x: parseInt(fire[0], 10),
+	      y: parseInt(fire[1], 10)
+	    };
+
+	    return rect;
+	  });
+
+	  return zoneList;
 	}
 
 /***/ },

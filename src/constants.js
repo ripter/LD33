@@ -14,6 +14,8 @@ export const MAP = {
     , BALLOONS: 'balloons'
     , PROPS: 'props'
     , SPAWN: 'MAP_LAYER_SPAWN'
+    , TAPZONE: 'MAP_LAYER_TAPZONE'
+    , 'FIRE': 'MAP_LAYER_FIRE'
   }
   , SPAWNER: 'MAP_SPAWNER'
 };
