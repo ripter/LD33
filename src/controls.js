@@ -26,6 +26,7 @@ export function update(game, sprite, map) {
     const {x, y} = activeZone.fire;
 
     fireBullet(x, y, bulletGroup);
+    sprite.x = x;
   });
 }
 

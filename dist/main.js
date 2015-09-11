@@ -882,6 +882,7 @@
 	    var y = _activeZone$fire.y;
 
 	    fireBullet(x, y, bulletGroup);
+	    sprite.x = x;
 	  });
 	}
 
