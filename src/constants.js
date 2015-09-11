@@ -9,6 +9,7 @@ export const MOB = {
 export const MAP = {
   LAYER: {
     PATH: 'MAP_LAYER_PATH'
+    , TILE: 'MAP_LAYER_TILE'
     , MOBS: 'mobs'
     , BALLOONS: 'balloons'
     , PROPS: 'props'

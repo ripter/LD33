@@ -1,6 +1,7 @@
 /*global Phaser, game, bullets */
 'use strict';
 
+import R from 'ramda';
 import * as Mob from './mob.js';
 import * as Foreground from './foreground.js';
 import * as Prop from './prop.js';
@@ -14,7 +15,7 @@ import {physicsGroup} from './groups.js';
 export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
   const props = map.properties;
-  let layer, mobGroup, balloonGroup, propGroup, spawnLayer, spawnerList;
+  let mobGroup, balloonGroup, propGroup, spawnLayer, spawnerList;
   let bulletGroup;
   
   // Background image
@@ -22,19 +23,27 @@ export function loadTiledMap(game, mapKey) {
 
   // WARNING: Hardcoded values!
   map.addTilesetImage('paths', 'pathSpriteSheet');
-  layer = map.createLayer(MAP.LAYER.PATH);
+  const layer = map.createLayer(MAP.LAYER.TILE);
   layer.resizeWorld();
   
+  //
+  // Paths
+  // Path layers end with the word 'Path'
+  const pathNameList = Object.keys(map.objects).filter((key) => {
+    return key.endsWith('Path');
+  });
+  let paths = pathNameList.reduce((prev, pathName) => {
+    prev[pathName] = createPath(map.objects[pathName]);
+    return prev;
+    //return createPath(map.objects[pathName]);
+  }, {});
+
   //
   // Spawner
   mobGroup = physicsGroup();
   spawnLayer = map.objects[MAP.LAYER.SPAWN]; 
   spawnerList = spawnLayer.map((spawnDataItem) => {
-    const pathName = spawnDataItem.properties.pathName;
-    const layer = map.objects[pathName][0];
-    const waypoints = toTweenPoints(layer);
-
-    return new Spawner(mobGroup, spawnDataItem.properties, waypoints);
+    return new Spawner(mobGroup, spawnDataItem.properties, paths);
   });
 
   //
@@ -69,13 +78,23 @@ export function loadTiledMap(game, mapKey) {
   };
 }
 
+// Create our path from an object layer path that uses a polyline.
+function createPath(layerPath) {
+  if (!layerPath.length) { throw new Error('createPath: !layerPath.length'); } 
+  if (layerPath.length === 0) { throw new Error('createPath: layerPath.length === 0'); }
+  if (!layerPath[0].polyline) { throw new Error('createPath: !layerPath[0].polyline'); }
 
-function toTweenPoints(layer) {
-  const {x, y, polyline} = layer;
-  // We want:
+  const {x, y, polyline} = layerPath[0];
+  const path = polyline.map((cords) => {
+    return new Phaser.Point(cords[0] + x, cords[1] + y);
+  });
+
+  // create a tween version too
   //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]} 
-  return {
-    x: polyline.map((point) => { return point[0] + x; })
-    , y: polyline.map((point) => { return point[1] + y; })
+  path.tween = {
+    x: polyline.map((cords) => { return cords[0] + x; })
+    , y: polyline.map((cords) => { return cords[1] + y; })
   };
+  
+  return path;
 }

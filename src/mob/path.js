@@ -1,43 +1,89 @@
 /*global */
 'use strict';
 
+const ukey = Symbol('path.js');
+
 export function init(sprite) {
-  sprite.pathIndex = 0;
+  // sprite.pathIndex = 0;
 }
 
 // Start the sprite moving on the path.
-export function start(sprite) {
-  sprite.pathIndex = 0;
-  next(sprite);
+export function start(sprite, pointList) {
+  // sprite.pathIndex = 0;
+  // next(sprite);
+
+  const {x, y} = pointList[0];
+
+  sprite[ukey] = {
+    target: {x, y}
+    , pointList: pointList
+    , index: 0
+  };
+
+  // move to the first point
+  sprite.reset(x, y);
+  moveToPoint(sprite);
 }
 
 export function update(sprite) {
-  const {game, pathTarget, width} = sprite;
-  const {x, y} = pathTarget;
+  // const {game, pathTarget, width} = sprite;
+  // const {x, y} = pathTarget;
+  // const dist = game.physics.arcade.distanceToXY(sprite, x, y);
+  
+  // // We will never reach 0, we just need to be visually close.
+  // if (dist <= 3) {
+  //   next(sprite);
+  // }
+
+  const {game} = sprite;
+  const {x, y} = sprite[ukey].target;
+
   const dist = game.physics.arcade.distanceToXY(sprite, x, y);
   
   // We will never reach 0, we just need to be visually close.
   if (dist <= 3) {
-    next(sprite);
+    moveToPoint(sprite);
   }
 }
 
-function next(sprite) {
-  const {game, pathIndex} = sprite;
-  const speed = 100; //Tween speed is 1500, way to fast for us.
-  const {x, y} = getNextWaypoint(sprite);
+// function next(sprite) {
+function moveToPoint(sprite) {
+  // const {game, pathIndex} = sprite;
+  // const speed = 100; //Tween speed is 1500, way to fast for us.
+  // const {x, y} = getNextWaypoint(sprite);
   
+  // game.physics.arcade.moveToXY(sprite, x, y, speed);
+  
+  const {game} = sprite;
+  const {pointList, index} = sprite[ukey];
+  const {x, y} = pointList[index];
+  const speed = 100; //Tween speed is 1500, way to fast for us.
+
+  sprite[ukey].target = {x, y};
+  sprite[ukey].index = getNextIndex(sprite);
   game.physics.arcade.moveToXY(sprite, x, y, speed);
 }
 
-function getNextWaypoint(sprite) {
-  const {pathIndex, waypoints} = sprite;
-  const x = waypoints.x[pathIndex+1];
-  const y = waypoints.y[pathIndex+1];
+function getNextIndex(sprite) {
+  const {pointList, index} = sprite[ukey];
+  let nextIndex = index + 1;
+
+  // if we run out of points, restart
+  if (nextIndex === pointList.length) {
+    nextIndex = 0;
+  }
   
-  // These probably shouldn't be here.
-  // They are the only side effects.
-  sprite.pathIndex = pathIndex+1;
-  sprite.pathTarget = {x, y};
-  return {x, y};
+  return nextIndex;
 }
+
+// function getNextWaypoint(sprite, pointList) {
+//   const {pathIndex, waypoints} = sprite;
+//   const x = waypoints.x[pathIndex+1];
+//   const y = waypoints.y[pathIndex+1];
+  
+//   // These probably shouldn't be here.
+//   // They are the only side effects.
+//   sprite.pathIndex = pathIndex+1;
+//   sprite.pathTarget = {x, y};
+//   return {x, y};
+// }

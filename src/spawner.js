@@ -6,7 +6,7 @@ import {Mob} from './mob.js';
 import {getFirst, splitTrim} from './util.js';
 
 export class Spawner {
-  constructor(group, options, waypoints) {
+  constructor(group, options, paths) {
     this.availableMobs = splitTrim(options.mobList);
     this.availablePaths = splitTrim(options.pathList);
     this.options = Object.assign({}, {
@@ -14,7 +14,7 @@ export class Spawner {
     }, options);;
     this.group = group;
     this.game = group.game;
-    this.waypoints = waypoints;
+    this.paths = paths;
   }
   
   start() {
@@ -23,8 +23,13 @@ export class Spawner {
 
     // Start the spawn loop.
     game.time.events.loop(speed, () => {
+      const pathName = Phaser.ArrayUtils.getRandomItem(this.availablePaths);
+      const path = this.paths[pathName];
       const mob = this.next();
-      mob.start();
+
+      if (!path) { throw new Error(`Spawner could not find a path named "${pathName}".`); }
+      console.log(pathName, path);
+      mob.start(path);
     });
   }
   

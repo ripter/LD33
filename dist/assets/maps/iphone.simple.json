@@ -1,13 +1,13 @@
 { "height":12,
  "layers":[
         {
-         "height":12,
+         "height":0,
          "image":"..\/..\/dist\/assets\/bg-iphone.png",
          "name":"background",
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
-         "width":21,
+         "visible":true,
+         "width":0,
          "x":0,
          "y":0
         }, 
@@ -88,6 +88,10 @@
                  "y":48
                 }],
          "opacity":1,
+         "properties":
+            {
+             "type":"PATH"
+            },
          "type":"objectgroup",
          "visible":true,
          "width":0,
@@ -117,7 +121,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":0,
          "x":0,
          "y":0
@@ -495,7 +499,7 @@
                  "properties":
                     {
                      "mobList":"MOB_KNIGHT",
-                     "pathList":"zigPath, longPath"
+                     "pathName":"zigPath"
                     },
                  "rotation":0,
                  "type":"",
@@ -510,80 +514,8 @@
          "width":0,
          "x":0,
          "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "height":12,
-         "name":"longPath",
-         "objects":[
-                {
-                 "height":0,
-                 "id":86,
-                 "name":"",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":-48
-                        }, 
-                        {
-                         "x":-384,
-                         "y":-56
-                        }, 
-                        {
-                         "x":-384,
-                         "y":-120
-                        }, 
-                        {
-                         "x":48,
-                         "y":-120
-                        }, 
-                        {
-                         "x":48,
-                         "y":-184
-                        }, 
-                        {
-                         "x":-512,
-                         "y":-184
-                        }, 
-                        {
-                         "x":-512,
-                         "y":-248
-                        }, 
-                        {
-                         "x":48,
-                         "y":-248
-                        }, 
-                        {
-                         "x":48,
-                         "y":-312
-                        }, 
-                        {
-                         "x":-656,
-                         "y":-312
-                        }],
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":656,
-                 "y":360
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "width":21,
-         "x":0,
-         "y":0
         }],
- "nextobjectid":88,
+ "nextobjectid":85,
  "orientation":"orthogonal",
  "properties":
     {
