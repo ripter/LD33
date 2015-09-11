@@ -3,11 +3,12 @@
 
 const DELAY = Phaser.Timer.SECOND;
 import {Mob} from './mob.js';
-import {getFirst} from './util.js';
+import {getFirst, splitTrim} from './util.js';
 
 export class Spawner {
   constructor(group, options, waypoints) {
-    this.availableMobs = options.mobList.split(',').map((str) => { return str.trim(); });
+    this.availableMobs = splitTrim(options.mobList);
+    this.availablePaths = splitTrim(options.pathList);
     this.options = Object.assign({}, {
       speed: DELAY
     }, options);;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="85">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="88">
  <properties>
   <property name="background" value="bg-iphone"/>
  </properties>
@@ -56,7 +56,7 @@
    <image width="32" height="32" source="../balloon-32x32.png"/>
   </tile>
  </tileset>
- <imagelayer name="background">
+ <imagelayer name="background" visible="0">
   <image source="../../dist/assets/bg-iphone.png"/>
  </imagelayer>
  <layer name="MAP_LAYER_PATH" width="21" height="12">
@@ -76,14 +76,11 @@
 </data>
  </layer>
  <objectgroup name="zigPath">
-  <properties>
-   <property name="type" value="PATH"/>
-  </properties>
   <object id="83" x="0" y="48">
    <polyline points="0,0 80,0 80,64 144,64 144,128 208,128 208,192 272,192 272,256 656,256 656,296"/>
   </object>
  </objectgroup>
- <objectgroup name="balloons">
+ <objectgroup name="balloons" visible="0">
   <object id="51" name="BALLOON" gid="18" x="640" y="368" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="props" visible="0">
@@ -113,9 +110,14 @@
   <object id="82" name="MAP_SPAWNER" x="0" y="-24">
    <properties>
     <property name="mobList" value="MOB_KNIGHT"/>
-    <property name="pathName" value="zigPath"/>
+    <property name="pathList" value="zigPath, longPath"/>
    </properties>
    <polygon points="0,0 40,0 16,24"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="longPath">
+  <object id="86" x="656" y="360">
+   <polyline points="0,0 0,-48 -384,-56 -384,-120 48,-120 48,-184 -512,-184 -512,-248 48,-248 48,-312 -656,-312"/>
   </object>
  </objectgroup>
 </map>

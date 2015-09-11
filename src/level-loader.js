@@ -23,7 +23,7 @@ export function loadTiledMap(game, mapKey) {
   // WARNING: Hardcoded values!
   map.addTilesetImage('paths', 'pathSpriteSheet');
   layer = map.createLayer(MAP.LAYER.PATH);
-  //layer.resizeWorld();
+  layer.resizeWorld();
   
   //
   // Spawner

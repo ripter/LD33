@@ -56,6 +56,9 @@
    <image width="32" height="32" source="../balloon-32x32.png"/>
   </tile>
  </tileset>
+ <imagelayer name="background">
+  <image source="../../dist/assets/bg-iphone.png"/>
+ </imagelayer>
  <layer name="MAP_LAYER_PATH" width="21" height="12">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

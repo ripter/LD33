@@ -24,6 +24,7 @@ export function debounce(delay) {
   };
 }
 
+// returns the first sprite in the group that matches predicate.
 export function getFirst(group, predicate) {
   const availableSet = group.filter(predicate);
   
@@ -41,4 +42,9 @@ export function createUUID() {
     var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
     return v.toString(16);
   });
+}
+
+// Split a comma seprated string into a trimmed list.
+export function splitTrim(str) {
+  return str.split(',').map((s) => { return s.trim(); });
 }

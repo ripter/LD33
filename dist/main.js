@@ -923,6 +923,7 @@
 	exports.debounce = debounce;
 	exports.getFirst = getFirst;
 	exports.createUUID = createUUID;
+	exports.splitTrim = splitTrim;
 
 	function debounce(delay) {
 	  var isReady = true;
@@ -945,6 +946,8 @@
 	  };
 	}
 
+	// returns the first sprite in the group that matches predicate.
+
 	function getFirst(group, predicate) {
 	  var availableSet = group.filter(predicate);
 
@@ -963,6 +966,14 @@
 	    var r = Math.random() * 16 | 0,
 	        v = c == 'x' ? r : r & 0x3 | 0x8;
 	    return v.toString(16);
+	  });
+	}
+
+	// Split a comma seprated string into a trimmed list.
+
+	function splitTrim(str) {
+	  return str.split(',').map(function (s) {
+	    return s.trim();
 	  });
 	}
 
@@ -1021,7 +1032,7 @@
 	  // WARNING: Hardcoded values!
 	  map.addTilesetImage('paths', 'pathSpriteSheet');
 	  layer = map.createLayer(_constantsJs.MAP.LAYER.PATH);
-	  //layer.resizeWorld();
+	  layer.resizeWorld();
 
 	  //
 	  // Spawner
@@ -1243,9 +1254,8 @@
 	  function Spawner(group, options, waypoints) {
 	    _classCallCheck(this, Spawner);
 
-	    this.availableMobs = options.mobList.split(',').map(function (str) {
-	      return str.trim();
-	    });
+	    this.availableMobs = (0, _utilJs.splitTrim)(options.mobList);
+	    this.availablePaths = (0, _utilJs.splitTrim)(options.pathList);
 	    this.options = Object.assign({}, {
 	      speed: DELAY
 	    }, options);;
