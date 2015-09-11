@@ -17,6 +17,9 @@ export class Spawner {
     this.paths = paths;
   }
   
+  // Start the spawner.
+  // at speed, it will randomly spawn a mob from mobList and start it on a 
+  // random path from pathList.
   start() {
     const {game} = this;
     const {speed} = this.options;
@@ -28,15 +31,10 @@ export class Spawner {
       const mob = this.next();
 
       if (!path) { throw new Error(`Spawner could not find a path named "${pathName}".`); }
-      console.log(pathName, path);
       mob.start(path);
     });
   }
   
-  stop() {
-    console.log('spawner.stop', arguments);
-  }
-
   // Returns the next mob
   next() {
     const {game, group, waypoints} = this;

@@ -612,6 +612,7 @@
 	    if (USE_TWEEN) {
 	      mobTween.init(this);
 	    }
+
 	    // debug stats
 	    window.mobCount += 1;
 	  }
@@ -621,20 +622,6 @@
 	  _createClass(Mob, [{
 	    key: 'start',
 	    value: function start(pointList) {
-	      // const {x, y} = this.pathStart;
-
-	      // // reset to first path point
-	      // this.reset(x, y);
-
-	      // if (USE_TWEEN) {
-	      //   mobTween.start(this, waypoints)
-	      //     .onComplete.addOnce(() => {
-	      //     this.kill();
-	      //   });
-	      // } else {
-	      //   mobPath.start(this, waypoints);
-	      // }
-
 	      if (!pointList) {
 	        throw new Error('mob.start: !pointList');
 	      }
@@ -778,20 +765,13 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports.init = init;
 	exports.start = start;
 	exports.update = update;
 	var ukey = Symbol('path.js');
 
-	function init(sprite) {}
-	// sprite.pathIndex = 0;
-
 	// Start the sprite moving on the path.
 
 	function start(sprite, pointList) {
-	  // sprite.pathIndex = 0;
-	  // next(sprite);
-
 	  var _pointList$0 = pointList[0];
 	  var x = _pointList$0.x;
 	  var y = _pointList$0.y;
@@ -808,15 +788,6 @@
 	}
 
 	function update(sprite) {
-	  // const {game, pathTarget, width} = sprite;
-	  // const {x, y} = pathTarget;
-	  // const dist = game.physics.arcade.distanceToXY(sprite, x, y);
-
-	  // // We will never reach 0, we just need to be visually close.
-	  // if (dist <= 3) {
-	  //   next(sprite);
-	  // }
-
 	  var game = sprite.game;
 	  var _sprite$ukey$target = sprite[ukey].target;
 	  var x = _sprite$ukey$target.x;
@@ -832,12 +803,6 @@
 
 	// function next(sprite) {
 	function moveToPoint(sprite) {
-	  // const {game, pathIndex} = sprite;
-	  // const speed = 100; //Tween speed is 1500, way to fast for us.
-	  // const {x, y} = getNextWaypoint(sprite);
-
-	  // game.physics.arcade.moveToXY(sprite, x, y, speed);
-
 	  var game = sprite.game;
 	  var _sprite$ukey = sprite[ukey];
 	  var pointList = _sprite$ukey.pointList;
@@ -867,18 +832,6 @@
 
 	  return nextIndex;
 	}
-
-	// function getNextWaypoint(sprite, pointList) {
-	//   const {pathIndex, waypoints} = sprite;
-	//   const x = waypoints.x[pathIndex+1];
-	//   const y = waypoints.y[pathIndex+1];
-
-	//   // These probably shouldn't be here.
-	//   // They are the only side effects.
-	//   sprite.pathIndex = pathIndex+1;
-	//   sprite.pathTarget = {x, y};
-	//   return {x, y};
-	// }
 
 /***/ },
 /* 10 */
@@ -8826,6 +8779,10 @@
 	    this.paths = paths;
 	  }
 
+	  // Start the spawner.
+	  // at speed, it will randomly spawn a mob from mobList and start it on a
+	  // random path from pathList.
+
 	  _createClass(Spawner, [{
 	    key: 'start',
 	    value: function start() {
@@ -8843,14 +8800,8 @@
 	        if (!path) {
 	          throw new Error('Spawner could not find a path named "' + pathName + '".');
 	        }
-	        console.log(pathName, path);
 	        mob.start(path);
 	      });
-	    }
-	  }, {
-	    key: 'stop',
-	    value: function stop() {
-	      console.log('spawner.stop', arguments);
 	    }
 
 	    // Returns the next mob

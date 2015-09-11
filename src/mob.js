@@ -29,26 +29,13 @@ export class Mob extends Phaser.Sprite {
     if (USE_TWEEN) {
       mobTween.init(this);
     }
+
     // debug stats
     window.mobCount += 1;
   }
   
   // Start the mob moving along the path.
   start(pointList) {
-    // const {x, y} = this.pathStart;
-
-    // // reset to first path point
-    // this.reset(x, y);
-    
-    // if (USE_TWEEN) {
-    //   mobTween.start(this, waypoints) 
-    //     .onComplete.addOnce(() => {
-    //     this.kill();
-    //   });
-    // } else {
-    //   mobPath.start(this, waypoints);
-    // }
-    
     if (!pointList) { throw new Error('mob.start: !pointList'); }
 
     // Start the mob moving on the path
