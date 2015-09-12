@@ -846,8 +846,8 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	exports.updateTapZone = updateTapZone;
 	exports.update = update;
-	exports.updateTapAndMove = updateTapAndMove;
 
 	var _fireJs = __webpack_require__(4);
 
@@ -858,7 +858,7 @@
 	var atMoveSpeed = (0, _utilJs.debounce)(MOVE_DELAY);
 	var atFireSpeed = (0, _utilJs.debounce)(FIRE_DELAY);
 
-	function update(game, sprite, map) {
+	function updateTapZone(game, sprite, map) {
 	  var bulletGroup = map.bulletGroup;
 	  var tapZoneList = map.tapZoneList;
 
@@ -888,32 +888,37 @@
 
 	// Clike to move and fire
 
-	function updateTapAndMove(game, sprite, map) {
+	function update(game, sprite, map) {
 	  var bulletGroup = map.bulletGroup;
 
 	  var pointer = game.input.activePointer;
-	  var playerTween = undefined;
 
 	  if (pointer.isDown) {
-	    // We need to limit the speed since this function is called on update
-	    atMoveSpeed(game.time.events, function () {
-	      playerTween = game.add.tween(sprite);
-
-	      // Fire when the tween completes
-	      playerTween.onComplete.add(function () {
-	        var x = sprite.x;
-	        var y = sprite.y;
-
-	        // Limit the fire speed on top of the movement speed.
-	        atFireSpeed(game.time.events, function () {
-	          fireBullet(x, y, bulletGroup);
-	        });
-	      });
-
-	      // move to the pointer
-	      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
-	    });
+	    moveAndFire(game, sprite, bulletGroup, pointer);
 	  }
+	}
+
+	function moveAndFire(game, sprite, group, pointer) {
+	  var playerTween = undefined;
+
+	  // We need to limit the speed since this function is called on update
+	  atMoveSpeed(game.time.events, function () {
+	    playerTween = game.add.tween(sprite);
+
+	    // Fire when the tween completes
+	    playerTween.onComplete.add(function () {
+	      var x = sprite.x;
+	      var y = sprite.y;
+
+	      // Limit the fire speed on top of the movement speed.
+	      atFireSpeed(game.time.events, function () {
+	        fireBullet(x, y, group);
+	      });
+	    });
+
+	    // move to the pointer
+	    playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
+	  });
 	}
 
 	function fireBullet(x, y, group) {

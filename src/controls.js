@@ -10,7 +10,7 @@ const atMoveSpeed = debounce(MOVE_DELAY);
 const atFireSpeed = debounce(FIRE_DELAY);
 
 
-export function update(game, sprite, map) {
+export function updateTapZone(game, sprite, map) {
   const {bulletGroup, tapZoneList} = map;
   const pointer = game.input.activePointer;
 
@@ -31,30 +31,36 @@ export function update(game, sprite, map) {
 }
 
 // Clike to move and fire
-export function updateTapAndMove(game, sprite, map) {
+export function update(game, sprite, map) {
   const {bulletGroup} = map;
   const pointer = game.input.activePointer;
-  let playerTween;
   
   if (pointer.isDown) {
-    // We need to limit the speed since this function is called on update
-    atMoveSpeed(game.time.events, () => {
-      playerTween = game.add.tween(sprite);
-
-      // Fire when the tween completes
-      playerTween.onComplete.add(() => {
-        const {x, y} = sprite;
-
-        // Limit the fire speed on top of the movement speed.
-        atFireSpeed(game.time.events, () => { 
-          fireBullet(x, y, bulletGroup);
-        });
-      });
-
-      // move to the pointer
-      playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
-    });
+    moveAndFire(game, sprite, bulletGroup, pointer);
   }
+}
+
+
+function moveAndFire(game, sprite, group, pointer) {
+  let playerTween;
+
+  // We need to limit the speed since this function is called on update
+  atMoveSpeed(game.time.events, () => {
+    playerTween = game.add.tween(sprite);
+
+    // Fire when the tween completes
+    playerTween.onComplete.add(() => {
+      const {x, y} = sprite;
+
+      // Limit the fire speed on top of the movement speed.
+      atFireSpeed(game.time.events, () => { 
+        fireBullet(x, y, group);
+      });
+    });
+
+    // move to the pointer
+    playerTween.to(toPointer(sprite, pointer), MOVE_DELAY).start();
+  });
 }
 
 

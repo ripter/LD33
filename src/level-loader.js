@@ -40,7 +40,7 @@ export function loadTiledMap(game, mapKey) {
   
   //
   // TapZones
-  const tapZoneList = createTapzoneList(map.objects);
+  //const tapZoneList = createTapzoneList(map.objects);
 
   //
   // Props group
@@ -67,7 +67,7 @@ export function loadTiledMap(game, mapKey) {
   return {
     map
     , spawnerList
-    , tapZoneList
+    //, tapZoneList
     , mobGroup
     , balloonGroup
     , propGroup
