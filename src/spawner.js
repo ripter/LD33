@@ -3,34 +3,38 @@
 
 const DELAY = Phaser.Timer.SECOND;
 import {Mob} from './mob.js';
-import {getFirst} from './util.js';
+import {getFirst, splitTrim} from './util.js';
 
 export class Spawner {
-  constructor(group, options, waypoints) {
-    this.availableMobs = options.mobList.split(',').map((str) => { return str.trim(); });
+  constructor(group, options, paths) {
+    this.availableMobs = splitTrim(options.mobList);
+    this.availablePaths = splitTrim(options.pathList);
     this.options = Object.assign({}, {
       speed: DELAY
     }, options);;
     this.group = group;
     this.game = group.game;
-    this.waypoints = waypoints;
+    this.paths = paths;
   }
   
+  // Start the spawner.
+  // at speed, it will randomly spawn a mob from mobList and start it on a 
+  // random path from pathList.
   start() {
     const {game} = this;
     const {speed} = this.options;
 
     // Start the spawn loop.
     game.time.events.loop(speed, () => {
+      const pathName = Phaser.ArrayUtils.getRandomItem(this.availablePaths);
+      const path = this.paths[pathName];
       const mob = this.next();
-      mob.start();
+
+      if (!path) { throw new Error(`Spawner could not find a path named "${pathName}".`); }
+      mob.start(path);
     });
   }
   
-  stop() {
-    console.log('spawner.stop', arguments);
-  }
-
   // Returns the next mob
   next() {
     const {game, group, waypoints} = this;

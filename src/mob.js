@@ -14,7 +14,7 @@ const HIT_RANGE = 5;
 window.mobCount = 0;
 
 export class Mob extends Phaser.Sprite {
-  constructor(type, group, waypoints) {
+  constructor(type, group) {
     const {game} = group;
     super(game, 100, 100, type);
     // We need to add to the group so we get physics .body
@@ -23,15 +23,11 @@ export class Mob extends Phaser.Sprite {
     this.alive = false;
     this.anchor = {x: .5, y: 1};
     this.mobType = type;
-    this.pathStart = {x: waypoints.x[0], y: waypoints.y[0]};
     this.speed = SPEED;
 
     // Setup a path system
-    this.waypoints = waypoints;
     if (USE_TWEEN) {
       mobTween.init(this);
-    } else {
-      mobPath.init(this);
     }
 
     // debug stats
@@ -39,21 +35,11 @@ export class Mob extends Phaser.Sprite {
   }
   
   // Start the mob moving along the path.
-  start() {
-    const {waypoints} = this;
-    const {x, y} = this.pathStart;
+  start(pointList) {
+    if (!pointList) { throw new Error('mob.start: !pointList'); }
 
-    // reset to first path point
-    this.reset(x, y);
-    
-    if (USE_TWEEN) {
-      mobTween.start(this, waypoints) 
-        .onComplete.addOnce(() => {
-        this.kill();
-      });
-    } else {
-      mobPath.start(this, waypoints);
-    }
+    // Start the mob moving on the path
+    mobPath.start(this, pointList);
   }
   
   update() {

@@ -9,10 +9,13 @@ export const MOB = {
 export const MAP = {
   LAYER: {
     PATH: 'MAP_LAYER_PATH'
+    , TILE: 'MAP_LAYER_TILE'
     , MOBS: 'mobs'
     , BALLOONS: 'balloons'
     , PROPS: 'props'
     , SPAWN: 'MAP_LAYER_SPAWN'
+    , TAPZONE: 'MAP_LAYER_TAPZONE'
+    , 'FIRE': 'MAP_LAYER_FIRE'
   }
   , SPAWNER: 'MAP_SPAWNER'
 };

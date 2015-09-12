@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="85">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="102">
  <properties>
   <property name="background" value="bg-iphone"/>
  </properties>
@@ -56,34 +56,26 @@
    <image width="32" height="32" source="../balloon-32x32.png"/>
   </tile>
  </tileset>
- <imagelayer name="background">
+ <imagelayer name="background" visible="0">
   <image source="../../dist/assets/bg-iphone.png"/>
  </imagelayer>
- <layer name="MAP_LAYER_PATH" width="21" height="12">
+ <layer name="MAP_LAYER_TILE" width="21" height="12">
   <data encoding="csv">
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-3,5,5,3,3,3,5,3,3,3,5,3,1,3,1,5,3,5,1,3,3,
-0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,1,3,1,5,1,5,1,5,3,1,3,5,3,1,5,1,3,3,1,
-0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,5,1,1,1,1,3,3,5,3,3,3,1,1,5,5,5,5,
-0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,5,1,3,5,3,5,3,5,3,1,5,5,5,1,5,
-0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,5,5,3,1,3,3,3,3,5,5,1,1,1,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,6,0,0,6,0,0,0,0,0,2,5,5,2,0,0,0,0,
+0,0,0,0,2,3,3,6,0,0,0,0,0,4,0,0,4,0,0,0,0,
+0,0,0,0,4,0,0,4,0,0,0,0,0,4,5,1,2,0,0,0,0,
+0,0,0,0,6,5,3,2,0,0,0,0,0,2,0,0,2,0,0,0,0,
+0,0,0,0,6,0,0,6,0,0,0,0,0,6,3,3,6,0,0,0,0,
+0,0,0,0,2,3,5,2,0,0,0,0,0,2,0,0,2,0,0,0,0,
+0,0,0,0,6,0,0,6,0,0,0,0,0,6,1,3,6,0,0,0,0,
+0,0,0,0,6,5,3,6,0,0,0,0,0,2,0,0,4,0,0,0,0,
+0,0,0,0,6,0,0,4,0,0,0,0,0,2,5,3,4,0,0,0,0,
+0,0,0,0,2,5,5,2,0,0,0,0,0,6,0,0,4,0,0,0,0,
+0,0,0,0,2,0,0,2,0,0,0,0,0,6,3,5,2,0,0,0,0,
+0,0,0,0,6,0,0,2,0,0,0,0,0,4,0,0,6,0,0,0,0
 </data>
  </layer>
- <objectgroup name="zigPath">
-  <properties>
-   <property name="type" value="PATH"/>
-  </properties>
-  <object id="83" x="0" y="48">
-   <polyline points="0,0 80,0 80,64 144,64 144,128 208,128 208,192 272,192 272,256 656,256 656,296"/>
-  </object>
- </objectgroup>
- <objectgroup name="balloons">
+ <objectgroup name="balloons" visible="0">
   <object id="51" name="BALLOON" gid="18" x="640" y="368" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="props" visible="0">
@@ -113,9 +105,31 @@
   <object id="82" name="MAP_SPAWNER" x="0" y="-24">
    <properties>
     <property name="mobList" value="MOB_KNIGHT"/>
-    <property name="pathName" value="zigPath"/>
+    <property name="pathList" value="leftPath, rightPath"/>
    </properties>
    <polygon points="0,0 40,0 16,24"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="MAP_LAYER_TAPZONE" visible="0">
+  <object id="89" name="left" x="54" y="0" width="264" height="384">
+   <properties>
+    <property name="fire" value="192, 352"/>
+   </properties>
+  </object>
+  <object id="90" name="right" x="352" y="0" width="264" height="384">
+   <properties>
+    <property name="fire" value="480, 352"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="leftPath">
+  <object id="98" x="144" y="-24">
+   <polyline points="0,0 0,72 96,72 96,136 0,136 0,200 96,200 96,264 0,264 0,328 96,328 96,432"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="rightPath">
+  <object id="100" x="528" y="-32">
+   <polyline points="0,0 0,48 -96,48 -96,112 0,112 0,176 -96,176 -96,240 0,240 0,304 -96,304 -96,368 0,368 0,440"/>
   </object>
  </objectgroup>
 </map>

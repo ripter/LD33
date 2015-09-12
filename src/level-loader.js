@@ -1,11 +1,13 @@
 /*global Phaser, game, bullets */
 'use strict';
 
+import R from 'ramda';
 import * as Mob from './mob.js';
 import * as Foreground from './foreground.js';
 import * as Prop from './prop.js';
 import * as Balloon from './balloon.js';
 import {Spawner} from './spawner.js';
+import {splitTrim} from './util.js';
 import {MAP, MOB, PROP, OTHER} from './constants.js';
 
 // Groups with physics.
@@ -14,7 +16,7 @@ import {physicsGroup} from './groups.js';
 export function loadTiledMap(game, mapKey) {
   const map = game.add.tilemap(mapKey);
   const props = map.properties;
-  let layer, mobGroup, balloonGroup, propGroup, spawnLayer, spawnerList;
+  let mobGroup, balloonGroup, propGroup;
   let bulletGroup;
   
   // Background image
@@ -22,20 +24,23 @@ export function loadTiledMap(game, mapKey) {
 
   // WARNING: Hardcoded values!
   map.addTilesetImage('paths', 'pathSpriteSheet');
-  layer = map.createLayer(MAP.LAYER.PATH);
-  //layer.resizeWorld();
+  const layer = map.createLayer(MAP.LAYER.TILE);
+  layer.resizeWorld();
+  
+  //
+  // Paths
+  // Path layers end with the word 'Path'
+  let paths = createPaths(map.objects);
+
   
   //
   // Spawner
   mobGroup = physicsGroup();
-  spawnLayer = map.objects[MAP.LAYER.SPAWN]; 
-  spawnerList = spawnLayer.map((spawnDataItem) => {
-    const pathName = spawnDataItem.properties.pathName;
-    const layer = map.objects[pathName][0];
-    const waypoints = toTweenPoints(layer);
-
-    return new Spawner(mobGroup, spawnDataItem.properties, waypoints);
-  });
+  const spawnerList = createSpawnerList(map.objects, mobGroup, paths); 
+  
+  //
+  // TapZones
+  //const tapZoneList = createTapzoneList(map.objects);
 
   //
   // Props group
@@ -61,21 +66,77 @@ export function loadTiledMap(game, mapKey) {
 
   return {
     map
+    , spawnerList
+    //, tapZoneList
     , mobGroup
     , balloonGroup
     , propGroup
-    , spawnerList
     , bulletGroup
   };
 }
 
+// Create our path from an object layer path that uses a polyline.
+function createPath(layerPath) {
+  if (!layerPath.length) { throw new Error('createPath: !layerPath.length'); } 
+  if (layerPath.length === 0) { throw new Error('createPath: layerPath.length === 0'); }
+  if (!layerPath[0].polyline) { throw new Error('createPath: !layerPath[0].polyline'); }
 
-function toTweenPoints(layer) {
-  const {x, y, polyline} = layer;
-  // We want:
+  const {x, y, polyline} = layerPath[0];
+  const path = polyline.map((cords) => {
+    return new Phaser.Point(cords[0] + x, cords[1] + y);
+  });
+
+  // create a tween version too
   //     {x: [0, 273, 0 ...], y: [50, 55, 142, ...]} 
-  return {
-    x: polyline.map((point) => { return point[0] + x; })
-    , y: polyline.map((point) => { return point[1] + y; })
+  path.tween = {
+    x: polyline.map((cords) => { return cords[0] + x; })
+    , y: polyline.map((cords) => { return cords[1] + y; })
   };
+  
+  return path;
 }
+
+
+// Object layers that end with the word 'Path'
+// return {pathName: pointList , ...}
+function createPaths(objects) {
+  const pathNameList = Object.keys(objects).filter((key) => {
+    return key.endsWith('Path');
+  });
+  let paths = pathNameList.reduce((prev, pathName) => {
+    prev[pathName] = createPath(objects[pathName]);
+    return prev;
+  }, {});
+  
+  return paths;
+}
+
+
+// creates a spawner that spawns in group.
+function createSpawnerList(objects, group, paths) {
+  const spawnLayer = objects[MAP.LAYER.SPAWN]; 
+  const spawnerList = spawnLayer.map((spawnDataItem) => {
+    return new Spawner(group, spawnDataItem.properties, paths);
+  });
+  
+  return spawnerList;
+}
+
+
+function createTapzoneList(objects) {
+  const layer = objects[MAP.LAYER.TAPZONE];
+  const zoneList = layer.map((zone) => {
+    const rect = new Phaser.Rectangle(zone.x, zone.y, zone.width, zone.height);
+    const fire = splitTrim(zone.properties.fire);
+
+    rect.fire = {
+      x: parseInt(fire[0], 10)
+      , y: parseInt(fire[1], 10)
+    };
+
+    return rect;
+  });
+  
+  return zoneList;
+}
+
