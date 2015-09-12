@@ -32,7 +32,6 @@ export function loadTiledMap(game, mapKey) {
   // Path layers end with the word 'Path'
   let paths = createPaths(map.objects);
 
-  
   //
   // Spawner
   mobGroup = physicsGroup();
@@ -50,7 +49,6 @@ export function loadTiledMap(game, mapKey) {
     map.createFromObjects(MAP.LAYER.PROPS, PROP[key], PROP[key], null, true, false, propGroup);
   });
   // set standard properties
-  //propGroup.setAll('anchor', {x: .25, y: .85});
   mobGroup.setAll('anchor', {x: .5, y: 1});
   propGroup.setAll('body.moves', false);
   propGroup.forEach(Prop.addAnimation);

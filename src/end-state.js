@@ -30,14 +30,6 @@ function create() {
   game.add.text(100, 200, 'Your score: ' + game.currentScore, headerFont);
 
   game.add.text(100, 150, 'Refresh page to play again', headerFont);
-  
-
-  //
-  // debug stats
-  console.group('Stats');
-  console.log('bulletCount', window.bulletCount);
-  console.log('mobCount', window.mobCount);
-  console.groupEnd();
 }
 
 function update() {
@@ -47,6 +39,12 @@ function update() {
     game.state.start('game', true, false, lvl2);
   }
 
+  // Tap to Start
+  if (game.input.activePointer.isDown) {
+    //game.state.start('game', true, false, 'iphone-map');
+    //game.state.start('game', true, false, 'iphone-tapzone');
+    game.state.start('game');
+  }
 }
 
 

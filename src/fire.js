@@ -6,9 +6,6 @@ const SPEED = 300;
 const OFFSET_Y = 0;
 const OFFSET_X = 29;
 
-// debug stats
-window.bulletCount = 0;
-
 export class Fire extends Phaser.Sprite {
   constructor(x, y, group) {
     const {game} = group;
@@ -21,9 +18,6 @@ export class Fire extends Phaser.Sprite {
     this.body.velocity.y = -SPEED;
     this.checkWorldBounds = true;
     this.outOfBoundsKill = true;
-
-    // debug stats
-    window.bulletCount++;
   }
   
   reset(x, y) {

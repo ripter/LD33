@@ -350,9 +350,6 @@
 	var OFFSET_Y = 0;
 	var OFFSET_X = 29;
 
-	// debug stats
-	window.bulletCount = 0;
-
 	var Fire = (function (_Phaser$Sprite) {
 	  _inherits(Fire, _Phaser$Sprite);
 
@@ -370,9 +367,6 @@
 	    this.body.velocity.y = -SPEED;
 	    this.checkWorldBounds = true;
 	    this.outOfBoundsKill = true;
-
-	    // debug stats
-	    window.bulletCount++;
 	  }
 
 	  _createClass(Fire, [{
@@ -591,9 +585,6 @@
 	var SPEED = Phaser.Timer.SECOND * 15;
 	var HIT_RANGE = 5;
 
-	// debug stats
-	window.mobCount = 0;
-
 	var Mob = (function (_Phaser$Sprite) {
 	  _inherits(Mob, _Phaser$Sprite);
 
@@ -615,9 +606,6 @@
 	    if (USE_TWEEN) {
 	      mobTween.init(this);
 	    }
-
-	    // debug stats
-	    window.mobCount += 1;
 	  }
 
 	  // Start the mob moving along the path.
@@ -1105,7 +1093,6 @@
 	    map.createFromObjects(_constantsJs.MAP.LAYER.PROPS, _constantsJs.PROP[key], _constantsJs.PROP[key], null, true, false, propGroup);
 	  });
 	  // set standard properties
-	  //propGroup.setAll('anchor', {x: .25, y: .85});
 	  mobGroup.setAll('anchor', { x: .5, y: 1 });
 	  propGroup.setAll('body.moves', false);
 	  propGroup.forEach(Prop.addAnimation);
@@ -9048,13 +9035,6 @@
 	  game.add.text(100, 200, 'Your score: ' + game.currentScore, _fontsJs.headerFont);
 
 	  game.add.text(100, 150, 'Refresh page to play again', _fontsJs.headerFont);
-
-	  //
-	  // debug stats
-	  console.group('Stats');
-	  console.log('bulletCount', window.bulletCount);
-	  console.log('mobCount', window.mobCount);
-	  console.groupEnd();
 	}
 
 	function update() {
@@ -9062,6 +9042,13 @@
 
 	  if (game.input.keyboard.isDown(ENTER)) {
 	    game.state.start('game', true, false, _levelsIphoneJs2['default']);
+	  }
+
+	  // Tap to Start
+	  if (game.input.activePointer.isDown) {
+	    //game.state.start('game', true, false, 'iphone-map');
+	    //game.state.start('game', true, false, 'iphone-tapzone');
+	    game.state.start('game');
 	  }
 	}
 

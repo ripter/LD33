@@ -10,9 +10,6 @@ const DELAY = Phaser.Timer.SECOND;
 const SPEED = Phaser.Timer.SECOND * 15;
 const HIT_RANGE = 5;
 
-// debug stats
-window.mobCount = 0;
-
 export class Mob extends Phaser.Sprite {
   constructor(type, group) {
     const {game} = group;
@@ -29,9 +26,6 @@ export class Mob extends Phaser.Sprite {
     if (USE_TWEEN) {
       mobTween.init(this);
     }
-
-    // debug stats
-    window.mobCount += 1;
   }
   
   // Start the mob moving along the path.
