@@ -20,7 +20,7 @@ There is a lane per Egg/Tresaure/Balloon on the map.
 [ ] If Egg/Treaser/Balloon has been destoryed, you can no longer tap in that lane.
 
 ###Results
-Don't lie the feel. It feels jerky and uncessarlly restrictive. Having two specific tap zones feels like a step back from the free click.
+Don't like the feel. It feels jerky and uncessarlly restrictive. Having two specific tap zones feels like a step back from the free click.
 
 
 
