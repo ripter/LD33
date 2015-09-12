@@ -261,9 +261,9 @@
 
 	  balloon.kill();
 
-	  if (balloonGroup.countLiving() === 0) {
-	    game.state.start('end');
-	  }
+	  //if (balloonGroup.countLiving() === 0) {
+	  game.state.start('end');
+	  //}
 	}
 
 	exports['default'] = {
@@ -765,12 +765,13 @@
 	/*global */
 	'use strict';
 
+	//const ukey = Symbol('path.js');
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
 	exports.start = start;
 	exports.update = update;
-	var ukey = Symbol('path.js');
+	var ukey = 'path.js';
 
 	// Start the sprite moving on the path.
 
@@ -1080,7 +1081,7 @@
 	  // WARNING: Hardcoded values!
 	  map.addTilesetImage('paths', 'pathSpriteSheet');
 	  var layer = map.createLayer(_constantsJs.MAP.LAYER.TILE);
-	  layer.resizeWorld();
+	  //layer.resizeWorld();
 
 	  //
 	  // Paths
@@ -1094,7 +1095,7 @@
 
 	  //
 	  // TapZones
-	  var tapZoneList = createTapzoneList(map.objects);
+	  //const tapZoneList = createTapzoneList(map.objects);
 
 	  //
 	  // Props group
@@ -1120,9 +1121,9 @@
 
 	  return {
 	    map: map,
-	    spawnerList: spawnerList,
-	    tapZoneList: tapZoneList,
-	    mobGroup: mobGroup,
+	    spawnerList: spawnerList
+	    //, tapZoneList
+	    , mobGroup: mobGroup,
 	    balloonGroup: balloonGroup,
 	    propGroup: propGroup,
 	    bulletGroup: bulletGroup

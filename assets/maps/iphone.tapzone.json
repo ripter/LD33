@@ -40,12 +40,28 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":640,
-                 "y":368
+                 "x":512,
+                 "y":384
+                }, 
+                {
+                 "gid":18,
+                 "height":32,
+                 "id":102,
+                 "name":"BALLOON",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":384
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":0,
          "x":0,
          "y":0
@@ -641,7 +657,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":102,
+ "nextobjectid":103,
  "orientation":"orthogonal",
  "properties":
     {

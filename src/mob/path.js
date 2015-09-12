@@ -1,7 +1,8 @@
 /*global */
 'use strict';
 
-const ukey = Symbol('path.js');
+//const ukey = Symbol('path.js');
+const ukey = 'path.js';
 
 // Start the sprite moving on the path.
 export function start(sprite, pointList) {

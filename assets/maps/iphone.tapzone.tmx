@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="102">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="12" tilewidth="32" tileheight="32" nextobjectid="103">
  <properties>
   <property name="background" value="bg-iphone"/>
  </properties>
@@ -75,8 +75,9 @@
 0,0,0,0,6,0,0,2,0,0,0,0,0,4,0,0,6,0,0,0,0
 </data>
  </layer>
- <objectgroup name="balloons" visible="0">
-  <object id="51" name="BALLOON" gid="18" x="640" y="368" width="32" height="32"/>
+ <objectgroup name="balloons">
+  <object id="51" name="BALLOON" gid="18" x="512" y="384" width="32" height="32"/>
+  <object id="102" name="BALLOON" gid="18" x="224" y="384" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="props" visible="0">
   <object id="25" name="PROP_WALL" type="PROP_WALL" gid="17" x="0" y="136" width="64" height="64"/>

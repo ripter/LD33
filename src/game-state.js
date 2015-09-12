@@ -152,9 +152,9 @@ function collideMobBalloon(mob, balloon) {
 
   balloon.kill();
   
-  if (balloonGroup.countLiving() === 0) {
+  //if (balloonGroup.countLiving() === 0) {
     game.state.start('end');
-  }
+  //}
 }
 
 

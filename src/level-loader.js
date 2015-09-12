@@ -25,7 +25,7 @@ export function loadTiledMap(game, mapKey) {
   // WARNING: Hardcoded values!
   map.addTilesetImage('paths', 'pathSpriteSheet');
   const layer = map.createLayer(MAP.LAYER.TILE);
-  layer.resizeWorld();
+  //layer.resizeWorld();
   
   //
   // Paths
